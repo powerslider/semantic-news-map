@@ -1,0 +1,23 @@
+{
+  "name": "semantic-news-map",
+  "version": "1.0.0",
+  "description": "Web application for visualizing news",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "event-stream": "^3.2.1",
+    "gulp": "^3.8.10",
+    "gulp-inject": "^1.1.1",
+    "gulp-6to5": "^2.0.2",
+    "gulp-ng-annotate": "^0.5.0",
+    "gulp-typescript": "^2.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.ontotext.com/tsvetan.dimitrov/semantic-news-map"
+  },
+  "author": "Tsvetan Dimitrov <tsvetan.dimitrov@ontotext.com>"
+}

@@ -31,18 +31,25 @@
         <commons.io.version>2.4</commons.io.version>
 
         <angular.version>1.5.2</angular.version>
+        <angular.ui.router.version>0.2.18</angular.ui.router.version>
+        <angular.ui.bootstrap.version>1.2.5</angular.ui.bootstrap.version>
+        <angular.material.version>1.2.5</angular.material.version>
+        <angular.toastr.version>1.5.0</angular.toastr.version>
+        <ng.annotate.version>0.15.4</ng.annotate.version>
+
         <d3.version>3.5.16</d3.version>
         <lodash.version>4.0.0</lodash.version>
         <jquery.version>2.2.3</jquery.version>
         <bootstrap.version>4.0.0-alpha.2</bootstrap.version>
         <bootstrap.material.version>0.5.8</bootstrap.material.version>
         <font-awesome.version>4.5.0</font-awesome.version>
-        <!--<requirejs.version>2.2.0</requirejs.version>-->
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- Webjars deps -->
+
+            <!-- Angular deps -->
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>angularjs</artifactId>
@@ -50,9 +57,39 @@
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
+                <artifactId>angular-toastr</artifactId>
+                <version>${angular.toastr.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>angular-ui-router</artifactId>
+                <version>${angular.ui.router.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>angular-ui-bootstrap</artifactId>
+                <version>${angular.ui.bootstrap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>angular-material</artifactId>
+                <version>${angular.material.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>ng-annotate</artifactId>
+                <version>${ng.annotate.version}</version>
+            </dependency>
+            <!-- End of Angular deps -->
+
+
+            <dependency>
+                <groupId>org.webjars</groupId>
                 <artifactId>d3js</artifactId>
                 <version>${d3.version}</version>
             </dependency>
+
+
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>jquery</artifactId>
@@ -60,18 +97,15 @@
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
-                <artifactId>font-awesome</artifactId>
-                <version>${font-awesome.version}</version>
-            </dependency>
-            <!--<dependency>-->
-            <!--<groupId>org.webjars</groupId>-->
-            <!--<artifactId>requirejs</artifactId>-->
-            <!--<version>2.1.17</version>-->
-            <!--</dependency>-->
-            <dependency>
-                <groupId>org.webjars</groupId>
                 <artifactId>lodash</artifactId>
                 <version>${lodash.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>font-awesome</artifactId>
+                <version>${font-awesome.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -89,7 +123,7 @@
                 <artifactId>bootstrap-material-design</artifactId>
                 <version>${bootstrap-material}</version>
             </dependency>
-            <!-- End of webjar deps -->
+            <!-- End of webjars deps -->
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -158,6 +192,11 @@
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>1.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
