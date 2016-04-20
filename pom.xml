@@ -40,7 +40,7 @@
         <d3.version>3.5.16</d3.version>
         <lodash.version>4.0.0</lodash.version>
         <jquery.version>2.2.3</jquery.version>
-        <requirejs.version>2.2.0</requirejs.version>
+        <systemjs.version>0.19.26</systemjs.version>
 
         <bootstrap.version>4.0.0-alpha.2</bootstrap.version>
         <bootstrap.material.version>0.5.8</bootstrap.material.version>
@@ -97,9 +97,9 @@
                 <version>${lodash.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>requirejs</artifactId>
-                <version>${requirejs.version}</version>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>systemjs</artifactId>
+                <version>${systemjs.version}</version>
             </dependency>
 
             <dependency>

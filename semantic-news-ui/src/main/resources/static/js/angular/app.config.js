@@ -1,7 +1,8 @@
-export function routing($urlRouterProvider, $stateProvider) {
+routing.$inject = ['$urlRouterProvider', '$stateProvider'];
+export default function routing($urlRouterProvider, $stateProvider) {
 
     $urlRouterProvider.otherwise('/');
-
+    console.log("routing");
     $stateProvider
         .state('home', {
             url: '/',

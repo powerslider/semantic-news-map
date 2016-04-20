@@ -3,18 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Semantic News Map</title>
-    <!-- inject:css -->
-    <!-- endinject -->
-    <script src="webjars/angularjs/1.5.2/angular.min"></script>
+
+    <script src="jspm_packages/system.js"></script>
+    <script src="config.js"></script>
+    <script>
+        System.import('app/bootstrap');
+    </script>
 </head>
-<body>
+<body ng-cloak>
 <h1>Hello!!</h1>
-    <h1>Hello!!</h1>
-    <h1>Hello!!</h1>
-    <h1>Hello!!</h1>
-    <h1>Hello!!</h1>
-    <script src="webjars/requirejs/2.2.0/require.min.js"></script>
-    <!-- inject:js -->
-    <!-- endinject -->
+<h1>Hello!!</h1>
+
+<!--<h1>Welcome</h1>-->
+<!--<a ui-sref="login" href="#">Login</a> |-->
+<!--<a ui-sref="dashboards" href="#">Dashboard</a> |-->
+<!--<a ui-sref="forms" href="#">Forms</a> |-->
+<!--<a ui-sref="admin" href="#">Admin</a>-->
+
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+    <div ui-view="sidenav"></div>
+</md-sidenav>
+<md-content flex layout-fill layout="column">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="open menu" ng-click="main.toggleSidenav()">
+                <i class="fa fa-bars"></i>
+            </md-button>
+            <h2 flex>
+                <span>Toolbar</span>
+            </h2>
+        </div>
+    </md-toolbar>
+    <div ui-view="content" flex layout-fill layout-padding></div>
+</md-content>
 </body>
 </html>

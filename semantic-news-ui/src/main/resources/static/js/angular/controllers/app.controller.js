@@ -5,10 +5,12 @@ class AppController {
 
     /*@ngInject*/
     constructor($scope) {
-        this.title = "FUCK YEAHHHH!!!!!!!"
+        this.title = "FUCK YEAHHHH!!!!!!!";
         this.$inject = ['$scope'];
     }
 }
+
+export default AppController;
 
 register('semNewsApp.controllers')
     .controller('AppController', AppController);

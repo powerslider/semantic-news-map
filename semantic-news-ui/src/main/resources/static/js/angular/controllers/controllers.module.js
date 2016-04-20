@@ -1,5 +1,4 @@
-import services from './services/services.module';
+import services from 'app/services/services.module';
 
 export default angular
-    .module('semNewsApp.controllers', [services])
-    .name;
+    .module('semNewsApp.controllers', [services]);

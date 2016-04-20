@@ -18,16 +18,27 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <resources>
-                        <resource>
-                            <directory>src/main/resources</directory>
-                            <excludes>
-                                <exclude>**/*</exclude>
-                            </excludes>
-                        </resource>
-                    </resources>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>.</directory>
+                                    <includes>
+                                        <include>jspm_packages/**</include>
+                                        <include>config.js</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -61,74 +72,85 @@
                         </configuration>
                     </execution>
 
+                    <!--<execution>-->
+                        <!--<id>install jspm locally</id>-->
+                        <!--<goals>-->
+                            <!--<goal>npm</goal>-->
+                        <!--</goals>-->
+                        <!--&lt;!&ndash; Optional configuration which provides for running any npm command &ndash;&gt;-->
+                        <!--<configuration>-->
+                            <!--<arguments>install jspm &#45;&#45;save-dev</arguments>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+
                     <execution>
-                        <id>npm run build</id>
+                        <id>jspm install</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>jspm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <arguments>install</arguments>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>gulp build</id>
-                        <goals>
-                            <goal>gulp</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>gulp build</id>-->
+                        <!--<goals>-->
+                            <!--<goal>gulp</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>generate-resources</phase>-->
+                    <!--</execution>-->
                 </executions>
             </plugin>
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angularjs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>angular-ui-router</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-ui-bootstrap</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-material</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>d3js</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>requirejs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>font-awesome</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>lodash</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>jquery</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-    </dependencies>
+    <!--<dependencies>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>angularjs</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars.bower</groupId>-->
+            <!--<artifactId>angular-ui-router</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>angular-ui-bootstrap</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>angular-material</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>d3js</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>jquery</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars.npm</groupId>-->
+            <!--<artifactId>systemjs</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>font-awesome</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>lodash</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>bootstrap</artifactId>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.webjars</groupId>-->
+                    <!--<artifactId>jquery</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+    <!--</dependencies>-->
 
 </project>

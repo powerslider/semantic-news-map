@@ -1,3 +1,2 @@
 export default angular
-    .module('semNewsApp.services', [])
-    .name;
+    .module('semNewsApp.services', []);
