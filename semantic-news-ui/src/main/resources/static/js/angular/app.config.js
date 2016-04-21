@@ -1,8 +1,9 @@
-routing.$inject = ['$urlRouterProvider', '$stateProvider'];
-export default function routing($urlRouterProvider, $stateProvider) {
+routing.$inject = ['$urlRouterProvider', '$stateProvider', '$locationProvider'];
+export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/');
-    console.log("routing");
+
     $stateProvider
         .state('home', {
             url: '/',
@@ -10,3 +11,4 @@ export default function routing($urlRouterProvider, $stateProvider) {
             controller: 'AppController'
         });
 }
+

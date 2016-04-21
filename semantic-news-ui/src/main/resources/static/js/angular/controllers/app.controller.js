@@ -3,14 +3,17 @@
  */
 class AppController {
 
-    /*@ngInject*/
-    constructor($scope) {
-        this.title = "FUCK YEAHHHH!!!!!!!";
-        this.$inject = ['$scope'];
+    constructor(SplashService) {
+        this.SplashService = SplashService;
+    }
+
+    openSplash() {
+        SplashService.open({
+            title: 'Hi there!',
+            message: "This sure is a fine modal, isn't it?"
+        });
     }
 }
 
+AppController.$inject = ['SplashService'];
 export default AppController;
-
-register('semNewsApp.controllers')
-    .controller('AppController', AppController);

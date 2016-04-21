@@ -2,7 +2,7 @@
  * Taken from https://github.com/michaelbromley/angular-es6
  * A helper class to simplify registering Angular components and provide a consistent syntax for doing so.
  */
-export default function register(appName) {
+export function register(appName) {
 
     var app = angular.module(appName);
 

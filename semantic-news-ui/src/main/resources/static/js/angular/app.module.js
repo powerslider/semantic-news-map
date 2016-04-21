@@ -1,20 +1,33 @@
-import angular from 'angular';
+import 'angular-material/angular-material.css!';
+import 'styles/splash.css!';
+import 'styles/app.css!';
 
-import 'angular-ui-bootstrap';
+import angular from 'angular';
 import 'angular-ui-router';
+
+import 'angular-animate';
+import 'angular-ui-bootstrap';
+
 import 'angular-material';
+import 'angular-aria';
+import 'angular-messages';
 
 import 'jquery';
 import 'lodash';
 
-import routing from 'app/app.config';
+import { routing } from 'app/app.config';
 import 'app/utils/register';
-import 'app/services/services.module';
-import 'app/controllers/controllers.module';
+import services from 'app/services/services.module';
+import controllers from 'app/controllers/controllers.module';
 
 export default angular
     .module('semNewsApp', [
         'ui.bootstrap',
-        'ui.router'
+        'ui.router',
+        'ngAnimate',
+        'ngAria',
+        'ngMaterial',
+        services.name,
+        controllers.name
     ])
     .config(routing);
