@@ -1,5 +1,5 @@
 /**
- * Provides access to the JSON endpoint which contains the data about the items.
+ * Service for opening a splash screen
  */
 class SplashService {
 
@@ -9,7 +9,7 @@ class SplashService {
     }
 
     open(attrs, opts) {
-        var scope = $rootScope.$new();
+        var scope = this.$rootScope.$new();
         angular.extend(scope, attrs);
         opts = angular.extend(opts || {}, {
             backdrop: false,
@@ -17,7 +17,7 @@ class SplashService {
             templateUrl: 'views/splash-content.tpl.html',
             windowTemplateUrl: 'views/splash.tpl.html'
         });
-        return $uibModal.open(opts);
+        return this.$uibModal.open(opts);
     }
 }
 

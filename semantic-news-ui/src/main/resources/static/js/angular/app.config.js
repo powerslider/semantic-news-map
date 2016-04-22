@@ -7,8 +7,12 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
     $stateProvider
         .state('home', {
             url: '/',
-            templateUrl: 'views/app.tpl.html',
-            controller: 'AppController'
+            controller: 'HomeController as homeCtrl',
+        })
+        .state('home.init', {
+//            url: 'аоеуитнеуоеутноеутнщ',
+            templateUrl: 'views/home.tpl.html'
+//            template: 'уаоеуоеауоеу'
         });
 }
 
