@@ -1,10 +1,13 @@
 import 'angular-material/angular-material.css!';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 import 'styles/splash.css!';
 import 'styles/app.css!';
 
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
+
+import 'lib/angular-material-icons.min';
 
 import 'angular-animate';
 import 'angular-ui-bootstrap';
@@ -27,6 +30,7 @@ export default angular
         'ngAnimate',
         'ngAria',
         'ngMaterial',
+        'ngMdIcons',
         services.name,
         controllers.name
     ])

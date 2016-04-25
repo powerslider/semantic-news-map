@@ -7,10 +7,11 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
     $stateProvider
         .state('home', {
             url: '/',
-            controller: 'HomeController as homeCtrl',
+            controller: 'SplashController as splashCtrl',
             template: '<div ui-view></div>'
         })
         .state('home.init', {
+            controller: 'HomeController as homeCtrl',
             templateUrl: 'views/home.tpl.html'
         });
 }
