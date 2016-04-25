@@ -8,11 +8,10 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
         .state('home', {
             url: '/',
             controller: 'HomeController as homeCtrl',
+            template: '<div ui-view></div>'
         })
         .state('home.init', {
-//            url: 'аоеуитнеуоеутноеутнщ',
             templateUrl: 'views/home.tpl.html'
-//            template: 'уаоеуоеауоеу'
         });
 }
 

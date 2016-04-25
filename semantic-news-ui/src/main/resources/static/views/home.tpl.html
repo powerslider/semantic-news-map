@@ -1,2 +1,27 @@
-<div ui-view></div>
-<!--<h2>aouaouoe</h2>-->
+<section layout="row" flex="">
+
+    <md-sidenav class="md-sidenav-left"
+                md-component-id="left"
+                md-is-locked-open="$mdMedia('gt-md')"
+                md-disable-backdrop=""
+                md-whiteframe="4">
+
+        <md-toolbar class="md-theme-indigo">
+            <h1 class="md-toolbar-tools">Sidenav Left</h1>
+        </md-toolbar>
+        <md-content layout-padding="">
+            <md-button ng-click="homeCtrl.close()" class="md-primary" hide-gt-md="">
+                Close Sidenav Left
+            </md-button>
+            <p hide-md="" show-gt-md="">
+                This sidenav is locked open on your device. To go back to the default behavior,
+                narrow your display.
+            </p>
+        </md-content>
+
+    </md-sidenav>
+    <md-button ng-click="homeCtrl.toggleLeft()"
+               class="md-primary" hide-gt-md>
+        Toggle left
+    </md-button>
+</section>

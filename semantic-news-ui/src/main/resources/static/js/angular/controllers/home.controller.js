@@ -3,8 +3,8 @@
  */
 class HomeController {
 
-    constructor(SplashService, $timeout) {
-        this.title = "aeuaoeu";
+    constructor(SplashService, $timeout, $mdSidenav) {
+        this.$mdSidenav = $mdSidenav;
         $timeout(() => {
             SplashService.open({
                 title: 'Hi there!',
@@ -13,10 +13,19 @@ class HomeController {
         }, 200);
     }
 
-    changeState() {
-        this.$state.go("home.init");
+    toggleLeft() {
+        return () => {
+            this.$mdSidenav("left").toggle();
+        }
+    }
+
+    close() {
+        return () => {
+            this.$mdSidenav("left").close();
+        }
     }
 }
+
 
 HomeController.$inject = ['SplashService', '$timeout'];
 export default HomeController;
