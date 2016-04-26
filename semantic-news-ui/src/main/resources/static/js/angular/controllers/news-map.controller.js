@@ -1,24 +1,16 @@
 /**
  * The one and only controller used in this app.
  */
-const VIZ_OPTIONS_SIDE_PANEL_ID = "vizOptionsSidePanel";
+class NewsMapController {
 
-class HomeController {
-
-    constructor(SplashService, $timeout, $mdSidenav) {
-        this.$mdSidenav = $mdSidenav;
+    constructor() {
         this.isVizOptionsSidePanelOpen = true;
-//        $timeout(() => {
-//            this.toggleVizOptionsSidePanel();
-//        }, 150);
-
         this.tabs = [
                   { title: 'Most popular', content: "Tabs will become paginated if there isn't enough room for them."},
                   { title: 'Most popular + Hidden', content: "You can swipe left and right on a mobile device to change tabs."},
                   { title: 'Hidden Champions', content: "You can bind the selected tab via the selected attribute on the md-tabs element."},
                   { title: 'Heat Map', content: "You can bind the selected tab via the selected attribute on the md-tabs element."}
                 ];
-
 
         this.menu = [
             {
@@ -53,13 +45,6 @@ class HomeController {
     closeVizOptionsSidePanel() {
         this.isVizOptionsSidePanelOpen = false;
     }
-//    toggleVizOptionsSidePanel() {
-//        this.$mdSidenav(VIZ_OPTIONS_SIDE_PANEL_ID).toggle();
-//    }
-//
-//    closeVizOptionsSidePanel() {
-//        this.$mdSidenav(VIZ_OPTIONS_SIDE_PANEL_ID).close();
-//    }
 
 //            selected = null,
 //            previous = null;
@@ -81,6 +66,5 @@ class HomeController {
     }
 }
 
-
-HomeController.$inject = ['SplashService', '$timeout', '$mdSidenav'];
-export default HomeController;
+NewsMapController.$inject = [];
+export default NewsMapController;

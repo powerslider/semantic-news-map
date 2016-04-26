@@ -11,7 +11,7 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
             template: '<div ui-view></div>'
         })
         .state('home.init', {
-            controller: 'HomeController as homeCtrl',
+            controller: 'NewsMapController as nmCtrl',
             templateUrl: 'views/home.tpl.html'
         });
 }

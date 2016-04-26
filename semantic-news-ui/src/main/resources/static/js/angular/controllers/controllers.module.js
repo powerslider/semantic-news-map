@@ -1,9 +1,9 @@
 import services from 'app/services/services.module';
 import SplashController from 'app/controllers/splash.controller';
-import HomeController from 'app/controllers/home.controller';
+import NewsMapController from 'app/controllers/news-map.controller';
 
 
 export default angular
     .module('semNewsApp.controllers', [services.name])
-    .controller('SplashController', SplashController)
-    .controller('HomeController', HomeController);
+    .controller('NewsMapController', NewsMapController)
+    .controller('SplashController', SplashController);

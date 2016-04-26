@@ -14,12 +14,12 @@ System.config({
   },
 
   map: {
-    "angular": "github:angular/bower-angular@1.5.5",
-    "angular-animate": "github:angular/bower-angular-animate@1.5.5",
-    "angular-aria": "github:angular/bower-angular-aria@1.5.5",
+    "angular": "github:angular/bower-angular@1.5.2",
+    "angular-animate": "github:angular/bower-angular-animate@1.5.2",
+    "angular-aria": "github:angular/bower-angular-aria@1.5.2",
     "angular-material": "github:angular/bower-material@1.0.7",
     "angular-material-icons": "npm:angular-material-icons@0.7.0",
-    "angular-messages": "github:angular/bower-angular-messages@1.5.5",
+    "angular-messages": "github:angular/bower-angular-messages@1.5.2",
     "angular-resizable": "npm:angular-resizable@1.2.0",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@1.3.2",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
@@ -36,21 +36,21 @@ System.config({
     "lodash": "npm:lodash@4.11.1",
     "text": "github:systemjs/plugin-text@0.0.7",
     "github:angular-ui/ui-router@0.2.18": {
-      "angular": "github:angular/bower-angular@1.5.5"
+      "angular": "github:angular/bower-angular@1.5.2"
     },
-    "github:angular/bower-angular-animate@1.5.5": {
-      "angular": "github:angular/bower-angular@1.5.5"
+    "github:angular/bower-angular-animate@1.5.2": {
+      "angular": "github:angular/bower-angular@1.5.2"
     },
-    "github:angular/bower-angular-aria@1.5.5": {
-      "angular": "github:angular/bower-angular@1.5.5"
+    "github:angular/bower-angular-aria@1.5.2": {
+      "angular": "github:angular/bower-angular@1.5.2"
     },
-    "github:angular/bower-angular-messages@1.5.5": {
-      "angular": "github:angular/bower-angular@1.5.5"
+    "github:angular/bower-angular-messages@1.5.2": {
+      "angular": "github:angular/bower-angular@1.5.2"
     },
     "github:angular/bower-material@1.0.7": {
-      "angular": "github:angular/bower-angular@1.5.5",
-      "angular-animate": "github:angular/bower-angular-animate@1.5.5",
-      "angular-aria": "github:angular/bower-angular-aria@1.5.5",
+      "angular": "github:angular/bower-angular@1.5.2",
+      "angular-animate": "github:angular/bower-angular-animate@1.5.2",
+      "angular-aria": "github:angular/bower-angular-aria@1.5.2",
       "css": "github:systemjs/plugin-css@0.1.21"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -72,7 +72,7 @@ System.config({
       "jquery": "npm:jquery@2.2.3"
     },
     "npm:angular-material-icons@0.7.0": {
-      "angular": "npm:angular@1.5.5"
+      "angular": "npm:angular@1.5.2"
     },
     "npm:assert@1.3.0": {
       "util": "npm:util@0.10.3"

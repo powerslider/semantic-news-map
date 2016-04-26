@@ -13,7 +13,7 @@ import uiRouter from 'angular-ui-router';
 import 'angular-material-icons';
 import 'angular-resizable';
 
-import 'angular-animate';
+//import 'angular-animate';
 import 'angular-ui-bootstrap';
 
 import 'angular-material';
@@ -33,7 +33,7 @@ export default angular
     .module('semNewsApp', [
         'ui.bootstrap',
         'ui.router',
-        'ngAnimate',
+        //'ngAnimate',
         'ngAria',
         'ngMaterial',
         'ngMdIcons',
