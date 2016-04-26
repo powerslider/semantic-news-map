@@ -18,7 +18,9 @@ System.config({
     "angular-animate": "github:angular/bower-angular-animate@1.5.5",
     "angular-aria": "github:angular/bower-angular-aria@1.5.5",
     "angular-material": "github:angular/bower-material@1.0.7",
+    "angular-material-icons": "npm:angular-material-icons@0.7.0",
     "angular-messages": "github:angular/bower-angular-messages@1.5.5",
+    "angular-resizable": "npm:angular-resizable@1.2.0",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@1.3.2",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
     "babel": "npm:babel-core@5.8.38",
@@ -30,7 +32,7 @@ System.config({
     "d3": "npm:d3@3.5.16",
     "font-awesome": "npm:font-awesome@4.6.1",
     "jquery": "github:components/jquery@2.2.0",
-    "json": "github:systemjs/plugin-json@0.1.0",
+    "json": "github:systemjs/plugin-json@0.1.2",
     "lodash": "npm:lodash@4.11.1",
     "text": "github:systemjs/plugin-text@0.0.7",
     "github:angular-ui/ui-router@0.2.18": {
@@ -69,6 +71,9 @@ System.config({
     "github:twbs/bootstrap@3.3.6": {
       "jquery": "npm:jquery@2.2.3"
     },
+    "npm:angular-material-icons@0.7.0": {
+      "angular": "npm:angular@1.5.5"
+    },
     "npm:assert@1.3.0": {
       "util": "npm:util@0.10.3"
     },
@@ -87,7 +92,7 @@ System.config({
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
-      "systemjs-json": "github:systemjs/plugin-json@0.1.0"
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:font-awesome@4.6.1": {
       "css": "github:systemjs/plugin-css@0.1.21"

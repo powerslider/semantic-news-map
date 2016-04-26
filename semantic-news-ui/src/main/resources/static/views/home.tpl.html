@@ -1,79 +1,79 @@
-<div class="tabsdemoDynamicTabs">
-    <md-content class="md-padding">
-    <md-tabs md-selected="homeCtrl.selectedIndex" md-border-bottom="" md-autoselect="">
-        <md-tab ng-repeat="tab in homeCtrl.tabs" ng-disabled="tab.disabled" label="{{tab.title}}">
-            <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
-                <div ng-bind="tab.content"></div>
-                <br>
-                <!--<md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">-->
-                <!--Remove Tab-->
-                <!--</md-button>-->
-            </div>
-        </md-tab>
-    </md-tabs>
-</md-content>
-</div>
-<section layout="row" flex="">
-    <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-4dp"
-                md-component-id="vizOptionsSidePanel"
-                md-disable-backdrop>
-
-        <md-toolbar class="md-theme-light">
-            <h1 class="md-toolbar-tools">News Visualisations</h1>
-            <md-button class="md-primary"
-                    ng-click="homeCtrl.closeVizOptionsSidePanel()">
-                    Close Sidenav Right
-            </md-button>
-        </md-toolbar>
-        <md-content layout="column" layout-padding="">
-            <md-list>
-                <md-item>
-                    <!--<md-item-content md-ink-ripple layout="row" layout-align="start center">-->
-                        <md-menu>
-                            <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
-                                    <ng-md-icon icon="local_offer"></ng-md-icon>
-                                <div class="inset">Category</div>
-                                <md-menu-content width="3">
-                                    <md-button ng-repeat="item in homeCtrl.categories">
-                                        {{item}}
-                                    </md-button>
-                                </md-menu-content>
+    <div layout-align="right">
+        <div pageslide
+             ps-class="viz-options-side-panel"
+             ps-open="true"
+             ps-side="bottom">
+            <section layout="row" layout-sm="column" layout-align="start center" layout-wrap>
+                <md-content layout="row" layout-padding="">
+                    <md-menu>
+                        <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                            <ng-md-icon icon="local_offer"></ng-md-icon>
+                        </md-button>
+                        Categories
+                        <md-menu-content width="3">
+                            <md-button ng-repeat="item in homeCtrl.categories">
+                                {{item}}
                             </md-button>
-                        </md-menu>
-                    <!--</md-item-content>-->
-                </md-item>
-                <md-item>
-                    <md-item-content md-ink-ripple layout="row" layout-align="start center">
-                        <md-datepicker ng-model="homeCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>
-                        <div class="inset">Date</div>
-                    </md-item-content>
-                </md-item>
-                <md-item>
-                    <md-item-content md-ink-ripple layout="row" layout-align="start center">
-                        <md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">
-                            Relative Popularity
-                        </md-checkbox>
-                    </md-item-content>
-                </md-item>
-                <md-divider></md-divider>
-            </md-list>
-            <!--<md-subheader class="md-primary">Date</md-subheader>-->
-            <md-datepicker ng-model="homeCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>
-            <!--<md-subheader class="md-primary">Categories</md-subheader>-->
-            <md-menu>
-                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-                    <md-icon md-font-set="fa">&#xf02c;</md-icon>
-                </md-button>
-                <md-menu-content width="3">
-                    <md-button ng-repeat="item in homeCtrl.categories">
-                        <!--<md-icon  md-menu-align-target="" md-font-set="fa">&#xf02c;</md-icon>-->
-                        {{item}}
+                        </md-menu-content>
+                    </md-menu>
+                    <!--<md-divider></md-divider>-->
+
+                    <md-datepicker ng-model="homeCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>
+                    <!--<md-divider></md-divider>-->
+
+                    <md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">
+                    </md-checkbox>
+                    Relative Popularity
+                    <md-button class="md-raised md-primary">
+                        Show
                     </md-button>
-                </md-menu-content>
-            </md-menu>
-            </md-content>
-    </md-sidenav>
-    <md-button ng-click="homeCtrl.toggleVizOptionsSidePanel()" class="md-primary">
-        Toggle right
-    </md-button>
+                </md-content>
+            </section>
+        </div>
+    </div>
+    <div layout-align="left" class="dynamic-tabs" flex>
+        <md-content class="md-padding">
+            <!--<md-tabs md-selected="homeCtrl.selectedIndex" md-border-bottom="" md-autoselect="">-->
+            <md-tabs md-selected="homeCtrl.selectedIndex">
+                <md-tab ng-repeat="tab in homeCtrl.tabs" ng-disabled="tab.disabled" label="{{tab.title}}">
+                    <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+                        <div ng-bind="tab.content"></div>
+                        <br>
+                        <!--<main>-->
+                            <!--<nav resizable r-directions="['right']">-->
+                                <!--<span class="icon-big icon_expand-1"></span>-->
+                                <!--<br /><br />-->
+                                <!--<h1>-->
+                                    <!--Angular-->
+                                    <!--Resizable-->
+                                <!--</h1>-->
+                                <!--<p>-->
+                                    <!--A teensy weensy directive for creating resizable containers.-->
+                                <!--</p>-->
+                            <!--</nav>-->
+                            <!--<div class="content">-->
+                                <!--<div class="row" resizable r-directions="['bottom']" r-flex="true">-->
+                                    <!--<section id="one" resizable r-directions="['right']" r-flex="true">-->
+                                        <!--<p>Works with flexbox.</p>-->
+                                    <!--</section>-->
+                                    <!--<section id="two">-->
+                                        <!--<p>2</p>-->
+                                    <!--</section>-->
+                                <!--</div>-->
+                                <!--<div class="row">-->
+                                    <!--<section id="three" resizable r-directions="['right']" r-flex="true">-->
+                                        <!--<p>Completely seperates <strong>layout logic</strong> from <strong>resize logic</strong>. All layout logic must be done by you in the CSS (as it should be).</p>-->
+                                    <!--</section>-->
+                                    <!--<section id="four">4</section>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</main>-->
+                        <!--<md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">-->
+                        <!--Remove Tab-->
+                        <!--</md-button>-->
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
 </section>
