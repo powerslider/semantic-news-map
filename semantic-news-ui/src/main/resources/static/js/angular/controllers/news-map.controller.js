@@ -3,35 +3,21 @@
  */
 class NewsMapController {
 
-    constructor() {
+    constructor($scope, $state) {
+        this.$scope = $scope;
+        this.$state = $state;
         this.isVizOptionsSidePanelOpen = true;
         this.tabs = [
-                  { title: 'Most popular', content: "Tabs will become paginated if there isn't enough room for them."},
-                  { title: 'Most popular + Hidden', content: "You can swipe left and right on a mobile device to change tabs."},
-                  { title: 'Hidden Champions', content: "You can bind the selected tab via the selected attribute on the md-tabs element."},
-                  { title: 'Heat Map', content: "You can bind the selected tab via the selected attribute on the md-tabs element."}
+                  { title: 'Most popular', content: '<div word-cloud></div>' },
+                  { title: 'Most popular + Hidden', content: '<div word-cloud></div>' },
+                  { title: 'Hidden Champions', content: '<div word-cloud></div>' },
+                  { title: 'Heat Map', content: '<div word-cloud></div>' }
                 ];
 
-        this.menu = [
-            {
-              title: 'Category',
-              icon: 'local_offer'
-            },
-            {
-              link : '',
-              title: 'Friends',
-              icon: 'group'
-            },
-            {
-              link : '',
-              title: 'Messages',
-              icon: 'message'
-            }
-        ];
         this.categories = ["All", "Science And Technology", "Lifestyle", "Business", "Sports", "International"];
-        this.selectedIndex = 2;
-
+        this.selectedIndex = 0;
         this.currentDate = new Date();
+        this.$scope.$watch('selectedIndex', this.changeTabContent);
     }
 
     openMenu($mdOpenMenu, event) {
@@ -46,25 +32,23 @@ class NewsMapController {
         this.isVizOptionsSidePanelOpen = false;
     }
 
-//            selected = null,
-//            previous = null;
-//        $scope.tabs = tabs;
-//        $scope.$watch('selectedIndex', function(current, old){
-//          previous = selected;
-//          selected = tabs[current];
-//          if ( old + 1 && (old != current)) $log.debug('Goodbye ' + previous.title + '!');
-//          if ( current + 1 )                $log.debug('Hello ' + selected.title + '!');
-//        });
-    addTab(title, view) {
-        view = view || title + " Content View";
-        this.tabs.push({ title: title, content: view, disabled: false});
+    changeTabContent(current, old) {
+        switch(current) {
+            case 0: this.$state.go("tab1"); break;
+            case 1: this.$state.go("tab2"); break;
+        }
     }
 
-    removeTab(tab) {
-        let index = this.tabs.indexOf(tab);
-        this.tabs.splice(index, 1);
-    }
+//    addTab(title, view) {
+//        view = view || title + " Content View";
+//        this.tabs.push({ title: title, content: view, disabled: false});
+//    }
+//
+//    removeTab(tab) {
+//        let index = this.tabs.indexOf(tab);
+//        this.tabs.splice(index, 1);
+//    }
 }
 
-NewsMapController.$inject = [];
+NewsMapController.$inject = ['$scope', '$state'];
 export default NewsMapController;

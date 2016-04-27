@@ -13,6 +13,14 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
         .state('home.init', {
             controller: 'NewsMapController as nmCtrl',
             templateUrl: 'views/news-map.tpl.html'
+        })
+        .state('tab1', {
+            url: '/tab1',
+            template: '<word-cloud></word-cloud>'
+        })
+        .state('tab2', {
+            url: '/tab2',
+            template: '<word-cloud></word-cloud>'
         });
 }
 

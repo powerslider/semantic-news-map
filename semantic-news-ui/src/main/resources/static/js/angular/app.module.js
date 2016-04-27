@@ -25,9 +25,10 @@ import 'lib/angular-pageslide-directive';
 import 'jquery';
 import 'lodash';
 
-import 'd3-dispatch';
-import 'd3-cloud';
-import 'd3';
+//import 'd3-dispatch';
+//import 'd3';
+//import 'lib/d3.layout.word.cloud';
+//import 'd3-cloud';
 
 import { routing } from 'app/app.config';
 import services from 'app/services/services.module';
