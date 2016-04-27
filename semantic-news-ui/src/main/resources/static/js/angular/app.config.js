@@ -12,7 +12,7 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
         })
         .state('home.init', {
             controller: 'NewsMapController as nmCtrl',
-            templateUrl: 'views/home.tpl.html'
+            templateUrl: 'views/news-map.tpl.html'
         });
 }
 

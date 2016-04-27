@@ -25,9 +25,14 @@ import 'lib/angular-pageslide-directive';
 import 'jquery';
 import 'lodash';
 
+import 'd3-dispatch';
+import 'd3-cloud';
+import 'd3';
+
 import { routing } from 'app/app.config';
 import services from 'app/services/services.module';
 import controllers from 'app/controllers/controllers.module';
+import directives from 'app/directives/directives.module';
 
 export default angular
     .module('semNewsApp', [
@@ -40,6 +45,7 @@ export default angular
         'angularResizable',
         'pageslide-directive',
         services.name,
-        controllers.name
+        controllers.name,
+        directives.name
     ])
     .config(routing);

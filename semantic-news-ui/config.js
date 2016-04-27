@@ -30,6 +30,7 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.21",
     "d3": "npm:d3@3.5.16",
+    "d3-cloud": "npm:d3-cloud@1.2.1",
     "font-awesome": "npm:font-awesome@4.6.1",
     "jquery": "github:components/jquery@2.2.0",
     "json": "github:systemjs/plugin-json@0.1.2",
@@ -93,6 +94,9 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
+    "npm:d3-cloud@1.2.1": {
+      "d3-dispatch": "npm:d3-dispatch@0.2.6"
     },
     "npm:font-awesome@4.6.1": {
       "css": "github:systemjs/plugin-css@0.1.21"

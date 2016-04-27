@@ -49,6 +49,7 @@
                 <md-tab ng-repeat="tab in nmCtrl.tabs" ng-disabled="tab.disabled" label="{{tab.title}}">
                     <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
                         <div ng-bind="tab.content"></div>
+                        <div word-cloud></div>
                         <br>
                         <!--<main>-->
                         <!--<nav resizable r-directions="['right']">-->

@@ -1,6 +1,11 @@
+import { register } from 'app/utils/register';
+
 import SplashService from 'app/services/splash.service';
 
 
-export default angular
-    .module('semNewsApp.services', [])
+let services = angular
+    .module('semNewsApp.services', []);
+export default services;
+
+register(services.name)
     .service('SplashService', SplashService);
