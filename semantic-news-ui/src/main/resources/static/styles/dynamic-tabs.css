@@ -1,18 +1,5 @@
 .dynamic-tabs md-tabs {
     height: 95vh;
-    flex: 100;
-}
-
-.pushed-tabs {
-    flex: 50;
-}
-
-#md-sidenav {
-#    flex: 15;
-#}
-
-.pushed-sidenav {
-    flex: 15;
 }
 
 .dynamic-tabs md-content {

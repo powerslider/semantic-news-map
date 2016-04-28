@@ -6,7 +6,6 @@
              ps-side="bottom">
             <section layout="row" layout-sm="column" layout-align="start center" layout-wrap>
                 <md-content layout="row" layout-padding="">
-
                     <div flex="20">
                         <md-menu>
                             <md-button aria-label="Open demo menu" class="md-icon-button"
@@ -44,74 +43,19 @@
     </div>
     <div layout-align="left" class="dynamic-tabs" flex>
         <md-content class="md-padding">
-            <!--<md-tabs md-selected="nmCtrl.selectedIndex" md-border-bottom="" md-autoselect="">-->
-            <md-tabs md-selected="nmCtrl.selectedIndex">
-                <md-tab ng-repeat="tab in nmCtrl.tabs" label="{{tab.title}}">
-                <!--<md-tab label="Most popular">-->
-                    <!--<div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">-->
-                                                <!--<div ng-bind="tab.content"></div>-->
-                    <!--</div>-->
-
-                    <!--<md-content>-->
-                        <!--<div word-cloud ng-if="nmCtrl.selectedIndex == 3"></div>-->
-                    <!--</md-content>-->
-                    {{nmCtrl.selectedIndex}}
-                    <!--<div word-cloud ng-show="tab.title === 'Most Popular'"></div>-->
-                    <!--<main>-->
-                        <!--<nav resizable r-directions="['right']">-->
-                        <!--<span class="icon-big icon_expand-1"></span>-->
-                        <!--<br /><br />-->
-                        <!--<h1>-->
-                        <!--Angular-->
-                        <!--Resizable-->
-                        <!--</h1>-->
-                        <!--<p>-->
-                        <!--A teensy weensy directive for creating resizable containers.-->
-                        <!--</p>-->
-                        <!--</nav>-->
-                        <!--<div class="content">-->
-                        <!--<div class="row" resizable r-directions="['bottom']" r-flex="true">-->
-                        <!--<section id="one" resizable r-directions="['right']" r-flex="true">-->
-                        <!--<p>Works with flexbox.</p>-->
-                        <!--</section>-->
-                        <!--<section id="two">-->
-                        <!--<p>2</p>-->
-                        <!--</section>-->
-                        <!--</div>-->
-                        <!--<div class="row">-->
-                        <!--<section id="three" resizable r-directions="['right']" r-flex="true">-->
-                        <!--<p>Completely seperates <strong>layout logic</strong> from <strong>resize logic</strong>. All layout logic must be done by you in the CSS (as it should be).</p>-->
-                        <!--</section>-->
-                        <!--<section id="four">4</section>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</main>-->
-                        <!--<md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">-->
-                        <!--Remove Tab-->
-                        <!--</md-button>-->
-                    <!--</div>-->
-
-                </md-tab>
-                <!--<md-tab label="Most popular">-->
-                    <!--<div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">-->
-                        <!--<div word-cloud></div>-->
-                    <!--</div>-->
-                <!--</md-tab>-->
-                <!--<md-tab label="Most popular + Hidden">-->
-                    <!--<div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">-->
-                        <!--&lt;!&ndash;<div word-cloud></div>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</md-tab>-->
-                <!--<md-tab label="Hidden Champions">-->
-                    <!--<div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">-->
-                        <!--&lt;!&ndash;<div word-cloud></div>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</md-tab>-->
-                <!--<md-tab label="Heat Map">-->
-                    <!--<div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">-->
-                        <!--&lt;!&ndash;<div word-cloud></div>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</md-tab>-->
+            <md-tabs  md-selected="nmCtrl.selectedIndex" md-stretch-tabs="always">
+               <md-tab label="Most Popular">
+                   <word-cloud ng-if="nmCtrl.selectedIndex == 0"></word-cloud>
+               </md-tab>
+               <md-tab label="Most Popular + Hidden">
+                   <word-cloud ng-if="nmCtrl.selectedIndex == 1" ></word-cloud>
+               </md-tab>
+               <md-tab label="Hidden Champions">
+                   <word-cloud ng-if="nmCtrl.selectedIndex == 2"></word-cloud>
+               </md-tab>
+               <md-tab label="Geo Heat Map">
+                   <word-cloud ng-if="nmCtrl.selectedIndex == 3"></word-cloud>
+               </md-tab>
             </md-tabs>
         </md-content>
     </div>

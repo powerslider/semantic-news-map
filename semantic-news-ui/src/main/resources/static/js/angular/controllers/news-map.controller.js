@@ -3,9 +3,11 @@
  */
 class NewsMapController {
 
-    constructor($scope, $state) {
+    constructor($scope, $state, $compile, $timeout) {
         this.$scope = $scope;
         this.$state = $state;
+        this.$compile = $compile;
+        this.$timeout = $timeout;
         this.isVizOptionsSidePanelOpen = true;
         this.tabs = [
                   { title: 'Most popular', content: '<div word-cloud></div>' },
@@ -14,10 +16,10 @@ class NewsMapController {
                   { title: 'Heat Map', content: '<div word-cloud></div>' }
                 ];
 
+
         this.categories = ["All", "Science And Technology", "Lifestyle", "Business", "Sports", "International"];
         this.selectedIndex = 0;
         this.currentDate = new Date();
-        this.$scope.$watch('selectedIndex', this.changeTabContent);
     }
 
     openMenu($mdOpenMenu, event) {
@@ -31,14 +33,6 @@ class NewsMapController {
     closeVizOptionsSidePanel() {
         this.isVizOptionsSidePanelOpen = false;
     }
-
-    changeTabContent(current, old) {
-        switch(current) {
-            case 0: this.$state.go("tab1"); break;
-            case 1: this.$state.go("tab2"); break;
-        }
-    }
-
 //    addTab(title, view) {
 //        view = view || title + " Content View";
 //        this.tabs.push({ title: title, content: view, disabled: false});
@@ -50,5 +44,5 @@ class NewsMapController {
 //    }
 }
 
-NewsMapController.$inject = ['$scope', '$state'];
+NewsMapController.$inject = ['$scope', '$state', '$compile', '$timeout'];
 export default NewsMapController;
