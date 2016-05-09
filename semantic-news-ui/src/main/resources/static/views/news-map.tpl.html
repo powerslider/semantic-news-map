@@ -43,19 +43,20 @@
     </div>
     <div layout-align="left" class="dynamic-tabs" flex>
         <md-content class="md-padding">
-            <md-tabs  md-selected="nmCtrl.selectedIndex" md-stretch-tabs="always">
-               <md-tab label="Most Popular">
-                   <word-cloud ng-if="nmCtrl.selectedIndex == 0"></word-cloud>
-               </md-tab>
-               <md-tab label="Most Popular + Hidden">
-                   <word-cloud ng-if="nmCtrl.selectedIndex == 1" ></word-cloud>
-               </md-tab>
-               <md-tab label="Hidden Champions">
-                   <word-cloud ng-if="nmCtrl.selectedIndex == 2"></word-cloud>
-               </md-tab>
-               <md-tab label="Geo Heat Map">
-                   <word-cloud ng-if="nmCtrl.selectedIndex == 3"></word-cloud>
-               </md-tab>
+            <md-tabs md-selected="nmCtrl.selectedIndex" md-stretch-tabs="always">
+                <md-tab label="Most Popular">
+                    <word-cloud ng-if="nmCtrl.selectedIndex == 0"></word-cloud>
+                </md-tab>
+                <md-tab label="Most Popular + Hidden">
+                    <word-cloud ng-if="nmCtrl.selectedIndex == 1"></word-cloud>
+                </md-tab>
+                <md-tab label="Hidden Champions">
+                    <word-cloud ng-if="nmCtrl.selectedIndex == 2"></word-cloud>
+                </md-tab>
+                <md-tab label="Geo Heat Map">
+                    <geo-heat-map
+                            ng-if="nmCtrl.selectedIndex == 3"></geo-heat-map>
+                </md-tab>
             </md-tabs>
         </md-content>
     </div>

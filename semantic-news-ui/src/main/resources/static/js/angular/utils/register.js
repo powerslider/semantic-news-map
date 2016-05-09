@@ -20,7 +20,8 @@ export function register(appName) {
 
         if (!constructorFn.prototype.compile) {
             // create an empty compile function if none was defined.
-            constructorFn.prototype.compile = () => {};
+            constructorFn.prototype.compile = () => {
+            };
         }
 
         var originalCompileFn = _cloneFunction(constructorFn.prototype.compile);
@@ -125,7 +126,7 @@ export function register(appName) {
      * @returns {Function}
      */
     function _cloneFunction(original) {
-        return function() {
+        return function () {
             return original.apply(this, arguments);
         };
     }

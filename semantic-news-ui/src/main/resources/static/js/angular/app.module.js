@@ -3,6 +3,9 @@ import 'angular-material-icons/angular-material-icons.css!';
 import 'angular-resizable/src/angular-resizable.css!';
 import 'bootstrap/css/bootstrap.css!';
 import 'font-awesome/css/font-awesome.css!';
+
+import 'lib/d3-geomap/d3.geomap.css!';
+
 import 'styles/splash.css!';
 import 'styles/dynamic-tabs.css!';
 import 'styles/app.css!';
@@ -13,7 +16,6 @@ import uiRouter from 'angular-ui-router';
 import 'angular-material-icons';
 import 'angular-resizable';
 
-//import 'angular-animate';
 import 'angular-ui-bootstrap';
 
 import 'angular-material';
@@ -25,11 +27,6 @@ import 'lib/angular-pageslide-directive';
 import 'jquery';
 import 'lodash';
 
-//import 'd3-dispatch';
-//import 'd3';
-//import 'lib/d3.layout.word.cloud';
-//import 'd3-cloud';
-
 import { routing } from 'app/app.config';
 import services from 'app/services/services.module';
 import controllers from 'app/controllers/controllers.module';
@@ -39,7 +36,6 @@ export default angular
     .module('semNewsApp', [
         'ui.bootstrap',
         'ui.router',
-        //'ngAnimate',
         'ngAria',
         'ngMaterial',
         'ngMdIcons',

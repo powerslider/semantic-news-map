@@ -10,11 +10,11 @@ class NewsMapController {
         this.$timeout = $timeout;
         this.isVizOptionsSidePanelOpen = true;
         this.tabs = [
-                  { title: 'Most popular', content: '<div word-cloud></div>' },
-                  { title: 'Most popular + Hidden', content: '<div word-cloud></div>' },
-                  { title: 'Hidden Champions', content: '<div word-cloud></div>' },
-                  { title: 'Heat Map', content: '<div word-cloud></div>' }
-                ];
+            {title: 'Most popular', content: '<div word-cloud></div>'},
+            {title: 'Most popular + Hidden', content: '<div word-cloud></div>'},
+            {title: 'Hidden Champions', content: '<div word-cloud></div>'},
+            {title: 'Heat Map', content: '<div word-cloud></div>'}
+        ];
 
 
         this.categories = ["All", "Science And Technology", "Lifestyle", "Business", "Sports", "International"];
@@ -33,6 +33,7 @@ class NewsMapController {
     closeVizOptionsSidePanel() {
         this.isVizOptionsSidePanelOpen = false;
     }
+
 //    addTab(title, view) {
 //        view = view || title + " Content View";
 //        this.tabs.push({ title: title, content: view, disabled: false});
