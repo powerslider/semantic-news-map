@@ -3,7 +3,7 @@ package com.ontotext.semnews.model;
 /**
  * Created by Boyan on 24-Mar-16.
  */
-public class NewsEntityModel {
+public class NewsEntity {
     private String title;
     private String date;
     private String uriLink;

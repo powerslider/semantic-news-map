@@ -1,5 +1,13 @@
 package com.ontotext.semnews.service;
 
+import com.ontotext.semnews.model.WorldHeatMap;
+import com.ontotext.semnews.model.NewsEntity;
+import com.ontotext.semnews.model.WordCloud;
+import org.openrdf.query.*;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.http.HTTPRepository;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
@@ -9,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Boyan on 12-Mar-16.
  */
-public class QueryService {
+public class SemanticNewsMapService {
 
     @Value("${sesame.server}")
     private String sesameServer;
@@ -66,8 +74,8 @@ public class QueryService {
         return tupleQueryResult;
     }
 
-    public List<TagCloudModel> getWordCloudResutlts(String from, String hidden, String industry, boolean relativePop) {
-        List<TagCloudModel> words = new ArrayList<>();
+    public List<WordCloud> getWordCloudResutlts(String from, String hidden, String industry, boolean relativePop) {
+        List<WordCloud> words = new ArrayList<>();
         if (hidden.equals("0")) {
             words = getMostFrequentEntities(from, industry, relativePop);
         } else if (hidden.equals("1")) {
@@ -80,7 +88,7 @@ public class QueryService {
         return words;
     }
 
-    public List<TagCloudModel> getMostFrequentEntities(String from, String industry, boolean relativePop) {
+    public List<WordCloud> getMostFrequentEntities(String from, String industry, boolean relativePop) {
         String q = "";
         String d = parseDate(from);
         if (relativePop) {
@@ -93,24 +101,24 @@ public class QueryService {
         q = q.replaceAll(Pattern.quote("{category}"), industry);
 
         TupleQueryResult result = evaluateQuery(q);
-        List<TagCloudModel> words = new ArrayList<>();
+        List<WordCloud> words = new ArrayList<>();
 
         try {
             while (result.hasNext()) {
-                TagCloudModel tagCloudModel = new TagCloudModel();
+                WordCloud wordCloud = new WordCloud();
                 BindingSet bind = result.next();
 
                 if (bind.getBinding("entity_label") != null) {
-                    tagCloudModel.setText(bind.getValue("entity_label").stringValue());
+                    wordCloud.setText(bind.getValue("entity_label").stringValue());
                 }
                 if (bind.getBinding("relative_popularity") != null) {
-                    tagCloudModel.setWeight(Integer.valueOf(bind.getValue("relative_popularity").stringValue()));
+                    wordCloud.setWeight(Integer.valueOf(bind.getValue("relative_popularity").stringValue()));
                 }
                 if (bind.getBinding("mentioned_lod_entity") != null) {
-                    tagCloudModel.setLink("/details?uri=" + bind.getValue("mentioned_lod_entity").stringValue() +
+                    wordCloud.setLink("/details?uri=" + bind.getValue("mentioned_lod_entity").stringValue() +
                             "&from=" + from + "&industry=" + industry);
                 }
-                words.add(tagCloudModel);
+                words.add(wordCloud);
 
             }
         } catch (QueryEvaluationException e1) {
@@ -119,7 +127,7 @@ public class QueryService {
         return  words;
     }
 
-    public List<TagCloudModel> getHiddenChampions(String from, String industry, Boolean hiddenAndFrequent) {
+    public List<WordCloud> getHiddenChampions(String from, String industry, Boolean hiddenAndFrequent) {
         String q = "";
         String d = parseDate(from);
         if (!hiddenAndFrequent) {
@@ -132,24 +140,24 @@ public class QueryService {
         q = q.replaceAll(Pattern.quote("{category}"), industry);
 
         TupleQueryResult result = evaluateQuery(q);
-        List<TagCloudModel> words = new ArrayList<>();
+        List<WordCloud> words = new ArrayList<>();
 
         try {
             while (result.hasNext()) {
-                TagCloudModel tagCloudModel = new TagCloudModel();
+                WordCloud wordCloud = new WordCloud();
                 BindingSet bind = result.next();
 
                 if (bind.getBinding("entity_name") != null) {
-                    tagCloudModel.setText(bind.getValue("entity_name").stringValue());
+                    wordCloud.setText(bind.getValue("entity_name").stringValue());
                 }
                 if (bind.getBinding("relWeight") != null) {
-                    tagCloudModel.setWeight(Integer.valueOf(bind.getValue("relWeight").stringValue()));
+                    wordCloud.setWeight(Integer.valueOf(bind.getValue("relWeight").stringValue()));
                 }
                 if (bind.getBinding("rel_entity") != null) {
-                    tagCloudModel.setLink("/details?uri=" + bind.getValue("rel_entity").stringValue() +
+                    wordCloud.setLink("/details?uri=" + bind.getValue("rel_entity").stringValue() +
                             "&from=" + from + "&industry=" + industry);
                 }
-                words.add(tagCloudModel);
+                words.add(wordCloud);
 
             }
         } catch (QueryEvaluationException e1) {
@@ -159,8 +167,8 @@ public class QueryService {
         return words;
     }
 
-    public List<NewsEntityModel> getNewsMentioningEntitie(String from, String industry, String uri) {
-        List<NewsEntityModel> newsEntityModels = new ArrayList<>();
+    public List<NewsEntity> getNewsMentioningEntitie(String from, String industry, String uri) {
+        List<NewsEntity> newsEntities = new ArrayList<>();
         String q = "";
         String d = parseDate(from);
         q = newsMentoningEntity.replace("{date}", d);
@@ -172,33 +180,33 @@ public class QueryService {
 
         try {
             while (result.hasNext()) {
-                NewsEntityModel newsEntityModel = new NewsEntityModel();
+                NewsEntity newsEntity = new NewsEntity();
                 BindingSet bind = result.next();
 
                 if (bind.getBinding("news_title") != null) {
-                    newsEntityModel.setTitle(bind.getValue("news_title").stringValue());
+                    newsEntity.setTitle(bind.getValue("news_title").stringValue());
                 }
                 if (bind.getBinding("news_date") != null) {
-                    newsEntityModel.setDate(bind.getValue("news_date").stringValue());
+                    newsEntity.setDate(bind.getValue("news_date").stringValue());
                 }
                 if (bind.getBinding("news") != null) {
-                    newsEntityModel.setUriLink(bind.getValue("news").stringValue());
+                    newsEntity.setUriLink(bind.getValue("news").stringValue());
                 }
                 if (bind.getBinding("entity_relevance") != null) {
-                    newsEntityModel.setEntityRelevance(bind.getValue("entity_relevance").stringValue());
+                    newsEntity.setEntityRelevance(bind.getValue("entity_relevance").stringValue());
                 }
-                newsEntityModels.add(newsEntityModel);
+                newsEntities.add(newsEntity);
 
             }
         } catch (QueryEvaluationException e1) {
             e1.printStackTrace();
         }
 
-        return newsEntityModels;
+        return newsEntities;
     }
 
-    public List<NewsEntityModel> getNewsMentioningRelEntitie(String from, String industry, String uri) {
-        List<NewsEntityModel> newsEntityModels = new ArrayList<>();
+    public List<NewsEntity> getNewsMentioningRelEntitie(String from, String industry, String uri) {
+        List<NewsEntity> newsEntities = new ArrayList<>();
         String q = "";
         String d = parseDate(from);
         q = newsMentioningRelEntity.replace("{date}", d);
@@ -210,26 +218,26 @@ public class QueryService {
 
         try {
             while (result.hasNext()) {
-                NewsEntityModel newsEntityModel = new NewsEntityModel();
+                NewsEntity newsEntity = new NewsEntity();
                 BindingSet bind = result.next();
 
                 if (bind.getBinding("title") != null) {
-                    newsEntityModel.setTitle(bind.getValue("title").stringValue());
+                    newsEntity.setTitle(bind.getValue("title").stringValue());
                 }
                 if (bind.getBinding("date") != null) {
-                    newsEntityModel.setDate(bind.getValue("date").stringValue());
+                    newsEntity.setDate(bind.getValue("date").stringValue());
                 }
                 if (bind.getBinding("news") != null) {
-                    newsEntityModel.setUriLink(bind.getValue("news").stringValue());
+                    newsEntity.setUriLink(bind.getValue("news").stringValue());
                 }
                 if (bind.getBinding("rel_entity") != null) {
-                    newsEntityModel.setRelEntity(bind.getValue("rel_entity").stringValue());
+                    newsEntity.setRelEntity(bind.getValue("rel_entity").stringValue());
                 }
                 if (bind.getBinding("intermed_entity") != null) {
-                    newsEntityModel.setInternalEntity(bind.getValue("intermed_entity").stringValue());
+                    newsEntity.setInternalEntity(bind.getValue("intermed_entity").stringValue());
                 }
                 if (bind.size() > 0) {
-                    newsEntityModels.add(newsEntityModel);
+                    newsEntities.add(newsEntity);
                 }
 
 
@@ -238,13 +246,13 @@ public class QueryService {
             e1.printStackTrace();
         }
 
-        return newsEntityModels;
+        return newsEntities;
     }
 
 
 
-    public List<HeatMapModel> getHeatMap(String from) {
-        List<HeatMapModel> heatMap = new ArrayList<>();
+    public List<WorldHeatMap> getHeatMap(String from) {
+        List<WorldHeatMap> heatMap = new ArrayList<>();
         String q = "";
         String d = parseDate(from);
         q = heatMapQuery.replace("{date}", d);
@@ -253,16 +261,16 @@ public class QueryService {
         TupleQueryResult result = evaluateQuery(q);
         try {
             while (result.hasNext()) {
-                HeatMapModel heatMapModel = new HeatMapModel();
+                WorldHeatMap worldHeatMap = new WorldHeatMap();
                 BindingSet bind = result.next();
 
                 if (bind.getBinding("label") != null) {
-                    heatMapModel.setCountry(bind.getValue("label").stringValue());
+                    worldHeatMap.setCountry(bind.getValue("label").stringValue());
                 }
                 if (bind.getBinding("mention") != null) {
-                    heatMapModel.setFrequency(Integer.parseInt(bind.getValue("mention").stringValue()));
+                    worldHeatMap.setFrequency(Integer.parseInt(bind.getValue("mention").stringValue()));
                 }
-                heatMap.add(heatMapModel);
+                heatMap.add(worldHeatMap);
 
             }
         } catch (QueryEvaluationException e1) {

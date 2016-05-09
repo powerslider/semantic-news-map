@@ -149,11 +149,11 @@ class WordCloudDirective {
                 .on("end", draw);
 
             let vis = svg.append("g")
-                    .attr("transform", "translate(" + [width >> 1, height >> 1] + ")");
+                .attr("transform", "translate(" + [width >> 1, height >> 1] + ")");
 
             update();
 
-            this.$window.onresize = function(event) {
+            this.$window.onresize = (event) => {
                 update();
             };
 
@@ -177,38 +177,38 @@ class WordCloudDirective {
                     height / Math.abs(bounds[0].y - height / 2)) / 2 : 1;
 
                 let text = vis.selectAll("text")
-                    .data(data, function(d) {
+                    .data(data, (d) => {
                         return d.text.toLowerCase();
                     });
                 text
                     .transition()
                     .duration(1000)
-                    .attr("transform", function(d) {
+                    .attr("transform", (d) => {
                         return "translate(" + [getTranslatedX(d.x), getTranslatedY(d.y)] + ")rotate(" + d.rotate + ")";
                     })
-                    .style("font-size", function(d) {
+                    .style("font-size", (d) => {
                         return d.size + "px";
                     });
 
                 text.enter().append("text")
                     .attr("text-anchor", "middle")
-                    .attr("transform", function(d) {
+                    .attr("transform", (d) => {
                         return "translate(" + [getTranslatedX(d.x), getTranslatedY(d.y)] + ")rotate(" + d.rotate + ")";
                     })
-                    .style("font-size", function(d) {
+                    .style("font-size", (d) => {
                         return d.size + "px";
                     })
                     .style("opacity", 1e-6)
                     .transition()
                     .duration(200)
                     .style("opacity", 1)
-                    .style("font-family", function(d) {
+                    .style("font-family", (d) => {
                         return d.font;
                     })
-                    .style("fill", function(d) {
+                    .style("fill", (d) => {
                         return color(d.text.toLowerCase());
                     })
-                    .text(function(d) {
+                    .text((d) => {
                         return d.text;
                     });
 

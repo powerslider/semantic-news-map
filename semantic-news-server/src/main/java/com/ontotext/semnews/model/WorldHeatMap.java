@@ -3,7 +3,7 @@ package com.ontotext.semnews.model;
 /**
  * Created by Boyan on 23-Mar-16.
  */
-public class HeatMapModel {
+public class WorldHeatMap {
 
     String country;
     Integer frequency;

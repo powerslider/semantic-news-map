@@ -2,8 +2,8 @@ class SplashController {
 
     constructor(SplashService) {
         SplashService.open({
-            title: 'Hi there!',
-            message: "FUCK YEAHHHH"
+            title: 'Semantic News Map',
+            message: "Read news like a champ"
         });
     }
 }

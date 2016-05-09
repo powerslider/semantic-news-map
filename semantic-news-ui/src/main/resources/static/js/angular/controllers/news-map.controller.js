@@ -20,10 +20,10 @@ class NewsMapController {
     showSearchCriteriaDialog($event) {
         this.$mdDialog.show({
             templateUrl: 'views/search-criteria-dialog.tpl.html',
-            controller: [ '$mdDialog', NewsMapSearchController],
+            controller: ['$mdDialog', NewsMapSearchController],
             controllerAs: "searchCtrl",
-            bindToController : true,
-            clickOutsideToClose:true,
+            bindToController: true,
+            clickOutsideToClose: true,
             targetEvent: $event
         });
 
@@ -51,11 +51,12 @@ class NewsMapController {
                 };
             }
 
-            function querySearch (query) {
+            function querySearch(query) {
                 return query ? this.categories.filter(createFilterFor(query)) : this.categories;
             }
         }
     }
+
 //    showSearchCriteriaBottonSheet($event) {
 //        this.$mdBottomSheet.show({
 //            templateUrl: 'views/bottom-sheet-search-criteria.tpl.html',

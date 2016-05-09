@@ -1,0 +1,34 @@
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
+PREFIX pub: <http://ontology.ontotext.com/taxonomy/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX onto: <http://www.ontotext.com/>
+PREFIX ff-pub: <http://factforge.org/pub/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT DISTINCT ?entity_label ?mentioned_lod_entity
+                 (?num_of_mentions AS ?relative_popularity)
+FROM onto:disable-sameAs
+WHERE {
+ {    SELECT ?pub_entity ?entity_label ?mentioned_lod_entity
+             (count(*) AS ?num_of_mentions) (sum(?relevance)/?num_of_mentions AS ?averageRelevance)
+     WHERE {
+         ?news pub-old:containsMention ?mention.
+         ?mention  pub-old:hasInstance ?pub_entity .
+         ?mention pub-old:relevanceScore ?relevance.
+         ?pub_entity pub:preferredLabel ?entity_label.
+         ?pub_entity pub:exactMatch ?mentioned_lod_entity.
+         ?mentioned_lod_entity a owl:Thing .
+
+         ?news pub-old:creationDate ?date.
+         FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+         FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
+
+         ?news pub-old:category ?category .
+         FILTER (?category = "{category}"^^xsd:string)
+
+     }    GROUP BY ?pub_entity ?entity_label ?mentioned_lod_entity
+  }
+
+} ORDER BY desc(?relative_popularity) limit 100

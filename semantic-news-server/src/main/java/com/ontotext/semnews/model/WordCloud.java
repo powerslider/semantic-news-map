@@ -3,16 +3,16 @@ package com.ontotext.semnews.model;
 /**
  * Created by Boyan on 11-Mar-16.
  */
-public class TagCloudModel {
+public class WordCloud {
     private String text;
     private int weight;
     private String link;
 
-    public TagCloudModel() {
+    public WordCloud() {
 
     }
 
-    public TagCloudModel(String text, int weight, String link) {
+    public WordCloud(String text, int weight, String link) {
         this.text = text;
         this.weight = weight;
         this.link = link;

@@ -1,8 +1,10 @@
 package com.ontotext.semnews.controller;
 
-import com.ontotext.ffnews.model.HeatMapModel;
-import com.ontotext.ffnews.model.TagCloudModel;
-import com.ontotext.ffnews.service.QueryService;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.ontotext.semnews.model.WorldHeatMap;
+import com.ontotext.semnews.model.WordCloud;
+import com.ontotext.semnews.service.SemanticNewsMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,9 +19,58 @@ import java.util.*;
 @Controller
 public class TagCloudController {
 
-	@Autowired
-	private QueryService queryService;
+	public static final ImmutableMap<String,String> INDUSTRIES = ImmutableMap.<String, String>builder()
+		.put("all", "all")
+		.put("Agriculture", "http://dbpedia.org/resource/Agriculture")
+		.put("Biotechnology", "http://dbpedia.org/resource/Biotechnology")
+		.put("Electronics", "http://dbpedia.org/resource/Electronics")
+		.put("Telecommunications", "http://dbpedia.org/resource/Telecommunications")
+		.put("Real estate", "http://dbpedia.org/resource/Real_estate")
+		.put("Internet", "http://dbpedia.org/resource/Internet")
+		.put("Software", "http://dbpedia.org/resource/Software")
+		.put("Transport", "http://dbpedia.org/resource/Transport")
+		.put("Manufacturing", "http://dbpedia.org/resource/Manufacturing")
+		.put("Construction", "http://dbpedia.org/resource/Construction")
+		.put("Mining", "http://dbpedia.org/resource/Mining")
+		.put("Energy", "http://dbpedia.org/resource/Energy")
+		.put("Entertainment", "http://dbpedia.org/resource/Entertainment")
+		.put("Mass media", "http://dbpedia.org/resource/Mass_media")
+		.put("Education", "http://dbpedia.org/resource/Education")
+		.put("Finance", "http://dbpedia.org/resource/Finance")
+		.put("Automotive", "http://dbpedia.org/resource/Automotive")
+		.put("Healthcare", "http://dbpedia.org/resource/Healthcare")
+		.put("Publishing", "http://dbpedia.org/resource/Publishing")
+		.put("Hospitality", "http://dbpedia.org/resource/Hospitality")
+		.put("Retail", "http://dbpedia.org/resource/Retail")
+		.put("Oil and gas", "http://dbpedia.org/resource/Oil_and_gas")
+		.put("Food and Beverage", "http://dbpedia.org/resource/Food_and_Beverage")
+		.build();
 
+	public static final ImmutableMap<String,String> CONTINENTS = ImmutableMap.<String, String>builder()
+		.put("Africa", "http://dbpedia.org/resource/Africa")
+		.put("Antarctica", "http://dbpedia.org/resource/Antarctica")
+		.put("Asia", "http://dbpedia.org/resource/Asia")
+		.put("Europe", "http://dbpedia.org/resource/Europe")
+		.put("North America", "http://dbpedia.org/resource/North_America")
+		.put("South America", "http://dbpedia.org/resource/South_America")
+		.put("Australia (continent)", "http://dbpedia.org/resource/Australia_(continent)")
+		.build();
+
+	public static final ImmutableSet<String> PUB_CATEGORIES = ImmutableSet.of(
+		"All",
+		"Business",
+		"Sports",
+		"International",
+		"Science and Technology",
+		"Lifestyle"
+	);
+
+
+
+
+
+	@Autowired
+	private SemanticNewsMapService semanticNewsMapService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) {
@@ -30,24 +81,17 @@ public class TagCloudController {
 
 	@RequestMapping(value = "/tag-cloud", method = RequestMethod.GET)
 	@ResponseBody
-	public List<TagCloudModel> getTagCloud(ModelMap model, @RequestParam("from") String from,
+	public List<WordCloud> getTagCloud(ModelMap model, @RequestParam("from") String from,
 										   @RequestParam("hidden") String hidden,
 										   @RequestParam("industry") String industry,
 										   @RequestParam(value = "relPop", required = false, defaultValue = "false") Boolean relPopularity) {
-
-
-		List<TagCloudModel> tagCloud;
-		tagCloud = queryService.getWordCloudResutlts(from, hidden, industry, relPopularity);
-
-
-
-		return tagCloud;
+		return semanticNewsMapService.getWordCloudResutlts(from, hidden, industry, relPopularity);
 	}
 
 	@RequestMapping(value = "/categories", method = RequestMethod.GET)
 	@ResponseBody
 	public Set<String> getCategories() {
-		return getPubCategory();
+		return PUB_CATEGORIES;
 
 	}
 
@@ -69,70 +113,7 @@ public class TagCloudController {
 
 	@RequestMapping(value = "/heat-map", method = RequestMethod.GET)
 	@ResponseBody
-	public List<HeatMapModel> getHeatMap(HttpServletRequest request, @RequestParam("from") String from, ModelMap model) {
-
-		List<HeatMapModel> heatMapModels = new ArrayList<>();
-		heatMapModels = queryService.getHeatMap(from);
-
-		return heatMapModels;
+	public List<WorldHeatMap> getHeatMap(HttpServletRequest request, @RequestParam("from") String from, ModelMap model) {
+		return semanticNewsMapService.getHeatMap(from);
 	}
-
-	private Map<String, String> getIndustry(){
-		Map<String, String> industry = new HashMap<>();
-		industry.put("all", "all");
-		industry.put("Agriculture", "http://dbpedia.org/resource/Agriculture");
-		industry.put("Biotechnology", "http://dbpedia.org/resource/Biotechnology");
-		industry.put("Electronics", "http://dbpedia.org/resource/Electronics");
-		industry.put("Telecommunications", "http://dbpedia.org/resource/Telecommunications");
-		industry.put("Real estate", "http://dbpedia.org/resource/Real_estate");
-		industry.put("Internet", "http://dbpedia.org/resource/Internet");
-		industry.put("Software", "http://dbpedia.org/resource/Software");
-		industry.put("Transport", "http://dbpedia.org/resource/Transport");
-		industry.put("Manufacturing", "http://dbpedia.org/resource/Manufacturing");
-		industry.put("Construction", "http://dbpedia.org/resource/Construction");
-		industry.put("Mining", "http://dbpedia.org/resource/Mining");
-		industry.put("Energy", "http://dbpedia.org/resource/Energy");
-		industry.put("Entertainment", "http://dbpedia.org/resource/Entertainment");
-		industry.put("Mass media", "http://dbpedia.org/resource/Mass_media");
-		industry.put("Education", "http://dbpedia.org/resource/Education");
-		industry.put("Finance", "http://dbpedia.org/resource/Finance");
-		industry.put("Automotive", "http://dbpedia.org/resource/Automotive");
-		industry.put("Healthcare", "http://dbpedia.org/resource/Healthcare");
-		industry.put("Publishing", "http://dbpedia.org/resource/Publishing");
-		industry.put("Hospitality", "http://dbpedia.org/resource/Hospitality");
-		industry.put("Retail", "http://dbpedia.org/resource/Retail");
-		industry.put("Oil and gas", "http://dbpedia.org/resource/Oil_and_gas");
-		industry.put("Food and Beverage", "http://dbpedia.org/resource/Food_and_Beverage");
-
-		return industry;
-	}
-
-	public Set<String> getPubCategory() {
-		Set<String> pubCategory = new HashSet();
-		pubCategory.add("All");
-		pubCategory.add("Business");
-		pubCategory.add("Sports");
-		pubCategory.add("International");
-		pubCategory.add("Science and Technology");
-		pubCategory.add("Lifestyle");
-
-		return pubCategory;
-	}
-
-	private Map<String, String> getContinents() {
-		Map<String, String> continents = new HashMap<>();
-		continents.put("Africa", "http://dbpedia.org/resource/Africa");
-		continents.put("Antarctica", "http://dbpedia.org/resource/Antarctica");
-		continents.put("Asia", "http://dbpedia.org/resource/Asia");
-		continents.put("Europe", "http://dbpedia.org/resource/Europe");
-		continents.put("North America", "http://dbpedia.org/resource/North_America");
-		continents.put("South America", "http://dbpedia.org/resource/South_America");
-		continents.put("Australia (continent)", "http://dbpedia.org/resource/Australia_(continent)");
-
-		return continents;
-	}
-
-
-
-
 }
