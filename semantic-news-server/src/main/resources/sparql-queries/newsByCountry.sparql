@@ -1,0 +1,19 @@
+PREFIX onto: <http://www.ontotext.com/>
+PREFIX pub: <http://ontology.ontotext.com/taxonomy/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
+select ?label (count(*) as ?mentions)
+       (IF(?label = "United States"@en, round(?mentions / 3), ?mentions) as ?mention)
+from onto:disable-sameAs {
+    ?news pub:country ?country. FILTER(?country NOT IN (dbr:Antigua_and_Barbuda , dbr:Cuba))
+    ?country a dbo:Country;
+        rdfs:label ?label.
+    ?news pub-old:creationDate ?date.
+    FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+
+} group by ?label
+order by desc(?mention)

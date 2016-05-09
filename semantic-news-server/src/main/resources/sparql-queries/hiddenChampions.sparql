@@ -1,0 +1,68 @@
+PREFIX onto: <http://www.ontotext.com/>
+PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX pub: <http://ontology.ontotext.com/taxonomy/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?rel_entity  (max(?name) as ?entity_name) (xsd:integer(round((IF((?relWeight1 + ?relWeight2) > 0.9, 0, (?relWeight1 + ?relWeight2)) * 100))) as ?relWeight)
+     (sum(?rel_weight1) as ?relWeight1)     (sum(?c1) as ?count1)
+     (sum(?rel_weight2) as ?relWeight2) (sum(?c2) as ?count2)
+     (count(*) as ?entity_count)
+        
+FROM onto:disable-sameAs
+WHERE {
+    { SELECT DISTINCT ?rel_entity (sum(?weight) as ?rel_weight1) (count(*) as ?c1)  {
+        { SELECT DISTINCT ?entity (max(?w1) as ?w2) {
+            ?news pub-old:creationDate ?date .
+            FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+            ?news pub-old:category ?category .
+            FILTER (?category = "{category}"^^xsd:string)
+            
+            ?news pub-old:containsMention ?mention .
+            ?mention pub-old:hasInstance ?pub_entity ; pub-old:relevanceScore ?relevance .
+            ?pub_entity pub:exactMatch ?entity .
+            ?entity a dbo:Agent .
+            BIND(?relevance as ?w1)
+        } GROUP BY ?entity ?news}
+            
+        ?entity ff-map:agentRelation ?e2 ; ff-map:outDegree ?degree .
+        BIND(?e2 as ?rel_entity)
+        BIND((?w2 / ?degree * "1.0"^^xsd:double) as ?weight)
+    } GROUP BY ?rel_entity ?entity }
+UNION
+    { SELECT DISTINCT ?rel_entity (sum(?weight) as ?rel_weight2) (count(*) as ?c2) {
+        { SELECT DISTINCT ?entity (max(?w1) as ?w2) {
+            ?news pub-old:creationDate ?date .
+            FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+            ?news pub-old:category ?category .
+            FILTER (?category = "{category}"^^xsd:string)
+            
+            ?news pub-old:containsMention ?mention .
+            ?mention pub-old:hasInstance ?pub_entity ; pub-old:relevanceScore ?relevance .
+            ?pub_entity pub:exactMatch ?entity .
+            ?entity a dbo:Agent .
+            BIND(?relevance as ?w1)
+        } GROUP BY ?entity ?news }
+           
+        ?entity ff-map:agentRelation ?e2 ; ff-map:outDegree ?degree1 .
+        ?e2 ff-map:agentRelation ?e3 ; ff-map:outDegree ?degree2 .
+        FILTER( ?e3 != ?entity )
+        BIND(?e3 as ?rel_entity)
+        BIND((?w2 / ?degree1 / ?degree2 * "1.0"^^xsd:double) as ?weight)
+    } GROUP BY ?rel_entity ?entity }
+        
+     OPTIONAL {
+        ?pub_entity2 pub:exactMatch ?rel_entity .
+        ?news2 pub-old:containsMention / pub-old:hasInstance ?pub_entity2 .
+        ?news2 pub-old:creationDate ?date2 .
+         FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+        ?news2 pub-old:category ?category2 .
+        FILTER (?category2 = "{category}"^^xsd:string)
+     }
+     FILTER(!bound(?news2))
+     ?rel_entity rdfs:label ?name .
+     }  GROUP BY ?rel_entity
+        HAVING (?entity_count > 1)
+        ORDER BY DESC(?relWeight)
+        LIMIT 100

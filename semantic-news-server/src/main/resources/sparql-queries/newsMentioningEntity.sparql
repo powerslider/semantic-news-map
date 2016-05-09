@@ -1,0 +1,29 @@
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX onto: <http://www.ontotext.com/>
+PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
+PREFIX pub: <http://ontology.ontotext.com/taxonomy/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
+SELECT (max(?title) AS ?news_title) (max(?date) AS ?news_date) ?news (xsd:integer(max(?relevance) * 100) AS ?entity_relevance)
+FROM onto:disable-sameAs
+WHERE {
+    BIND(<{entity}> as ?entity)
+
+    ?news pub-old:containsMention ?mention.
+    ?mention  pub-old:hasInstance ?pub_entity .
+    ?mention pub-old:relevanceScore ?relevance.
+    ?pub_entity pub:exactMatch ?entity.
+
+    ?news pub-old:creationDate ?date.
+    FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+    FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
+
+    ?news pub-old:category ?category .
+    FILTER (?category = "{category}"^^xsd:string)
+
+    ?news pub-old:title ?title .
+
+}
+GROUP BY ?news ORDER BY ?news_date
