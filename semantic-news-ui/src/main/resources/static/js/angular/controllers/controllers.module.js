@@ -11,5 +11,5 @@ let controllers = angular
 export default controllers;
 
 register(controllers.name)
-    .controller('NewsMapController', NewsMapController)
-    .controller('SplashController', SplashController);
+    .controller('SplashController', SplashController)
+    .controller('NewsMapController', NewsMapController);

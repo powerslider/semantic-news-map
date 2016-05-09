@@ -1,63 +1,53 @@
-<section>
-    <div layout-align="right">
-        <div pageslide
-             ps-class="viz-options-side-panel"
-             ps-open="nmCtrl.isVizOptionsSidePanelOpen"
-             ps-side="bottom">
-            <section layout="row" layout-sm="column" layout-align="start center" layout-wrap>
-                <md-content layout="row" layout-padding="">
-                    <div flex="20">
-                        <md-menu>
-                            <md-button aria-label="Open demo menu" class="md-icon-button"
-                                       ng-click="$mdOpenMenu($event)">
-                                <ng-md-icon icon="local_offer"></ng-md-icon>
-                            </md-button>
-                            Categories
-                            <md-menu-content width="3">
-                                <md-button ng-repeat="item in nmCtrl.categories">
-                                    {{item}}
-                                </md-button>
-                            </md-menu-content>
-                        </md-menu>
-                    </div>
+<section layout-align="left" class="dynamic-tabs" flex>
+    <md-content class="md-padding">
+        <md-tabs md-selected="nmCtrl.selectedTabIndex"
+                 md-align-tabs="bottom"
+                 md-stretch-tabs="always">
+            <md-tab label="Most Popular">
+                <word-cloud
+                        ng-if="nmCtrl.selectedTabIndex == 0"></word-cloud>
+            </md-tab>
+            <md-tab label="Most Popular + Hidden">
+                <word-cloud
+                        ng-if="nmCtrl.selectedTabIndex == 1"></word-cloud>
+            </md-tab>
+            <md-tab label="Hidden Champions">
+                <word-cloud
+                        ng-if="nmCtrl.selectedTabIndex == 2"></word-cloud>
+            </md-tab>
+            <md-tab label="Geo Heat Map">
+                <geo-heat-map
+                        ng-if="nmCtrl.selectedTabIndex == 3"></geo-heat-map>
+            </md-tab>
+        </md-tabs>
 
-                    <div flex="20">
-                        <md-datepicker ng-model="nmCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>
-                    </div>
+        <md-button class="md-fab md-fab-top-right" aria-label="Add" ng-click="nmCtrl.showSearchCriteriaDialog($event)">
+            <ng-md-icon class="floating-btn" icon="add"></ng-md-icon>
+        </md-button>
 
-                    <div flex="20">
-                        <md-checkbox ng-model="nmCtrl.relativePopularity" aria-label="Checkbox 1">
-                            Relative Popularity
-                        </md-checkbox>
-                    </div>
-
-                    <div flex="20">
-                        <md-button class="md-raised md-primary">
-                            Show
-                        </md-button>
-                    </div>
-
-                </md-content>
-            </section>
-        </div>
-    </div>
-    <div layout-align="left" class="dynamic-tabs" flex>
-        <md-content class="md-padding">
-            <md-tabs md-selected="nmCtrl.selectedIndex" md-stretch-tabs="always">
-                <md-tab label="Most Popular">
-                    <word-cloud ng-if="nmCtrl.selectedIndex == 0"></word-cloud>
-                </md-tab>
-                <md-tab label="Most Popular + Hidden">
-                    <word-cloud ng-if="nmCtrl.selectedIndex == 1"></word-cloud>
-                </md-tab>
-                <md-tab label="Hidden Champions">
-                    <word-cloud ng-if="nmCtrl.selectedIndex == 2"></word-cloud>
-                </md-tab>
-                <md-tab label="Geo Heat Map">
-                    <geo-heat-map
-                            ng-if="nmCtrl.selectedIndex == 3"></geo-heat-map>
-                </md-tab>
-            </md-tabs>
-        </md-content>
-    </div>
+        <!--<md-fab-toolbar-->
+                <!--md-open="nmCtrl.diagramOptions.isOpen"-->
+                <!--count="nmCtrl.diagramOptions.count"-->
+                <!--md-direction="right">-->
+            <!--<md-fab-trigger class="align-with-text">-->
+                <!--<md-button aria-label="menu"-->
+                           <!--class="md-fab md-fab-top-right md-primary">-->
+                    <!--<ng-md-icon icon="menu"></ng-md-icon>-->
+                <!--</md-button>-->
+            <!--</md-fab-trigger>-->
+            <!--<md-toolbar>-->
+                <!--<md-fab-actions class="md-toolbar-tools">-->
+                    <!--<md-button aria-label="comment" class="md-icon-button">-->
+                        <!--<ng-md-icon icon="backup"></ng-md-icon>-->
+                    <!--</md-button>-->
+                    <!--<md-button aria-label="label" class="md-icon-button">-->
+                        <!--<ng-md-icon icon="local_offer"></ng-md-icon>-->
+                    <!--</md-button>-->
+                    <!--<md-button aria-label="photo" class="md-icon-button">-->
+                        <!--<ng-md-icon icon="backup"></ng-md-icon>-->
+                    <!--</md-button>-->
+                <!--</md-fab-actions>-->
+            <!--</md-toolbar>-->
+        <!--</md-fab-toolbar>-->
+    </md-content>
 </section>

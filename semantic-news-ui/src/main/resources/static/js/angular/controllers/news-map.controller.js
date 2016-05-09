@@ -3,47 +3,76 @@
  */
 class NewsMapController {
 
-    constructor($scope, $state, $compile, $timeout) {
+    constructor($scope, $timeout, $mdBottomSheet, $mdDialog) {
         this.$scope = $scope;
-        this.$state = $state;
-        this.$compile = $compile;
         this.$timeout = $timeout;
-        this.isVizOptionsSidePanelOpen = true;
-        this.tabs = [
-            {title: 'Most popular', content: '<div word-cloud></div>'},
-            {title: 'Most popular + Hidden', content: '<div word-cloud></div>'},
-            {title: 'Hidden Champions', content: '<div word-cloud></div>'},
-            {title: 'Heat Map', content: '<div word-cloud></div>'}
-        ];
+        this.$mdBottomSheet = $mdBottomSheet;
+        this.$mdDialog = $mdDialog;
+        this.diagramOptions = {
+            isOpen: false,
+            count: 0
+        };
 
-
-        this.categories = ["All", "Science And Technology", "Lifestyle", "Business", "Sports", "International"];
-        this.selectedIndex = 0;
-        this.currentDate = new Date();
+        this.selectedTabIndex = 0;
+//        this.showSearchCriteriaBottonSheet();
     }
 
-    openMenu($mdOpenMenu, event) {
-        $mdOpenMenu(event);
-    }
+    showSearchCriteriaDialog($event) {
+        this.$mdDialog.show({
+            templateUrl: 'views/search-criteria-dialog.tpl.html',
+            controller: [ '$mdDialog', NewsMapSearchController],
+            controllerAs: "searchCtrl",
+            bindToController : true,
+            clickOutsideToClose:true,
+            targetEvent: $event
+        });
 
-    toggleVizOptionsSidePanel() {
-        this.isVizOptionsSidePanelOpen = !this.isVizOptionsSidePanelOpen;
-    }
+        function NewsMapSearchController($mdDialog) {
+            this.currentDate = new Date();
+            this.categories = loadAllCategories();
+            this.querySearch = querySearch;
+            this.cancel = ($event) => $mdDialog.cancel();
+            this.finish = ($event) => $mdDialog.hide();
 
-    closeVizOptionsSidePanel() {
-        this.isVizOptionsSidePanelOpen = false;
-    }
+            function loadAllCategories() {
+                let categories = "All, Science And Technology, Lifestyle, Business, Sports, International";
+                return categories.split(/, +/g).map((category) => {
+                    return {
+                        value: category.toLowerCase(),
+                        display: category
+                    };
+                });
+            }
 
-//    addTab(title, view) {
-//        view = view || title + " Content View";
-//        this.tabs.push({ title: title, content: view, disabled: false});
-//    }
+            function createFilterFor(query) {
+                let lowercaseQuery = angular.lowercase(query);
+                return function filterFn(category) {
+                    return (category.value.indexOf(lowercaseQuery) === 0);
+                };
+            }
+
+            function querySearch (query) {
+                return query ? this.categories.filter(createFilterFor(query)) : this.categories;
+            }
+        }
+    }
+//    showSearchCriteriaBottonSheet($event) {
+//        this.$mdBottomSheet.show({
+//            templateUrl: 'views/bottom-sheet-search-criteria.tpl.html',
+//            controller: [ '$mdBottomSheet', NewsMapSearchController],
+//            controllerAs: "searchCtrl",
+//            bindToController : true,
+//            targetEvent: $event
+//        });
 //
-//    removeTab(tab) {
-//        let index = this.tabs.indexOf(tab);
-//        this.tabs.splice(index, 1);
+//        function NewsMapSearchController($mdBottomSheet) {
+//            this.categories = ["All", "Science And Technology", "Lifestyle", "Business", "Sports", "International"];
+//            this.currentDate = new Date();
+//        }
 //    }
+
+
 }
 
-NewsMapController.$inject = ['$scope', '$state', '$compile', '$timeout'];
+NewsMapController.$inject = ['$scope', '$timeout', '$mdBottomSheet', '$mdDialog'];
 export default NewsMapController;

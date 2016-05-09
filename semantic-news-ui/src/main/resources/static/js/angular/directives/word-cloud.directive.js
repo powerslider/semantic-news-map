@@ -9,7 +9,7 @@ class WordCloudDirective {
 
     link(scope, element, attrs) {
         this.$timeout(() => {
-            var frequency_list = [{"text": "study", "size": 40}, {"text": "motion", "size": 15}, {
+            let tags = [{"text": "study", "size": 40}, {"text": "motion", "size": 15}, {
                 "text": "forces",
                 "size": 10
             }, {"text": "electricity", "size": 15}, {"text": "movement", "size": 10}, {
@@ -134,56 +134,98 @@ class WordCloudDirective {
             let svg = d3.select(".word-cloud-holder")
                 .insert("svg:svg", "h2")
                 .attr("viewBox", "0 0 " + width / 2 + " " + height / 2)
-                .attr("preserveAspectRatio", "xMidYMid meet")
-                .on("dblclick.zoom", null);
+                .attr("preserveAspectRatio", "xMidYMid meet");
 
             let color = d3.scale.category20();
 
             let layout = d3.layout.cloud()
-                .size([700, 300])
-                .words(frequency_list)
+                .size([width / 2, height / 2])
+                .words(tags)
                 .rotate(0)
                 .font("Impact")
                 .fontSize((d) => {
                     return d.size;
                 })
-                .on("end", draw)
-                .start();
+                .on("end", draw);
 
-            function draw(words) {
+            let vis = svg.append("g")
+                    .attr("transform", "translate(" + [width >> 1, height >> 1] + ")");
+
+            update();
+
+            this.$window.onresize = function(event) {
+                update();
+            };
+
+            function draw(data, bounds) {
+                function getTranslatedX(x) {
+                    return x - width / 4;
+                }
+
+                function getTranslatedY(y) {
+                    return y - height / 4;
+                }
+
                 svg
                     .attr("width", width)
-                    .attr("height", height)
-                    .attr("class", "wordcloud")
-                    .append("g")
-                    // without the transform, words words would get cutoff to the left and top, they would
-                    // appear outside of the SVG area
-                    .attr("transform", "translate(" + width / 4 + "," + height / 4 + ")")
-                    .selectAll("text")
-                    .data(words)
-                    .enter().append("text")
-                    .style("font-size", (d) => {
+                    .attr("height", height);
+
+                let scale = bounds ? Math.min(
+                    width / Math.abs(bounds[1].x - width / 2),
+                    width / Math.abs(bounds[0].x - width / 2),
+                    height / Math.abs(bounds[1].y - height / 2),
+                    height / Math.abs(bounds[0].y - height / 2)) / 2 : 1;
+
+                let text = vis.selectAll("text")
+                    .data(data, function(d) {
+                        return d.text.toLowerCase();
+                    });
+                text
+                    .transition()
+                    .duration(1000)
+                    .attr("transform", function(d) {
+                        return "translate(" + [getTranslatedX(d.x), getTranslatedY(d.y)] + ")rotate(" + d.rotate + ")";
+                    })
+                    .style("font-size", function(d) {
+                        return d.size + "px";
+                    });
+
+                text.enter().append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", function(d) {
+                        return "translate(" + [getTranslatedX(d.x), getTranslatedY(d.y)] + ")rotate(" + d.rotate + ")";
+                    })
+                    .style("font-size", function(d) {
                         return d.size + "px";
                     })
-                    .style("fill", (d, i) => {
-                        return color(i);
+                    .style("opacity", 1e-6)
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1)
+                    .style("font-family", function(d) {
+                        return d.font;
                     })
-                    .style("margin-left", (d) => {
-                        return d.size + "px"
+                    .style("fill", function(d) {
+                        return color(d.text.toLowerCase());
                     })
-                    .attr("text-anchor", "middle")
-                    .attr("transform", (d) => {
-                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-                    })
-                    .text((d) => {
+                    .text(function(d) {
                         return d.text;
-                    })
-                    .on("click", (d, i)  => {
-                        window.open("http://google.com", "_blank");
                     });
-            }
-        }, 20);
 
+                vis
+                    .transition()
+                    .attr("transform", "translate(" + [width >> 1, height >> 1] + ")scale(" + scale + ")");
+            }
+
+            function update() {
+                layout.font('impact').spiral('rectangular');
+                let fontSize = d3.scale['sqrt']().range([10, 100]);
+                if (tags.length) {
+                    fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
+                }
+                layout.stop().words(tags).start();
+            }
+        }, 50);
     }
 }
 

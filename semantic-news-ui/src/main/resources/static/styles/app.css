@@ -7,7 +7,25 @@
     box-shadow:         -1px 3px 10px 0px rgba(49, 109, 208, 0.69);
 }
 
+md-backdrop {
+    display:none
+}
 
+md-fab-toolbar.md-right md-fab-trigger.align-with-text {
+  left: 7px; }
+
+.floating-btn {
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: fixed;
+    border-collapse: collapse;
+    z-index: -1; position:relative
+}
+
+.search-criteria-dialog {
+    width: 33%;
+    height: 25%
+}
 /*
   body {
     color: #343e3d;

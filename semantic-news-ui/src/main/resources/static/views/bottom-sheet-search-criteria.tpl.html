@@ -1,0 +1,72 @@
+<md-dialog aria-label="Form">
+    <md-list flex layout="row" layout-align="center center">
+        <md-icon class="md-avatar" md-svg-icon="avatars:svg-1"></md-icon>
+        <div flex="25">
+            <md-menu>
+                <md-button aria-label="Open demo menu" class="md-icon-button"
+                           ng-click="$mdOpenMenu($event)">
+                    <ng-md-icon icon="local_offer"></ng-md-icon>
+                </md-button>
+                Categories {{categories}}
+                <md-menu-content width="3">
+                    <md-button ng-repeat="item in searchCtrl.categories">
+                        {{item}}
+                    </md-button>
+                </md-menu-content>
+            </md-menu>
+        </div>
+
+        <div flex="25">
+            <md-datepicker ng-model="searchCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>
+        </div>
+
+        <div flex="25">
+            <md-checkbox ng-model="relativePopularity" aria-label="Checkbox 1">
+                Relative Popularity
+            </md-checkbox>
+        </div>
+
+        <div flex="25">
+            <md-button class="md-raised md-primary">
+                Show
+            </md-button>
+        </div>
+
+    </md-list>
+</md-dialog>
+<!--</md-bottom-sheet><md-bottom-sheet class="md-grid" layout="column" ng-cloak>-->
+    <!--<md-list flex layout="row" layout-align="center center">-->
+        <!--<md-icon class="md-avatar" md-svg-icon="avatars:svg-1"></md-icon>-->
+        <!--<div flex="25">-->
+            <!--<md-menu>-->
+                <!--<md-button aria-label="Open demo menu" class="md-icon-button"-->
+                           <!--ng-click="$mdOpenMenu($event)">-->
+                    <!--<ng-md-icon icon="local_offer"></ng-md-icon>-->
+                <!--</md-button>-->
+                <!--Categories {{categories}}-->
+                <!--<md-menu-content width="3">-->
+                    <!--<md-button ng-repeat="item in searchCtrl.categories">-->
+                        <!--{{item}}-->
+                    <!--</md-button>-->
+                <!--</md-menu-content>-->
+            <!--</md-menu>-->
+        <!--</div>-->
+
+        <!--<div flex="25">-->
+            <!--<md-datepicker ng-model="searchCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>-->
+        <!--</div>-->
+
+        <!--<div flex="25">-->
+            <!--<md-checkbox ng-model="relativePopularity" aria-label="Checkbox 1">-->
+                <!--Relative Popularity-->
+            <!--</md-checkbox>-->
+        <!--</div>-->
+
+        <!--<div flex="25">-->
+            <!--<md-button class="md-raised md-primary">-->
+                <!--Show-->
+            <!--</md-button>-->
+        <!--</div>-->
+
+    <!--</md-list>-->
+<!--</md-bottom-sheet>-->

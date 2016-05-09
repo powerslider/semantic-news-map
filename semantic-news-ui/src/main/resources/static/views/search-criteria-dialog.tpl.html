@@ -1,0 +1,48 @@
+<md-dialog
+        class="search-criteria-dialog"
+        aria-label="Form">
+    <!--<md-list layout="column" layout-align="start end">-->
+    <md-list flex layout="column">
+        <!--<div flex>-->
+            <!--<md-toolbar>Search News</md-toolbar>-->
+        <!--</div>-->
+        <div flex="30">
+            <form ng-submit="$event.preventDefault()">
+                <md-autocomplete
+                        md-selected-item="searchCtrl.selectedItem"
+                        md-search-text="searchCtrl.searchText"
+                        md-items="item in searchCtrl.querySearch(searchCtrl.searchText)"
+                        md-item-text="item.display"
+                        md-min-length="0"
+                        md-autoselect="true"
+                        placeholder="Pick news category">
+                    <md-item-template>
+                        <span md-highlight-text="searchCtrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No categories matching {{item.display}} were found
+                    </md-not-found>
+                </md-autocomplete>
+            </form>
+        </div>
+        <div flex="30" layout="row">
+            <div flex>
+                <md-datepicker ng-model="searchCtrl.currentDate" md-placeholder="Enter date"></md-datepicker>
+            </div>
+
+            <div flex>
+                <md-checkbox ng-model="relativePopularity" aria-label="Checkbox 1">
+                    Relative Popularity
+                </md-checkbox>
+            </div>
+        </div>
+
+        <div flex="40">
+            <md-button class="md-raised md-primary">
+                Show
+            </md-button>
+        </div>
+
+    </md-list>
+</md-dialog>
+
