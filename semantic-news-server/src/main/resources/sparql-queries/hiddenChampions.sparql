@@ -6,7 +6,7 @@ PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?rel_entity  (max(?name) as ?entity_name) (xsd:integer(round((IF((?relWeight1 + ?relWeight2) > 0.9, 0, (?relWeight1 + ?relWeight2)) * 100))) as ?relWeight)
-     (sum(?rel_weight1) as ?relWeight1)     (sum(?c1) as ?count1)
+     (sum(?rel_weight1) as ?relWeight1) (sum(?c1) as ?count1)
      (sum(?rel_weight2) as ?relWeight2) (sum(?c2) as ?count2)
      (count(*) as ?entity_count)
         

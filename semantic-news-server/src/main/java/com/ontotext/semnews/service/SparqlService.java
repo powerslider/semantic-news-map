@@ -1,5 +1,8 @@
 package com.ontotext.semnews.service;
 
+import com.ontotext.semnews.model.RepositoryConfiguration;
+import info.aduna.io.IOUtil;
+import org.openrdf.model.Value;
 import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -7,29 +10,36 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 09-May-2016
  */
 @Service
+@EnableConfigurationProperties(RepositoryConfiguration.class)
 public class SparqlService {
 
     public static final Logger LOG = LoggerFactory.getLogger(SparqlService.class);
 
-    @Value("${sesame.server}")
-    private String sesameServer;
-
-    @Value("${repository.id}")
-    private String repositoryID;
+    @Autowired
+    private RepositoryConfiguration repositoryConfiguration;
 
     public Repository getRepository(){
-        Repository repository = new HTTPRepository(sesameServer, repositoryID);
+        Repository repository = new HTTPRepository(
+                repositoryConfiguration.getSesameServer(),
+                repositoryConfiguration.getRepositoryId());
         try {
             repository.initialize();
         } catch (RepositoryException e) {
@@ -127,6 +137,84 @@ public class SparqlService {
             connection.prepareUpdate(QueryLanguage.SPARQL, u).execute();
         }
 
+//        public void t() {
+//            executeQueryAndGetBindings("pesho", s -> s.replaceAll(Pattern.quote("{{target_class}}"), "<" + targetURI + ">"))
+//        }
+
+        protected Map<String, List<String>> executeQueryAndGetBindings(String sparqlFileName, Function<String, String> replacePlaceholdersOperator) {
+            String queryString = null;
+            try {
+                queryString = readQueryString(sparqlFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            queryString = replacePlaceholdersOperator.apply(queryString);
+            TupleQueryResult queryResult = null;
+            try {
+                queryResult = prepareAndEvaluate(queryString);
+            } catch (QueryEvaluationException | MalformedQueryException e) {
+                LOG.error("Error evaluating query");
+            } catch (RepositoryException e) {
+                LOG.error("Repository error");
+            }
+            return getResultsForAllQueryBindings(queryResult);
+        }
+
         protected abstract R doInConnection() throws RepositoryException;
+    }
+
+    /**
+     * Read query string from SPARQL file.
+     *
+     * @param fileName file containing the SPARQL query
+     * @return SPARQL query string
+     * @throws IOException
+     */
+    public String readQueryString(String fileName) throws IOException {
+        return IOUtil.readString(
+                getClass().getResourceAsStream("/" + fileName + ".sparql"));
+    }
+
+    /**
+     * Gets all projected values of the query as key-value pairs (binding-collection of its values)
+     *
+     * @param tqr {@link TupleQueryResult} instance which contains a list of all projected values
+     * @return query results a map of (binding-collection of its values)
+     */
+    public Map<String, List<String>> getResultsForAllQueryBindings(TupleQueryResult tqr) {
+        Map<String, List<String>> resultMap = new HashMap<>();
+
+        String currentBinding = null;
+        try {
+            List<String> bindings = tqr.getBindingNames();
+            for (String binding : bindings) {
+                resultMap.put(binding, new ArrayList<String>());
+            }
+
+            while (tqr.hasNext()) {
+                BindingSet bs = tqr.next();
+
+                for (Map.Entry<String, List<String>> entry : resultMap.entrySet()) {
+                    currentBinding = entry.getKey();
+                    List<String> values = entry.getValue();
+                    Value value = bs.getValue(currentBinding);
+                    if (value == null) continue;
+                    values.add(value.stringValue());
+                }
+            }
+        } catch (QueryEvaluationException e) {
+            LOG.error("Failed to get results for binding ?{}. Query results corrupted?!", currentBinding);
+        } finally {
+            closeQueryResult(tqr);
+        }
+        return resultMap;
+    }
+
+    private void closeQueryResult(TupleQueryResult tqr) {
+        try {
+            tqr.close();
+        } catch (QueryEvaluationException e) {
+            LOG.error("Error closing tuple query result!");
+        }
     }
 }

@@ -1,22 +1,30 @@
 package com.ontotext.semnews.service;
 
+import com.codepoetics.protonpack.StreamUtils;
+import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.model.WorldHeatMap;
 import com.ontotext.semnews.model.NewsEntity;
-import com.ontotext.semnews.model.WordCloud;
 import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Boyan on 12-Mar-16.
  */
+@Service
 public class SemanticNewsMapService {
 
     @Value("${sesame.server}")
@@ -74,97 +82,51 @@ public class SemanticNewsMapService {
         return tupleQueryResult;
     }
 
-    public List<WordCloud> getWordCloudResutlts(String from, String hidden, String industry, boolean relativePop) {
-        List<WordCloud> words = new ArrayList<>();
-        if (hidden.equals("0")) {
-            words = getMostFrequentEntities(from, industry, relativePop);
-        } else if (hidden.equals("1")) {
-            words = getHiddenChampions(from, industry, false);
-        } else {
-            words = getHiddenChampions(from, industry, true);
+    public List<Word> getWordCloudResults(String from, String hidden, String industry, boolean relativePop) {
+        List<Word> words;
+        switch (hidden) {
+            case "0":
+                words = getMostFrequentEntities(from, industry, relativePop);
+                break;
+            case "1":
+                words = getHiddenChampions(from, industry, false);
+                break;
+            default:
+                words = getHiddenChampions(from, industry, true);
+                break;
         }
 
 
         return words;
     }
 
-    public List<WordCloud> getMostFrequentEntities(String from, String industry, boolean relativePop) {
-        String q = "";
-        String d = parseDate(from);
-        if (relativePop) {
-            q = wordCloud.replaceAll(Pattern.quote("{date}"), d);
-        } else {
-            q = relPopularity.replaceAll(Pattern.quote("{date}"), d);
-        }
+    public List<Word> getMostFrequentEntities(Map<String, List<String>> entities, String from, String category) {
+        Stream<String> labels = entities.get("entities_label").stream();
+        Stream<String> weights = entities.get("relative_popularity").stream();
+        Stream<String> mentionedEntities = entities.get("mentioned_lod_entity").stream();
 
-        q = q.replaceAll(Pattern.quote("{date1}"), d);
-        q = q.replaceAll(Pattern.quote("{category}"), industry);
-
-        TupleQueryResult result = evaluateQuery(q);
-        List<WordCloud> words = new ArrayList<>();
-
-        try {
-            while (result.hasNext()) {
-                WordCloud wordCloud = new WordCloud();
-                BindingSet bind = result.next();
-
-                if (bind.getBinding("entity_label") != null) {
-                    wordCloud.setText(bind.getValue("entity_label").stringValue());
-                }
-                if (bind.getBinding("relative_popularity") != null) {
-                    wordCloud.setWeight(Integer.valueOf(bind.getValue("relative_popularity").stringValue()));
-                }
-                if (bind.getBinding("mentioned_lod_entity") != null) {
-                    wordCloud.setLink("/details?uri=" + bind.getValue("mentioned_lod_entity").stringValue() +
-                            "&from=" + from + "&industry=" + industry);
-                }
-                words.add(wordCloud);
-
-            }
-        } catch (QueryEvaluationException e1) {
-            e1.printStackTrace();
-        }
-        return  words;
+        return zip2Words(from, category, labels, weights, mentionedEntities);
     }
 
-    public List<WordCloud> getHiddenChampions(String from, String industry, Boolean hiddenAndFrequent) {
-        String q = "";
-        String d = parseDate(from);
-        if (!hiddenAndFrequent) {
-            q = hid.replaceAll(Pattern.quote("{date}"), d);
-        } else {
-            q = hidPopular.replaceAll(Pattern.quote("{date}"), d);
-        }
+    private List<Word> zip2Words(String from, String category, Stream<String> labels, Stream<String> weights, Stream<String> mentionedEntities) {
+        return StreamUtils.zip(labels, weights, mentionedEntities,
+                (label, weight, mentionedEntity) -> {
+                    Word word = new Word();
+                    word.setText(label);
+                    word.setWeight(Integer.parseInt(weight));
+                    word.setDetailsUrl("/details?uri=" + mentionedEntity +
+                            "&from=" + from + "&category=" + category);
+                    return word;
+                })
+                .collect(Collectors.toList());
+    }
 
-        q = q.replaceAll(Pattern.quote("{date1}"), d);
-        q = q.replaceAll(Pattern.quote("{category}"), industry);
+    public List<Word> getHiddenChampions(Map<String, List<String>> entities, String from, String category) {
+        Stream<String> labels = entities.get("entities_name").stream();
+        Stream<String> weights = entities.get("relWeight").stream();
+        Stream<String> mentionedEntities = entities.get("rel_entity").stream();
 
-        TupleQueryResult result = evaluateQuery(q);
-        List<WordCloud> words = new ArrayList<>();
-
-        try {
-            while (result.hasNext()) {
-                WordCloud wordCloud = new WordCloud();
-                BindingSet bind = result.next();
-
-                if (bind.getBinding("entity_name") != null) {
-                    wordCloud.setText(bind.getValue("entity_name").stringValue());
-                }
-                if (bind.getBinding("relWeight") != null) {
-                    wordCloud.setWeight(Integer.valueOf(bind.getValue("relWeight").stringValue()));
-                }
-                if (bind.getBinding("rel_entity") != null) {
-                    wordCloud.setLink("/details?uri=" + bind.getValue("rel_entity").stringValue() +
-                            "&from=" + from + "&industry=" + industry);
-                }
-                words.add(wordCloud);
-
-            }
-        } catch (QueryEvaluationException e1) {
-            e1.printStackTrace();
-        }
-
-        return words;
+        return zip2Words(from, category, labels, weights, mentionedEntities);
     }
 
     public List<NewsEntity> getNewsMentioningEntitie(String from, String industry, String uri) {
@@ -280,15 +242,15 @@ public class SemanticNewsMapService {
         return heatMap;
     }
 
-    public String parseDate(String date) {
-        String d[] = date.split("/");
-        String n = d[2] + "-" + d[0] + "-" + d[1];
-        return n;
 
+    public String toIsoLocalDate(String dateString) {
+        DateTimeFormatter fromFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate parsedDate = LocalDate.parse(dateString, fromFormat);
+        return parsedDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
 //    private String getAllCategories(){
-//        TagCloudController tagCloudController = new TagCloudController();
+//        WordCloudController tagCloudController = new WordCloudController();
 //        Set<String> cat =  tagCloudController.getPubCategory();
 //        String
 //    }

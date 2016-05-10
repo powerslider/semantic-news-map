@@ -1,21 +1,20 @@
 package com.ontotext.semnews.model;
 
-/**
- * Created by Boyan on 11-Mar-16.
- */
-public class WordCloud {
+
+public class Word {
+
     private String text;
     private int weight;
-    private String link;
+    private String detailsUrl;
 
-    public WordCloud() {
-
+    public Word() {
+        super();
     }
 
-    public WordCloud(String text, int weight, String link) {
+    public Word(String text, int weight, String detailsUrl) {
         this.text = text;
         this.weight = weight;
-        this.link = link;
+        this.detailsUrl = detailsUrl;
     }
 
     public String getText() {
@@ -34,11 +33,11 @@ public class WordCloud {
         this.weight = weight;
     }
 
-    public String getLink() {
-        return link;
+    public String getDetailsUrl() {
+        return detailsUrl;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setDetailsUrl(String detailsUrl) {
+        this.detailsUrl = detailsUrl;
     }
 }

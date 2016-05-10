@@ -28,7 +28,7 @@ WHERE {
          ?news pub-old:category ?category .
          FILTER (?category = "{category}"^^xsd:string)
 
-     }    GROUP BY ?pub_entity ?entity_label ?mentioned_lod_entity
+     } GROUP BY ?pub_entity ?entity_label ?mentioned_lod_entity
   }
 
 } ORDER BY desc(?relative_popularity) limit 100

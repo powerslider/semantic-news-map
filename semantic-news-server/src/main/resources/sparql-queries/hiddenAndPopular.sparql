@@ -1,0 +1,102 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX onto: <http://www.ontotext.com/>
+PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
+PREFIX pub: <http://ontology.ontotext.com/taxonomy/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT     ?rel_entity  (max(?name) as ?entity_name)
+      (xsd:integer(round((?relWeight1 + ?relWeight2) * 50 + ?relWeight3)) as ?relWeight)
+      (sum(?rel_weight1) as ?relWeight1)         (sum(?c1) as ?count1)
+      (sum(?rel_weight2) as ?relWeight2)         (sum(?c2) as ?count2)
+      (sum(?rel_weight3) as ?relWeight3)    
+FROM onto:disable-sameAs
+where {
+  {
+      select distinct ?rel_entity (sum(?weight) as ?rel_weight1) (count(*) as ?c1)  {
+          {
+              select distinct ?entity (max(?w1) as ?w2) {
+                  ?news pub-old:creationDate ?date .
+                  FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+                  ?news pub-old:category ?category .
+                  FILTER (?category = "{category}"^^xsd:string)
+                  ?news pub-old:containsMention ?mention .
+                  ?mention pub-old:hasInstance ?pub_entity ;
+                      pub-old:relevanceScore ?relevance .
+                  ?pub_entity pub:exactMatch ?entity .
+                  ?entity a dbo:Agent .
+                  BIND(?relevance as ?w1)
+              } group by ?entity ?news
+          }
+          ?entity ff-map:agentRelation ?e2 ;
+              ff-map:outDegree ?degree .
+          BIND(?e2 as ?rel_entity)
+          BIND((?w2 / ?degree * "1.0"^^xsd:double) as ?weight)
+      } group by ?rel_entity ?entity
+  }
+  UNION
+  {
+      select distinct ?rel_entity (sum(?weight) as ?rel_weight2) (count(*) as ?c2) {
+          {
+              select distinct ?entity (max(?w1) as ?w2) {
+                  ?news pub-old:creationDate ?date .
+                  FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+                  ?news pub-old:category ?category .
+                  FILTER (?category = "{category}"^^xsd:string)
+                  ?news pub-old:containsMention ?mention .
+                  ?mention pub-old:hasInstance ?pub_entity ;
+                      pub-old:relevanceScore ?relevance .
+                  ?pub_entity pub:exactMatch ?entity .
+                  ?entity a dbo:Agent .
+                  BIND(?relevance as ?w1)
+              } group by ?entity ?news
+          }
+          ?entity ff-map:agentRelation ?e2 ;
+              ff-map:outDegree ?degree1 .
+          ?e2 ff-map:agentRelation ?e3 ;
+              ff-map:outDegree ?degree2 .
+          FILTER( ?e3 != ?entity )
+          BIND(?e3 as ?rel_entity)
+          BIND((?w2 / ?degree1 / ?degree2 * "1.0"^^xsd:double) as ?weight)
+      } group by ?rel_entity ?entity
+  }
+  UNION
+  { #==================================================
+      SELECT DISTINCT (?mentioned_lod_entity as ?rel_entity)  ?longterm_popularity
+          (sum(?entity_relevance) as ?daily_popularity)
+          (xsd:integer(round((?daily_popularity * ?daily_popularity * ?daily_popularity / ?longterm_popularity)*10)) AS ?rel_weight3)
+
+      WHERE {
+      {    SELECT ?pub_entity (max(?relevance) as ?entity_relevance)
+      {
+      ?news pub-old:containsMention ?mention.
+      ?mention  pub-old:hasInstance ?pub_entity .
+      ?mention pub-old:relevanceScore ?relevance.
+
+      ?news pub-old:creationDate ?date.
+      FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+      FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) 
+
+      ?news pub-old:category ?category .
+      FILTER (?category = "{category}"^^xsd:string)
+
+      }    GROUP BY ?news ?pub_entity
+      }
+
+      ?pub_entity ff-map:longtermPopularity ?long_popularity .
+      FILTER (?long_popularity > "1.0"^^xsd:double)
+      BIND(IF(?long_popularity < "3.0"^^xsd:double , ?long_popularity * 1.5, ?long_popularity) as ?longterm_popularity)
+
+      ?pub_entity pub:exactMatch ?mentioned_lod_entity.
+      ?mentioned_lod_entity a owl:Thing .
+      }
+      GROUP BY ?mentioned_lod_entity ?longterm_popularity
+
+  } #==================================================
+
+  ?rel_entity rdfs:label ?name .
+}  GROUP BY ?rel_entity
+ORDER BY desc(?relWeight)
+LIMIT 100
