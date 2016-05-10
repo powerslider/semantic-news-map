@@ -1,6 +1,9 @@
 package com.ontotext.semnews.model;
 
-
+/**
+ * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
+ * @since 11-May-2016
+ */
 public class Word {
 
     private String text;

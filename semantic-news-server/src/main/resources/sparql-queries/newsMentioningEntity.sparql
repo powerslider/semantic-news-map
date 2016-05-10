@@ -17,7 +17,7 @@ WHERE {
     ?pub_entity pub:exactMatch ?entity.
 
     ?news pub-old:creationDate ?date.
-    FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+    FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime))
     FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
 
     ?news pub-old:category ?category .

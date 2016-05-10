@@ -15,7 +15,7 @@ WHERE {
     { SELECT DISTINCT ?rel_entity (sum(?weight) as ?rel_weight1) (count(*) as ?c1)  {
         { SELECT DISTINCT ?entity (max(?w1) as ?w2) {
             ?news pub-old:creationDate ?date .
-            FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+            FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
             ?news pub-old:category ?category .
             FILTER (?category = "{category}"^^xsd:string)
             
@@ -34,7 +34,7 @@ UNION
     { SELECT DISTINCT ?rel_entity (sum(?weight) as ?rel_weight2) (count(*) as ?c2) {
         { SELECT DISTINCT ?entity (max(?w1) as ?w2) {
             ?news pub-old:creationDate ?date .
-            FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+            FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
             ?news pub-old:category ?category .
             FILTER (?category = "{category}"^^xsd:string)
             
@@ -56,7 +56,7 @@ UNION
         ?pub_entity2 pub:exactMatch ?rel_entity .
         ?news2 pub-old:containsMention / pub-old:hasInstance ?pub_entity2 .
         ?news2 pub-old:creationDate ?date2 .
-         FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+         FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime)  && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
         ?news2 pub-old:category ?category2 .
         FILTER (?category2 = "{category}"^^xsd:string)
      }

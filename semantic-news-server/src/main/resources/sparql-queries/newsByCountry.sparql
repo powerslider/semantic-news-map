@@ -13,7 +13,7 @@ FROM onto:disable-sameAs {
     ?country a dbo:Country;
         rdfs:label ?label.
     ?news pub-old:creationDate ?date.
-    FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+    FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime))
 
 } GROUP BY ?label
 ORDER BY DESC(?mention)

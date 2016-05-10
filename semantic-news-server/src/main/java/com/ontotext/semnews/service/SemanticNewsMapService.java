@@ -1,15 +1,11 @@
 package com.ontotext.semnews.service;
 
 import com.codepoetics.protonpack.StreamUtils;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.model.WorldHeatMap;
-import com.ontotext.semnews.model.NewsEntity;
-import org.openrdf.query.*;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.http.HTTPRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,88 +13,61 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Created by Boyan on 12-Mar-16.
+ * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
+ * @since 11-May-2016
  */
 @Service
 public class SemanticNewsMapService {
 
-    @Value("${sesame.server}")
-    private String sesameServer;
+    public static final ImmutableMap<String, String> INDUSTRIES = ImmutableMap.<String, String>builder()
+            .put("all", "all")
+            .put("Agriculture", "http://dbpedia.org/resource/Agriculture")
+            .put("Biotechnology", "http://dbpedia.org/resource/Biotechnology")
+            .put("Electronics", "http://dbpedia.org/resource/Electronics")
+            .put("Telecommunications", "http://dbpedia.org/resource/Telecommunications")
+            .put("Real estate", "http://dbpedia.org/resource/Real_estate")
+            .put("Internet", "http://dbpedia.org/resource/Internet")
+            .put("Software", "http://dbpedia.org/resource/Software")
+            .put("Transport", "http://dbpedia.org/resource/Transport")
+            .put("Manufacturing", "http://dbpedia.org/resource/Manufacturing")
+            .put("Construction", "http://dbpedia.org/resource/Construction")
+            .put("Mining", "http://dbpedia.org/resource/Mining")
+            .put("Energy", "http://dbpedia.org/resource/Energy")
+            .put("Entertainment", "http://dbpedia.org/resource/Entertainment")
+            .put("Mass media", "http://dbpedia.org/resource/Mass_media")
+            .put("Education", "http://dbpedia.org/resource/Education")
+            .put("Finance", "http://dbpedia.org/resource/Finance")
+            .put("Automotive", "http://dbpedia.org/resource/Automotive")
+            .put("Healthcare", "http://dbpedia.org/resource/Healthcare")
+            .put("Publishing", "http://dbpedia.org/resource/Publishing")
+            .put("Hospitality", "http://dbpedia.org/resource/Hospitality")
+            .put("Retail", "http://dbpedia.org/resource/Retail")
+            .put("Oil and gas", "http://dbpedia.org/resource/Oil_and_gas")
+            .put("Food and Beverage", "http://dbpedia.org/resource/Food_and_Beverage")
+            .build();
 
-    @Value("${repository.id}")
-    private String repositoryID;
+    public static final ImmutableMap<String, String> CONTINENTS = ImmutableMap.<String, String>builder()
+            .put("Africa", "http://dbpedia.org/resource/Africa")
+            .put("Antarctica", "http://dbpedia.org/resource/Antarctica")
+            .put("Asia", "http://dbpedia.org/resource/Asia")
+            .put("Europe", "http://dbpedia.org/resource/Europe")
+            .put("North America", "http://dbpedia.org/resource/North_America")
+            .put("South America", "http://dbpedia.org/resource/South_America")
+            .put("Australia (continent)", "http://dbpedia.org/resource/Australia_(continent)")
+            .build();
 
-    @Value("${word.cloud}")
-    private String wordCloud;
-
-    @Value("${word.hidden.champ}")
-    private String hid;
-
-    @Value("${news.by.country}")
-    private String heatMapQuery;
-
-    @Value("${word.hidden.frequent}")
-    private String hidPopular;
-
-    @Value("${most.popular.nonNorm}")
-    private String relPopularity;
-
-    @Value("${news.mentioning.entity}")
-    private String newsMentoningEntity;
-
-    @Value("${news.mentioning.rel.entities}")
-    private String newsMentioningRelEntity;
-
-    public Repository getRepository(){
-        Repository repository = new HTTPRepository(sesameServer, repositoryID);
-        try {
-            repository.initialize();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-        return repository;
-    }
-
-    public TupleQueryResult evaluateQuery(String query) {
-        Repository repository = getRepository();
-        RepositoryConnection repositoryConnection = null;
-        TupleQueryResult tupleQueryResult = null;
-        try {
-            repositoryConnection = repository.getConnection();
-            TupleQuery tupleQuery = repositoryConnection.prepareTupleQuery(QueryLanguage.SPARQL, query);
-            tupleQueryResult = tupleQuery.evaluate();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        } catch (QueryEvaluationException e) {
-            e.printStackTrace();
-        } catch (MalformedQueryException e) {
-            e.printStackTrace();
-        }
-        return tupleQueryResult;
-    }
-
-    public List<Word> getWordCloudResults(String from, String hidden, String industry, boolean relativePop) {
-        List<Word> words;
-        switch (hidden) {
-            case "0":
-                words = getMostFrequentEntities(from, industry, relativePop);
-                break;
-            case "1":
-                words = getHiddenChampions(from, industry, false);
-                break;
-            default:
-                words = getHiddenChampions(from, industry, true);
-                break;
-        }
-
-
-        return words;
-    }
+    public static final ImmutableSet<String> PUB_CATEGORIES = ImmutableSet.of(
+            "All",
+            "Business",
+            "Sports",
+            "International",
+            "Science and Technology",
+            "Lifestyle"
+    );
 
     public List<Word> getMostFrequentEntities(Map<String, List<String>> entities, String from, String category) {
         Stream<String> labels = entities.get("entities_label").stream();
@@ -108,7 +77,19 @@ public class SemanticNewsMapService {
         return zip2Words(from, category, labels, weights, mentionedEntities);
     }
 
-    private List<Word> zip2Words(String from, String category, Stream<String> labels, Stream<String> weights, Stream<String> mentionedEntities) {
+    public List<Word> getHiddenChampions(Map<String, List<String>> entities, String from, String category) {
+        Stream<String> labels = entities.get("entities_name").stream();
+        Stream<String> weights = entities.get("relWeight").stream();
+        Stream<String> mentionedEntities = entities.get("rel_entity").stream();
+
+        return zip2Words(from, category, labels, weights, mentionedEntities);
+    }
+
+    private List<Word> zip2Words(String from,
+                                 String category,
+                                 Stream<String> labels,
+                                 Stream<String> weights,
+                                 Stream<String> mentionedEntities) {
         return StreamUtils.zip(labels, weights, mentionedEntities,
                 (label, weight, mentionedEntity) -> {
                     Word word = new Word();
@@ -121,137 +102,65 @@ public class SemanticNewsMapService {
                 .collect(Collectors.toList());
     }
 
-    public List<Word> getHiddenChampions(Map<String, List<String>> entities, String from, String category) {
-        Stream<String> labels = entities.get("entities_name").stream();
-        Stream<String> weights = entities.get("relWeight").stream();
-        Stream<String> mentionedEntities = entities.get("rel_entity").stream();
-
-        return zip2Words(from, category, labels, weights, mentionedEntities);
-    }
-
-    public List<NewsEntity> getNewsMentioningEntitie(String from, String industry, String uri) {
+    public List<NewsEntity> getNewsMentioningEntity(Map<String, List<String>> queryResult) {
         List<NewsEntity> newsEntities = new ArrayList<>();
-        String q = "";
-        String d = parseDate(from);
-        q = newsMentoningEntity.replace("{date}", d);
-        q = q.replace("{date1}", d);
-        q = q.replaceAll(Pattern.quote("{category}"), industry);
-        q = q.replaceAll(Pattern.quote("{entity}"), uri);
 
-        TupleQueryResult result = evaluateQuery(q);
+        List<String> newsTitles = queryResult.get("news_title");
+        List<String> newsDate = queryResult.get("news_date");
+        List<String> newsUris = queryResult.get("news");
+        List<String> entityRelevances = queryResult.get("entity_relevance");
 
-        try {
-            while (result.hasNext()) {
-                NewsEntity newsEntity = new NewsEntity();
-                BindingSet bind = result.next();
-
-                if (bind.getBinding("news_title") != null) {
-                    newsEntity.setTitle(bind.getValue("news_title").stringValue());
-                }
-                if (bind.getBinding("news_date") != null) {
-                    newsEntity.setDate(bind.getValue("news_date").stringValue());
-                }
-                if (bind.getBinding("news") != null) {
-                    newsEntity.setUriLink(bind.getValue("news").stringValue());
-                }
-                if (bind.getBinding("entity_relevance") != null) {
-                    newsEntity.setEntityRelevance(bind.getValue("entity_relevance").stringValue());
-                }
-                newsEntities.add(newsEntity);
-
-            }
-        } catch (QueryEvaluationException e1) {
-            e1.printStackTrace();
+        for (int i = 0; i < newsTitles.size(); i++) {
+            NewsEntity newsEntity = new NewsEntity();
+            newsEntity.setTitle(newsTitles.get(i));
+            newsEntity.setDate(newsDate.get(i));
+            newsEntity.setUriLink(newsUris.get(i));
+            newsEntity.setEntityRelevance(entityRelevances.get(i));
+            newsEntities.add(newsEntity);
         }
 
         return newsEntities;
     }
 
-    public List<NewsEntity> getNewsMentioningRelEntitie(String from, String industry, String uri) {
+    public List<NewsEntity> getNewsMentioningRelEntity(Map<String, List<String>> queryResult) {
         List<NewsEntity> newsEntities = new ArrayList<>();
-        String q = "";
-        String d = parseDate(from);
-        q = newsMentioningRelEntity.replace("{date}", d);
-        q = q.replace("{date1}", d);
-        q = q.replaceAll(Pattern.quote("{category}"), industry);
-        q = q.replaceAll(Pattern.quote("{entity}"), uri);
 
-        TupleQueryResult result = evaluateQuery(q);
+        List<String> newsTitles = queryResult.get("title");
+        List<String> newsDate = queryResult.get("date");
+        List<String> newsUris = queryResult.get("news");
+        List<String> entityRelevances = queryResult.get("rel_entity");
+        List<String> intermedEntities = queryResult.get("intermed_entity");
 
-        try {
-            while (result.hasNext()) {
-                NewsEntity newsEntity = new NewsEntity();
-                BindingSet bind = result.next();
-
-                if (bind.getBinding("title") != null) {
-                    newsEntity.setTitle(bind.getValue("title").stringValue());
-                }
-                if (bind.getBinding("date") != null) {
-                    newsEntity.setDate(bind.getValue("date").stringValue());
-                }
-                if (bind.getBinding("news") != null) {
-                    newsEntity.setUriLink(bind.getValue("news").stringValue());
-                }
-                if (bind.getBinding("rel_entity") != null) {
-                    newsEntity.setRelEntity(bind.getValue("rel_entity").stringValue());
-                }
-                if (bind.getBinding("intermed_entity") != null) {
-                    newsEntity.setInternalEntity(bind.getValue("intermed_entity").stringValue());
-                }
-                if (bind.size() > 0) {
-                    newsEntities.add(newsEntity);
-                }
-
-
-            }
-        } catch (QueryEvaluationException e1) {
-            e1.printStackTrace();
+        for (int i = 0; i < newsTitles.size(); i++) {
+            NewsEntity newsEntity = new NewsEntity();
+            newsEntity.setTitle(newsTitles.get(i));
+            newsEntity.setDate(newsDate.get(i));
+            newsEntity.setUriLink(newsUris.get(i));
+            newsEntity.setEntityRelevance(entityRelevances.get(i));
+            newsEntity.setInternalEntity(intermedEntities.get(i));
+            newsEntities.add(newsEntity);
         }
 
         return newsEntities;
     }
 
+    public List<WorldHeatMap> getHeatMap(Map<String, List<String>> queryResult) {
+        Stream<String> labels = queryResult.get("label").stream();
+        Stream<String> mentions = queryResult.get("mention").stream();
 
-
-    public List<WorldHeatMap> getHeatMap(String from) {
-        List<WorldHeatMap> heatMap = new ArrayList<>();
-        String q = "";
-        String d = parseDate(from);
-        q = heatMapQuery.replace("{date}", d);
-        q = q.replace("{date1}", d);
-
-        TupleQueryResult result = evaluateQuery(q);
-        try {
-            while (result.hasNext()) {
-                WorldHeatMap worldHeatMap = new WorldHeatMap();
-                BindingSet bind = result.next();
-
-                if (bind.getBinding("label") != null) {
-                    worldHeatMap.setCountry(bind.getValue("label").stringValue());
-                }
-                if (bind.getBinding("mention") != null) {
-                    worldHeatMap.setFrequency(Integer.parseInt(bind.getValue("mention").stringValue()));
-                }
-                heatMap.add(worldHeatMap);
-
-            }
-        } catch (QueryEvaluationException e1) {
-            e1.printStackTrace();
-        }
-
-        return heatMap;
+        return StreamUtils.zip(labels, mentions,
+                (label, mention) -> {
+                    WorldHeatMap worldHeatMap = new WorldHeatMap();
+                    worldHeatMap.setCountry(label);
+                    worldHeatMap.setFrequency(Integer.parseInt(mention));
+                    return worldHeatMap;
+                })
+                .collect(Collectors.toList());
     }
-
 
     public String toIsoLocalDate(String dateString) {
         DateTimeFormatter fromFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate parsedDate = LocalDate.parse(dateString, fromFormat);
         return parsedDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
-
-//    private String getAllCategories(){
-//        WordCloudController tagCloudController = new WordCloudController();
-//        Set<String> cat =  tagCloudController.getPubCategory();
-//        String
-//    }
-    }
+}

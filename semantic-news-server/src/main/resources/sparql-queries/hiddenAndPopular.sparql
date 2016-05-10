@@ -19,7 +19,7 @@ where {
           {
               select distinct ?entity (max(?w1) as ?w2) {
                   ?news pub-old:creationDate ?date .
-                  FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+                  FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
                   ?news pub-old:category ?category .
                   FILTER (?category = "{category}"^^xsd:string)
                   ?news pub-old:containsMention ?mention .
@@ -42,7 +42,7 @@ where {
           {
               select distinct ?entity (max(?w1) as ?w2) {
                   ?news pub-old:creationDate ?date .
-                  FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:59Z"^^xsd:dateTime))
+                  FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
                   ?news pub-old:category ?category .
                   FILTER (?category = "{category}"^^xsd:string)
                   ?news pub-old:containsMention ?mention .
@@ -76,7 +76,7 @@ where {
       ?mention pub-old:relevanceScore ?relevance.
 
       ?news pub-old:creationDate ?date.
-      FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
+      FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime))
       FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) 
 
       ?news pub-old:category ?category .

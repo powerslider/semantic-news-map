@@ -1,9 +1,11 @@
 package com.ontotext.semnews.model;
 
 /**
- * Created by Boyan on 24-Mar-16.
+ * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
+ * @since 11-May-2016
  */
 public class NewsEntity {
+
     private String title;
     private String date;
     private String uriLink;

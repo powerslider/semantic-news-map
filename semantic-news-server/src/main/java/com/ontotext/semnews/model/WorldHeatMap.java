@@ -1,12 +1,13 @@
 package com.ontotext.semnews.model;
 
 /**
- * Created by Boyan on 23-Mar-16.
+ * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
+ * @since 11-May-2016
  */
 public class WorldHeatMap {
 
-    String country;
-    Integer frequency;
+    private String country;
+    private Integer frequency;
 
     public String getCountry() {
         return country;
