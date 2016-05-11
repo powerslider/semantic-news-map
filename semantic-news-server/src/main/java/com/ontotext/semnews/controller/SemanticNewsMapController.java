@@ -82,7 +82,7 @@ public class SemanticNewsMapController {
         }.run();
     }
 
-    @RequestMapping(value = "/details", method = RequestMethod.GET)
+    @RequestMapping(value = "/news-details", method = RequestMethod.GET)
     public Map<String, List<NewsEntity>> getNewsEntityDetails(@RequestParam(value = "uri") String entitiUri,
                                                               @RequestParam("from") String from,
                                                               @RequestParam("category") String category) {

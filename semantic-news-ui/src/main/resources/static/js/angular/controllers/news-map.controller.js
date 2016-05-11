@@ -3,11 +3,14 @@
  */
 class NewsMapController {
 
-    constructor($scope, $timeout, $mdBottomSheet, $mdDialog) {
+    constructor($scope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService, MdAutocompleteService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$mdBottomSheet = $mdBottomSheet;
         this.$mdDialog = $mdDialog;
+        this.NewsMapDataService = NewsMapDataService;
+        this.MdAutocompleteService = MdAutocompleteService;
+
         this.diagramOptions = {
             isOpen: false,
             count: 0
@@ -20,40 +23,20 @@ class NewsMapController {
     showSearchCriteriaDialog($event) {
         this.$mdDialog.show({
             templateUrl: 'views/search-criteria-dialog.tpl.html',
-            controller: ['$mdDialog', NewsMapSearchController],
+            controller: ['$mdDialog', 'MdAutocompleteService', NewsMapSearchController],
             controllerAs: "searchCtrl",
             bindToController: true,
             clickOutsideToClose: true,
             targetEvent: $event
         });
 
-        function NewsMapSearchController($mdDialog) {
+        function NewsMapSearchController($mdDialog, MdAutocompleteService) {
             this.currentDate = new Date();
-            this.categories = loadAllCategories();
-            this.querySearch = querySearch;
+            this.categories = MdAutocompleteService
+                                    .loadAllItems("All, Science And Technology, Lifestyle, Business, Sports, International");
+            this.querySearch = MdAutocompleteService.querySearch;
             this.cancel = ($event) => $mdDialog.cancel();
             this.finish = ($event) => $mdDialog.hide();
-
-            function loadAllCategories() {
-                let categories = "All, Science And Technology, Lifestyle, Business, Sports, International";
-                return categories.split(/, +/g).map((category) => {
-                    return {
-                        value: category.toLowerCase(),
-                        display: category
-                    };
-                });
-            }
-
-            function createFilterFor(query) {
-                let lowercaseQuery = angular.lowercase(query);
-                return function filterFn(category) {
-                    return (category.value.indexOf(lowercaseQuery) === 0);
-                };
-            }
-
-            function querySearch(query) {
-                return query ? this.categories.filter(createFilterFor(query)) : this.categories;
-            }
         }
     }
 

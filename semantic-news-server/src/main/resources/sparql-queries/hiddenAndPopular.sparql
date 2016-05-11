@@ -28,13 +28,13 @@ WHERE {
                     ?pubEntity pub:exactMatch ?entity .
                     ?entity a dbo:Agent .
                     BIND(?relevance as ?w1)
-                } group by ?entity ?news
+                } GROUP BY ?entity ?news
             }
             ?entity ff-map:agentRelation ?e2 ;
                 ff-map:outDegree ?degree .
             BIND(?e2 as ?relativeEntity)
             BIND((?w2 / ?degree * "1.0"^^xsd:double) as ?weight)
-        } group by ?relativeEntity ?entity
+        } GROUP BY ?relativeEntity ?entity
     }
     UNION
     {
@@ -47,20 +47,20 @@ WHERE {
                     FILTER (?category = "{category}"^^xsd:string)
                     ?news pub-old:containsMention ?mention .
                     ?mention pub-old:hasInstance ?pubEntity ;
-                        pub-old:relevanceScore ?relevance .
+                             pub-old:relevanceScore ?relevance .
                     ?pubEntity pub:exactMatch ?entity .
                     ?entity a dbo:Agent .
                     BIND(?relevance as ?w1)
-                } group by ?entity ?news
+                } GROUP BY ?entity ?news
             }
             ?entity ff-map:agentRelation ?e2 ;
-                ff-map:outDegree ?degree1 .
+                    ff-map:outDegree ?degree1 .
             ?e2 ff-map:agentRelation ?e3 ;
                 ff-map:outDegree ?degree2 .
             FILTER( ?e3 != ?entity )
             BIND(?e3 as ?relativeEntity)
             BIND((?w2 / ?degree1 / ?degree2 * "1.0"^^xsd:double) as ?weight)
-        } group by ?relativeEntity ?entity
+        } GROUP BY ?relativeEntity ?entity
     }
     UNION
     {
