@@ -5,19 +5,23 @@
                  md-stretch-tabs="always">
             <md-tab label="Most Popular">
                 <word-cloud
-                        ng-if="nmCtrl.selectedTabIndex == 0"></word-cloud>
+                        ng-if="nmCtrl.selectedTabIndex == 0"
+                        word-data="nmCtrl.wordCloudDataPopular"></word-cloud>
             </md-tab>
             <md-tab label="Most Popular + Hidden">
                 <word-cloud
-                        ng-if="nmCtrl.selectedTabIndex == 1"></word-cloud>
+                        ng-if="nmCtrl.selectedTabIndex == 1"
+                        word-data="nmCtrl.wordCloudDataPopularAndHidden"></word-cloud>
             </md-tab>
             <md-tab label="Hidden Champions">
                 <word-cloud
-                        ng-if="nmCtrl.selectedTabIndex == 2"></word-cloud>
+                        ng-if="nmCtrl.selectedTabIndex == 2"
+                        word-data="nmCtrl.wordCloudDataHidden"></word-cloud>
             </md-tab>
             <md-tab label="Geo Heat Map">
                 <geo-heat-map
-                        ng-if="nmCtrl.selectedTabIndex == 3"></geo-heat-map>
+                        ng-if="nmCtrl.selectedTabIndex == 3"
+                        geo-data="nmCtrl.geoHeatMapData"></geo-heat-map>
             </md-tab>
         </md-tabs>
 

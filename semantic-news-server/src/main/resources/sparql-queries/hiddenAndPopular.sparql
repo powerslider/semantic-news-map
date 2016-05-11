@@ -24,7 +24,7 @@ WHERE {
                     FILTER (?category = "{category}"^^xsd:string)
                     ?news pub-old:containsMention ?mention .
                     ?mention pub-old:hasInstance ?pubEntity ;
-                        pub-old:relevanceScore ?relevance .
+                             pub-old:relevanceScore ?relevance .
                     ?pubEntity pub:exactMatch ?entity .
                     ?entity a dbo:Agent .
                     BIND(?relevance as ?w1)

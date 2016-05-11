@@ -4,13 +4,13 @@ class NewsMapDataService {
         this.$http = $http;
     }
 
-    getWordCloud(from, category, hidden, relativePopularity) {
+    getWordCloud(searchParams) {
         return this.$http.get('rest/semnews/word-cloud', {
                         params: {
-                            from: from,
-                            category: category,
-                            hidden: hidden,
-                            relPop: relativePopularity
+                            from: searchParams.from,
+                            category: searchParams.category,
+                            hidden: searchParams.hidden,
+                            relPop: searchParams.relativePopularity
                         }
                     });
     }
@@ -23,12 +23,12 @@ class NewsMapDataService {
                    });
     }
 
-    getNewsEntityDetails(from, entityUri, category) {
+    getNewsEntityDetails(searchParams) {
         return this.$http.get('rest/semnews/news-details', {
                         params: {
-                            from: from,
-                            uri: entityUri,
-                            category: category
+                            from: searchParams.from,
+                            uri: searchParams.entityUri,
+                            category: searchParams.category
                         }
                     });
     }

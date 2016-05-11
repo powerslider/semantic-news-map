@@ -26,7 +26,7 @@ public class SemanticNewsMapController {
 
     @RequestMapping(value = "/word-cloud", method = RequestMethod.GET)
     public List<Word> getWordCloud(@RequestParam("from") String from,
-                                   @RequestParam("hidden") String hidden,
+                                   @RequestParam(value = "type", required = false, defaultValue = "popularAndHidden") String type,
                                    @RequestParam("category") String category,
                                    @RequestParam(value = "relPop", required = false, defaultValue = "false") Boolean relPopularity) {
 
@@ -43,8 +43,8 @@ public class SemanticNewsMapController {
             @Override
             protected List<Word> doInConnection() throws RepositoryException {
                 Map<String, List<String>> queryResults;
-                switch (hidden) {
-                    case "false":
+                switch (type) {
+                    case "popular":
                         if (relPopularity) {
                             queryResults = executeWordCloudQuery("mostPopularNonNormalized");
                             return semanticNewsMapService.getMostFrequentEntities(queryResults, from, category);
@@ -52,10 +52,10 @@ public class SemanticNewsMapController {
                             queryResults = executeWordCloudQuery("wordCloud");
                             return semanticNewsMapService.getMostFrequentEntities(queryResults, from, category);
                         }
-                    case "true":
+                    case "hidden":
                         queryResults = executeWordCloudQuery("hiddenChampions");
                         return semanticNewsMapService.getHiddenChampions(queryResults, from, category);
-                    default:
+                    case "popularAndHidden":
                         queryResults = executeWordCloudQuery("hiddenAndPopular");
                         return semanticNewsMapService.getHiddenChampions(queryResults, from, category);
                 }

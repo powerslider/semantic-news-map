@@ -40,6 +40,60 @@ class NewsMapController {
         }
     }
 
+    loadNewsSearchResultData(searchParams) {
+        let popularEntitiesSearchParams = {
+            from: this.currentDate,
+            type: "popular",
+            category: this.category,
+            relPop: this.relativePopularity
+        };
+
+        NewsMapDataService.getWordCloud(popularEntitiesSearchParams)
+            .success((response) => {
+                this.wordCloudDataPopular = response;
+            })
+            .error(() => {
+
+            });
+
+        let hiddenEntitiesSearchParams = {
+            from: this.currentDate,
+            type: "hidden",
+            category: this.category,
+            relPop: this.relativePopularity
+        };
+
+        NewsMapDataService.getWordCloud(hiddenEntitiesSearchParams)
+            .success((response) => {
+                this.wordCloudDataHidden = response;
+            })
+            .error(() => {
+
+            });
+
+        let popularAndHiddenEntitiesSearchParams = {
+            from: this.currentDate,
+            category: this.category,
+            relPop: this.relativePopularity
+        };
+
+        NewsMapDataService.getWordCloud(popularAndHiddenEntitiesSearchParams)
+            .success((response) => {
+                this.wordCloudDataPopularAndHidden = response;
+            })
+            .error(() => {
+
+            });
+
+        NewsMapDataService.getWorldHeatMap(this.currentDate)
+            .success((response) => {
+                this.geoHeatMapData = response;
+            })
+            .error(() => {
+
+            });
+    }
+
 //    showSearchCriteriaBottonSheet($event) {
 //        this.$mdBottomSheet.show({
 //            templateUrl: 'views/bottom-sheet-search-criteria.tpl.html',
