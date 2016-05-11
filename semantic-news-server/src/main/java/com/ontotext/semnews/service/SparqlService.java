@@ -138,6 +138,7 @@ public class SparqlService {
         }
 
         protected Map<String, List<String>> executeQueryAndGetBindings(String sparqlFileName, Function<String, String> replacePlaceholdersOperator) {
+
             String queryString = null;
             try {
                 queryString = readQueryString(sparqlFileName);

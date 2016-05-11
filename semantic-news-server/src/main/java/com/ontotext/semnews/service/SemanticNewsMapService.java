@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.model.WorldHeatMap;
+import org.openrdf.model.datatypes.XMLDatatypeUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -70,17 +71,17 @@ public class SemanticNewsMapService {
     );
 
     public List<Word> getMostFrequentEntities(Map<String, List<String>> entities, String from, String category) {
-        Stream<String> labels = entities.get("entities_label").stream();
-        Stream<String> weights = entities.get("relative_popularity").stream();
-        Stream<String> mentionedEntities = entities.get("mentioned_lod_entity").stream();
+        Stream<String> labels = entities.get("entityLabel").stream();
+        Stream<String> weights = entities.get("relativePopularity").stream();
+        Stream<String> mentionedEntities = entities.get("mentionedLodEntity").stream();
 
         return zip2Words(from, category, labels, weights, mentionedEntities);
     }
 
     public List<Word> getHiddenChampions(Map<String, List<String>> entities, String from, String category) {
-        Stream<String> labels = entities.get("entities_name").stream();
-        Stream<String> weights = entities.get("relWeight").stream();
-        Stream<String> mentionedEntities = entities.get("rel_entity").stream();
+        Stream<String> labels = entities.get("entityLabel").stream();
+        Stream<String> weights = entities.get("relativePopularity").stream();
+        Stream<String> mentionedEntities = entities.get("relativeEntity").stream();
 
         return zip2Words(from, category, labels, weights, mentionedEntities);
     }
@@ -94,7 +95,7 @@ public class SemanticNewsMapService {
                 (label, weight, mentionedEntity) -> {
                     Word word = new Word();
                     word.setText(label);
-                    word.setWeight(Integer.parseInt(weight));
+                    word.setWeight(XMLDatatypeUtil.parseDouble(weight));
                     word.setDetailsUrl("/details?uri=" + mentionedEntity +
                             "&from=" + from + "&category=" + category);
                     return word;
@@ -105,10 +106,10 @@ public class SemanticNewsMapService {
     public List<NewsEntity> getNewsMentioningEntity(Map<String, List<String>> queryResult) {
         List<NewsEntity> newsEntities = new ArrayList<>();
 
-        List<String> newsTitles = queryResult.get("news_title");
-        List<String> newsDate = queryResult.get("news_date");
+        List<String> newsTitles = queryResult.get("newsTitle");
+        List<String> newsDate = queryResult.get("newsDate");
         List<String> newsUris = queryResult.get("news");
-        List<String> entityRelevances = queryResult.get("entity_relevance");
+        List<String> entityRelevances = queryResult.get("entityRelevance");
 
         for (int i = 0; i < newsTitles.size(); i++) {
             NewsEntity newsEntity = new NewsEntity();
@@ -125,11 +126,11 @@ public class SemanticNewsMapService {
     public List<NewsEntity> getNewsMentioningRelEntity(Map<String, List<String>> queryResult) {
         List<NewsEntity> newsEntities = new ArrayList<>();
 
-        List<String> newsTitles = queryResult.get("title");
-        List<String> newsDate = queryResult.get("date");
+        List<String> newsTitles = queryResult.get("newsTitle");
+        List<String> newsDate = queryResult.get("newsDate");
         List<String> newsUris = queryResult.get("news");
-        List<String> entityRelevances = queryResult.get("rel_entity");
-        List<String> intermedEntities = queryResult.get("intermed_entity");
+        List<String> entityRelevances = queryResult.get("relEntity");
+        List<String> intermedEntities = queryResult.get("intermedEntity");
 
         for (int i = 0; i < newsTitles.size(); i++) {
             NewsEntity newsEntity = new NewsEntity();

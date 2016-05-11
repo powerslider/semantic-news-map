@@ -6,19 +6,19 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
 PREFIX dbr: <http://dbpedia.org/resource/>
 
-SELECT (max(?title) AS ?news_title) (max(?date) AS ?news_date) ?news (xsd:integer(max(?relevance) * 100) AS ?entity_relevance)
+SELECT (max(?title) AS ?newsTitle) (max(?date) AS ?newsDate) ?news (xsd:integer(max(?relevance) * 100) AS ?entityRelevance)
 FROM onto:disable-sameAs
 WHERE {
     BIND(<{entity}> as ?entity)
 
     ?news pub-old:containsMention ?mention.
-    ?mention  pub-old:hasInstance ?pub_entity .
+    ?mention  pub-old:hasInstance ?pubEntity .
     ?mention pub-old:relevanceScore ?relevance.
-    ?pub_entity pub:exactMatch ?entity.
+    ?pubEntity pub:exactMatch ?entity.
 
     ?news pub-old:creationDate ?date.
     FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime))
-    FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
+    FILTER (?pubEntity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
 
     ?news pub-old:category ?category .
     FILTER (?category = "{category}"^^xsd:string)
@@ -26,4 +26,4 @@ WHERE {
     ?news pub-old:title ?title .
 
 }
-GROUP BY ?news ORDER BY ?news_date
+GROUP BY ?news ORDER BY ?newsDate

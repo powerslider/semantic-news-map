@@ -8,35 +8,35 @@ PREFIX ff-pub: <http://factforge.org/pub/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
 
-SELECT DISTINCT ?entity_label ?mentioned_lod_entity  ?longterm_popularity
-                (sum(?entity_relevance) as ?daily_popularity)
-                (xsd:integer(round((?daily_popularity * ?daily_popularity / ?longterm_popularity)*100)) AS ?relative_popularity)
+SELECT DISTINCT ?entityLabel ?mentionedLodEntity  ?longtermPopularity
+                (sum(?entity_relevance) as ?dailyPopularity)
+                (xsd:integer(round((?dailyPopularity * ?dailyPopularity / ?longtermPopularity)*100)) AS ?relativePopularity)
 FROM onto:disable-sameAs
 WHERE {
-    {    SELECT ?pub_entity (max(?relevance) as ?entity_relevance)
+    {    SELECT ?pubEntity (max(?relevance) as ?entity_relevance)
         {
             ?news pub-old:containsMention ?mention.
-            ?mention  pub-old:hasInstance ?pub_entity .
+            ?mention  pub-old:hasInstance ?pubEntity .
             ?mention pub-old:relevanceScore ?relevance.
 
             ?news pub-old:creationDate ?date.
-            FILTER ((?date > "{date}T00:00:00Z"^^xsd:dateTime) && (?date < "{date1}T23:59:00Z"^^xsd:dateTime))
-            FILTER (?pub_entity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
+            FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime))
+            FILTER (?pubEntity != <http://ontology.ontotext.com/resource/tslhir2hhreo>) # CONFIG.SYS: DSP-1404
 
             ?news pub-old:category ?category .
             FILTER (?category = "{category}"^^xsd:string)
 
-        }    GROUP BY ?news ?pub_entity
+        }    GROUP BY ?news ?pubEntity
      }
 
-     ?pub_entity ff-map:longtermPopularity ?long_popularity .
-     FILTER (?long_popularity > "1.0"^^xsd:double)
-     BIND(IF(?long_popularity < "3.0"^^xsd:double , ?long_popularity * 1.5, ?long_popularity) as ?longterm_popularity) 
+     ?pubEntity ff-map:longtermPopularity ?longPopularity .
+     FILTER (?longPopularity > "1.0"^^xsd:double)
+     BIND(IF(?longPopularity < "3.0"^^xsd:double , ?longPopularity * 1.5, ?longPopularity) as ?longtermPopularity) 
 
-    ?pub_entity pub:preferredLabel ?entity_label .
-    ?pub_entity pub:exactMatch ?mentioned_lod_entity.
-      ?mentioned_lod_entity a owl:Thing .
+    ?pubEntity pub:preferredLabel ?entityLabel .
+    ?pubEntity pub:exactMatch ?mentionedLodEntity.
+    ?mentionedLodEntity a owl:Thing .
 }
-GROUP BY ?mentioned_lod_entity ?entity_label ?longterm_popularity
-ORDER BY DESC(?relative_popularity)
+GROUP BY ?mentionedLodEntity ?entityLabel ?longtermPopularity
+ORDER BY DESC(?relativePopularity)
 LIMIT 100

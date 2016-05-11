@@ -6,36 +6,36 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
 PREFIX dbr: <http://dbpedia.org/resource/>
 
-SELECT DISTINCT ?title ?date ?news ?rel_entity ?intermed_entity
+SELECT DISTINCT ?newsTitle ?newsDate ?news ?relEntity ?intermedEntity
 FROM onto:disable-sameAs
 WHERE {
     {
-        SELECT distinct ?news ?date ?title ?rel_entity  {
+        SELECT distinct ?news ?newsDate ?newsTitle ?relEntity  {
             BIND(<{entity}>  as ?entity)
-            ?news pub-old:creationDate ?date .
-            FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
+            ?news pub-old:creationDate ?newsDate .
+            FILTER ((?newsDate > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?newsDate < "{max_date}T23:59:59Z"^^xsd:dateTime))
             ?news pub-old:category ?category .
             FILTER (?category = "{category}"^^xsd:string)
-            ?news pub-old:containsMention / pub-old:hasInstance ?pub_entity .
-            ?pub_entity pub:exactMatch ?rel_entity .
-            ?rel_entity ff-map:agentRelation ?entity .
-            ?news pub-old:title ?title .
-        } GROUP BY ?news ?date ?title ?rel_entity
+            ?news pub-old:containsMention / pub-old:hasInstance ?pubEntity .
+            ?pubEntity pub:exactMatch ?relEntity .
+            ?relEntity ff-map:agentRelation ?entity .
+            ?news pub-old:title ?newsTitle .
+        } GROUP BY ?news ?newsDate ?newsTitle ?relEntity
     }
     UNION
     {
-        SELECT ?news ?date ?title ?rel_entity ?intermed_entity {
+        SELECT ?news ?newsDate ?newsTitle ?relEntity ?intermedEntity {
             BIND(<{entity}> as ?entity)
-            ?news pub-old:creationDate ?date .
-            FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:59Z"^^xsd:dateTime))
+            ?news pub-old:creationDate ?newsDate .
+            FILTER ((?newsDate > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?newsDate < "{max_date}T23:59:59Z"^^xsd:dateTime))
             ?news pub-old:category ?category .
             FILTER (?category = "{category}"^^xsd:string)
-            ?news pub-old:containsMention / pub-old:hasInstance ?pub_entity .
-            ?pub_entity pub:exactMatch ?rel_entity .
-            ?rel_entity ff-map:agentRelation ?intermed_entity .
-            ?intermed_entity ff-map:agentRelation ?entity .
-            FILTER( ?rel_entity != ?entity )
-            ?news pub-old:title ?title .
-        } GROUP BY ?news ?date ?title ?rel_entity ?intermed_entity
+            ?news pub-old:containsMention / pub-old:hasInstance ?pubEntity .
+            ?pubEntity pub:exactMatch ?relEntity .
+            ?relEntity ff-map:agentRelation ?intermedEntity .
+            ?intermedEntity ff-map:agentRelation ?entity .
+            FILTER( ?relEntity != ?entity )
+            ?news pub-old:title ?newsTitle .
+        } GROUP BY ?news ?newsDate ?newsTitle ?relEntity ?intermedEntity
     }
-} ORDER BY ?date
+} ORDER BY ?newsDate
