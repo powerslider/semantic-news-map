@@ -137,10 +137,6 @@ public class SparqlService {
             connection.prepareUpdate(QueryLanguage.SPARQL, u).execute();
         }
 
-//        public void t() {
-//            executeQueryAndGetBindings("pesho", s -> s.replaceAll(Pattern.quote("{{target_class}}"), "<" + targetURI + ">"))
-//        }
-
         protected Map<String, List<String>> executeQueryAndGetBindings(String sparqlFileName, Function<String, String> replacePlaceholdersOperator) {
             String queryString = null;
             try {
@@ -187,13 +183,10 @@ public class SparqlService {
         String currentBinding = null;
         try {
             List<String> bindings = tqr.getBindingNames();
-            for (String binding : bindings) {
-                resultMap.put(binding, new ArrayList<String>());
-            }
+            bindings.forEach(b -> resultMap.put(b, new ArrayList<>()));
 
             while (tqr.hasNext()) {
                 BindingSet bs = tqr.next();
-
                 for (Map.Entry<String, List<String>> entry : resultMap.entrySet()) {
                     currentBinding = entry.getKey();
                     List<String> values = entry.getValue();

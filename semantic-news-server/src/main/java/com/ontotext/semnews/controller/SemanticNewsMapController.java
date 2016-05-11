@@ -1,5 +1,7 @@
 package com.ontotext.semnews.controller;
 
+import com.google.common.collect.ImmutableMap;
+import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.model.WorldHeatMap;
 import com.ontotext.semnews.service.SemanticNewsMapService;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/rest/semnews")
 public class SemanticNewsMapController {
 
     @Autowired
@@ -31,10 +34,10 @@ public class SemanticNewsMapController {
 
             private Map<String, List<String>> executeWordCloudQuery(String sparqlFileName) {
                 return executeQueryAndGetBindings(
-                                sparqlFileName,
-                                q -> q.replace("{category}", category)
-                                        .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-                                        .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
+                        sparqlFileName,
+                        q -> q.replace("{category}", category)
+                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
+                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
             }
 
             @Override
@@ -58,12 +61,12 @@ public class SemanticNewsMapController {
                 }
             }
         }.run();
-	}
+    }
 
-	@RequestMapping(value = "/categories", method = RequestMethod.GET)
-	public Set<String> getCategories() {
-		return SemanticNewsMapService.PUB_CATEGORIES;
-	}
+    @RequestMapping(value = "/categories", method = RequestMethod.GET)
+    public Set<String> getCategories() {
+        return SemanticNewsMapService.PUB_CATEGORIES;
+    }
 
     @RequestMapping(value = "/world-heat-map", method = RequestMethod.GET)
     public List<WorldHeatMap> getWorldHeatMap(@RequestParam("from") String from) {
@@ -78,7 +81,39 @@ public class SemanticNewsMapController {
             }
         }.run();
     }
- //
+
+    @RequestMapping(value = "/details", method = RequestMethod.GET)
+    public Map<String, List<NewsEntity>> getNewsEntityDetails(@RequestParam(value = "uri") String entitiUri,
+                                                              @RequestParam("from") String from,
+                                                              @RequestParam("category") String category) {
+
+        return sparqlService.new WithConnection<Map<String, List<NewsEntity>>>() {
+
+            private Map<String, List<String>> executeNewsEntityDetailsQuery(String sparqlFileName) {
+                return executeQueryAndGetBindings(
+                        sparqlFileName,
+                        q -> q.replace("{category}", category)
+                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
+                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from))
+                                .replace("{entity}", entitiUri));
+            }
+
+            @Override
+            protected Map<String, List<NewsEntity>> doInConnection() throws RepositoryException {
+                Map<String, List<String>> queryResult1 = executeNewsEntityDetailsQuery("newsMentioningEntity");
+                List<NewsEntity> newsMentioningEntity = semanticNewsMapService.getNewsMentioningEntity(queryResult1);
+                Map<String, List<String>> queryResult2 = executeNewsEntityDetailsQuery("newsMentioningRelevantEntities");
+                List<NewsEntity> newsMentioningRelEntity = semanticNewsMapService.getNewsMentioningRelEntity(queryResult2);
+
+                return ImmutableMap.<String, List<NewsEntity>>builder()
+                        .put("nonRelevant", newsMentioningEntity)
+                        .put("relevant", newsMentioningRelEntity)
+                        .build();
+            }
+        }.run();
+    }
+
+    //
 //	@RequestMapping(value = "/tag-cloud/results", method = RequestMethod.GET)
 //	public String getReuslts(HttpServletRequest request, @RequestParam("from") String from,
 //							 @RequestParam("category") String category,
