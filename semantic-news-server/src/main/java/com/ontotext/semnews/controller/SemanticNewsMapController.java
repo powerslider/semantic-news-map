@@ -43,17 +43,17 @@ public class SemanticNewsMapController {
                 switch (hidden) {
                     case "false":
                         if (relPopularity) {
-                            queryResults = executeWordCloudQuery("sparql-queries/mostPopularNonNormalized");
+                            queryResults = executeWordCloudQuery("mostPopularNonNormalized");
                             return semanticNewsMapService.getMostFrequentEntities(queryResults, from, category);
                         } else {
-                            queryResults = executeWordCloudQuery("sparql-queries/wordCloud");
+                            queryResults = executeWordCloudQuery("wordCloud");
                             return semanticNewsMapService.getMostFrequentEntities(queryResults, from, category);
                         }
                     case "true":
-                        queryResults = executeWordCloudQuery("sparql-queries/hiddenChampions");
+                        queryResults = executeWordCloudQuery("hiddenChampions");
                         return semanticNewsMapService.getHiddenChampions(queryResults, from, category);
                     default:
-                        queryResults = executeWordCloudQuery("sparql-queries/hiddenAndPopular");
+                        queryResults = executeWordCloudQuery("hiddenAndPopular");
                         return semanticNewsMapService.getHiddenChampions(queryResults, from, category);
                 }
             }
@@ -71,7 +71,7 @@ public class SemanticNewsMapController {
 
             @Override
             protected List<WorldHeatMap> doInConnection() throws RepositoryException {
-                Map<String, List<String>> queryResults = executeQueryAndGetBindings("sparql-queries/newsByCountry",
+                Map<String, List<String>> queryResults = executeQueryAndGetBindings("newsByCountry",
                         q -> q.replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
                                 .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
                 return semanticNewsMapService.getHeatMap(queryResults);

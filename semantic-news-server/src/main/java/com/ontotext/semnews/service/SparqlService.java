@@ -172,7 +172,7 @@ public class SparqlService {
      */
     public String readQueryString(String fileName) throws IOException {
         return IOUtil.readString(
-                getClass().getResourceAsStream("/" + fileName + ".sparql"));
+                getClass().getResourceAsStream("/sparql-queries/" + fileName + ".sparql"));
     }
 
     /**

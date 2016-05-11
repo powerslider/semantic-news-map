@@ -45,9 +45,9 @@ public class NewsEntityDetailsController {
 
             @Override
             protected Map<String, List<NewsEntity>> doInConnection() throws RepositoryException {
-                Map<String, List<String>> queryResult1 = executeNewsEntityDetailsQuery("sparql-queries/newsMentioningEntity");
+                Map<String, List<String>> queryResult1 = executeNewsEntityDetailsQuery("newsMentioningEntity");
                 List<NewsEntity> newsMentioningEntity = semanticNewsMapService.getNewsMentioningEntity(queryResult1);
-                Map<String, List<String>> queryResult2 = executeNewsEntityDetailsQuery("sparql-queries/newsMentioningRelevantEntities");
+                Map<String, List<String>> queryResult2 = executeNewsEntityDetailsQuery("newsMentioningRelevantEntities");
                 List<NewsEntity> newsMentioningRelEntity = semanticNewsMapService.getNewsMentioningRelEntity(queryResult2);
 
                 return ImmutableMap.<String, List<NewsEntity>>builder()
