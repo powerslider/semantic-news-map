@@ -184,6 +184,7 @@ class WordCloudDirective {
                     .data(data, (d) => {
                         return d.text.toLowerCase();
                     });
+
                 text
                     .transition()
                     .duration(1000)
@@ -222,12 +223,13 @@ class WordCloudDirective {
             }
 
             function update() {
+                var wordData = scope.wordData;
                 layout.font('impact').spiral('rectangular');
                 let fontSize = d3.scale['sqrt']().range([10, 100]);
-                if (this.scope.wordData.length) {
-                    fontSize.domain([+this.scope.wordData[this.scope.wordData.length - 1].value || 1, +this.scope.wordData[0].value]);
+                if (scope.wordData.length) {
+                    fontSize.domain([+wordData[wordData.length - 1].value || 1, +wordData[0].value]);
                 }
-                layout.stop().words(this.scope.wordData).start();
+                layout.stop().words(wordData).start();
             }
         }, 50);
     }

@@ -36,8 +36,10 @@ public class SemanticNewsMapController {
                 return executeQueryAndGetBindings(
                         sparqlFileName,
                         q -> q.replace("{category}", category)
-                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
+                                .replace("{min_date}", from)
+                                .replace("{max_date}", from));
+//                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
+//                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
             }
 
             @Override
@@ -55,7 +57,7 @@ public class SemanticNewsMapController {
                     case "hidden":
                         queryResults = executeWordCloudQuery("hiddenChampions");
                         return semanticNewsMapService.getHiddenChampions(queryResults, from, category);
-                    case "popularAndHidden":
+                    default:
                         queryResults = executeWordCloudQuery("hiddenAndPopular");
                         return semanticNewsMapService.getHiddenChampions(queryResults, from, category);
                 }
@@ -75,8 +77,10 @@ public class SemanticNewsMapController {
             @Override
             protected List<WorldHeatMap> doInConnection() throws RepositoryException {
                 Map<String, List<String>> queryResults = executeQueryAndGetBindings("newsByCountry",
-                        q -> q.replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
+                        q -> q.replace("{min_date}", from)
+                                .replace("{max_date}", from));
+//                        q -> q.replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
+//                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
                 return semanticNewsMapService.getHeatMap(queryResults);
             }
         }.run();
@@ -93,8 +97,10 @@ public class SemanticNewsMapController {
                 return executeQueryAndGetBindings(
                         sparqlFileName,
                         q -> q.replace("{category}", category)
-                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from))
+                                .replace("{min_date}", from)
+                                .replace("{max_date}", from)
+//                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
+//                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from))
                                 .replace("{entity}", entitiUri));
             }
 
