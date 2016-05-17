@@ -3,11 +3,14 @@
  */
 class NewsMapController {
 
-    constructor($scope, $timeout, $mdBottomSheet, $mdDialog) {
+    constructor($scope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$mdBottomSheet = $mdBottomSheet;
         this.$mdDialog = $mdDialog;
+        this.NewsMapDataService = NewsMapDataService;
+
+        this.wholeResponse = this.NewsMapDataService.getWholeResponse();
 
         this.diagramOptions = {
             isOpen: false,
@@ -38,6 +41,8 @@ class NewsMapController {
             this.loadNewsSearchResultData = loadNewsSearchResultData;
 
             function loadNewsSearchResultData() {
+                let wholeResponse = {};
+
                 let popularEntitiesSearchParams = {
                     from: this.currentDate,
                     type: "popular",
@@ -47,7 +52,7 @@ class NewsMapController {
 
                 NewsMapDataService.getWordCloud(popularEntitiesSearchParams)
                     .success((response) => {
-                        this.wordCloudDataPopular = response;
+                        wholeResponse.popularEntities = response;
                     })
                     .error(() => {
 
@@ -62,7 +67,7 @@ class NewsMapController {
 
                 NewsMapDataService.getWordCloud(hiddenEntitiesSearchParams)
                     .success((response) => {
-                        this.wordCloudDataHidden = response;
+                        wholeResponse.hiddenEntities = response;
                     })
                     .error(() => {
 
@@ -76,7 +81,7 @@ class NewsMapController {
 
                 NewsMapDataService.getWordCloud(popularAndHiddenEntitiesSearchParams)
                     .success((response) => {
-                        this.wordCloudDataPopularAndHidden = response;
+                        wholeResponse.popularAndHiddenEntities = response;
                     })
                     .error(() => {
 
@@ -84,11 +89,13 @@ class NewsMapController {
 
                 NewsMapDataService.getWorldHeatMap(this.currentDate)
                     .success((response) => {
-                        this.geoHeatMapData = response;
+                        wholeResponse.geoHeatMapData = response;
                     })
                     .error(() => {
 
                     });
+
+                NewsMapDataService.setWholeResponse(wholeResponse);
             }
         }
     }
@@ -111,5 +118,5 @@ class NewsMapController {
 
 }
 
-NewsMapController.$inject = ['$scope', '$timeout', '$mdBottomSheet', '$mdDialog'];
+NewsMapController.$inject = ['$scope', '$timeout', '$mdBottomSheet', '$mdDialog', 'NewsMapDataService'];
 export default NewsMapController;

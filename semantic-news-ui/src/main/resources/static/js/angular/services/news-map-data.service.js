@@ -2,6 +2,8 @@ function getDatePart(date) {
     return date.toISOString().substring(0, 10);
 }
 
+var wholeResponse = {};
+
 class NewsMapDataService {
 
     constructor($http) {
@@ -35,6 +37,14 @@ class NewsMapDataService {
                             category: searchParams.category
                         }
                     });
+    }
+
+    getWholeResponse() {
+        return wholeResponse;
+    }
+
+    setWholeResponse(response) {
+        wholeResponse = response;
     }
 }
 

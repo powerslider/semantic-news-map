@@ -6,22 +6,22 @@
             <md-tab label="Most Popular">
                 <word-cloud
                         ng-if="nmCtrl.selectedTabIndex == 0"
-                        word-data="nmCtrl.wordCloudDataPopular"></word-cloud>
+                        word-data="nmCtrl.wholeResponse.popularEntities"></word-cloud>
             </md-tab>
             <md-tab label="Most Popular + Hidden">
                 <word-cloud
                         ng-if="nmCtrl.selectedTabIndex == 1"
-                        word-data="nmCtrl.wordCloudDataPopularAndHidden"></word-cloud>
+                        word-data="nmCtrl.wholeResponse.popularAndHiddenEntities"></word-cloud>
             </md-tab>
             <md-tab label="Hidden Champions">
                 <word-cloud
                         ng-if="nmCtrl.selectedTabIndex == 2"
-                        word-data="nmCtrl.wordCloudDataHidden"></word-cloud>
+                        word-data="nmCtrl.wholeResponse.hiddenEntities"></word-cloud>
             </md-tab>
             <md-tab label="Geo Heat Map">
                 <geo-heat-map
                         ng-if="nmCtrl.selectedTabIndex == 3"
-                        geo-data="nmCtrl.geoHeatMapData"></geo-heat-map>
+                        geo-data="nmCtrl.wholeResponse.geoHeatMap"></geo-heat-map>
             </md-tab>
         </md-tabs>
 
