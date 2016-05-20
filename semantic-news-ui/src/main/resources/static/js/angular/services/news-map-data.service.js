@@ -1,8 +1,8 @@
 function getDatePart(date) {
-    return date.toISOString().substring(0, 10);
+    if (date) {
+        return date.substring(0, 10);
+    }
 }
-
-var wholeResponse = {};
 
 class NewsMapDataService {
 
@@ -13,6 +13,7 @@ class NewsMapDataService {
     getWordCloud(searchParams) {
         return this.$http.get('rest/semnews/word-cloud', {
                         params: {
+                            type: searchParams.type,
                             from: getDatePart(searchParams.from),
                             category: searchParams.category,
                             hidden: searchParams.hidden,
@@ -37,14 +38,6 @@ class NewsMapDataService {
                             category: searchParams.category
                         }
                     });
-    }
-
-    getWholeResponse() {
-        return wholeResponse;
-    }
-
-    setWholeResponse(response) {
-        wholeResponse = response;
     }
 }
 

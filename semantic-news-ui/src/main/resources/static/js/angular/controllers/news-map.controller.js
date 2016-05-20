@@ -3,101 +3,113 @@
  */
 class NewsMapController {
 
-    constructor($scope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService) {
+    constructor($scope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService, localStorageService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$mdBottomSheet = $mdBottomSheet;
         this.$mdDialog = $mdDialog;
         this.NewsMapDataService = NewsMapDataService;
-
-        this.wholeResponse = this.NewsMapDataService.getWholeResponse();
-
-        this.diagramOptions = {
-            isOpen: false,
-            count: 0
-        };
+        this.localStorageService = localStorageService;
 
         this.selectedTabIndex = 0;
+
+        let searchParams = JSON.parse(this.localStorageService.get("searchParams"));
+        if (searchParams) {
+            console.log(searchParams);
+            this.loadNewsSearchResultData(searchParams);
+        }
+
 //        this.showSearchCriteriaBottonSheet();
     }
 
     showSearchCriteriaDialog($event) {
         this.$mdDialog.show({
             templateUrl: 'views/search-criteria-dialog.tpl.html',
-            controller: ['$mdDialog', 'MdAutocompleteService', 'NewsMapDataService', NewsMapSearchController],
+            controller: ['$mdDialog', '$rootScope', 'MdAutocompleteService', 'localStorageService', '$state', NewsMapSearchController],
             controllerAs: "searchCtrl",
             bindToController: true,
             clickOutsideToClose: true,
             targetEvent: $event
         });
 
-        function NewsMapSearchController($mdDialog, MdAutocompleteService, NewsMapDataService) {
+        function NewsMapSearchController($mdDialog, $rootScope,  MdAutocompleteService, localStorageService, $state) {
             this.currentDate = new Date();
             this.categories = MdAutocompleteService
                                     .loadAllItems("All, Science And Technology, Lifestyle, Business, Sports, International");
             this.querySearch = MdAutocompleteService.querySearch;
             this.cancel = ($event) => $mdDialog.cancel();
             this.finish = ($event) => $mdDialog.hide();
-            this.loadNewsSearchResultData = loadNewsSearchResultData;
+            this.sendSearchParams = sendSearchParams;
 
-            function loadNewsSearchResultData() {
-                let wholeResponse = {};
-
-                let popularEntitiesSearchParams = {
-                    from: this.currentDate,
-                    type: "popular",
-                    category: this.category,
-                    relPop: this.relativePopularity
-                };
-
-                NewsMapDataService.getWordCloud(popularEntitiesSearchParams)
-                    .success((response) => {
-                        wholeResponse.popularEntities = response;
-                    })
-                    .error(() => {
-
-                    });
-
-                let hiddenEntitiesSearchParams = {
-                    from: this.currentDate,
-                    type: "hidden",
-                    category: this.category,
-                    relPop: this.relativePopularity
-                };
-
-                NewsMapDataService.getWordCloud(hiddenEntitiesSearchParams)
-                    .success((response) => {
-                        wholeResponse.hiddenEntities = response;
-                    })
-                    .error(() => {
-
-                    });
-
-                let popularAndHiddenEntitiesSearchParams = {
+            function sendSearchParams() {
+                let searchParams = {
                     from: this.currentDate,
                     category: this.category,
                     relPop: this.relativePopularity
                 };
 
-                NewsMapDataService.getWordCloud(popularAndHiddenEntitiesSearchParams)
-                    .success((response) => {
-                        wholeResponse.popularAndHiddenEntities = response;
-                    })
-                    .error(() => {
-
-                    });
-
-                NewsMapDataService.getWorldHeatMap(this.currentDate)
-                    .success((response) => {
-                        wholeResponse.geoHeatMapData = response;
-                    })
-                    .error(() => {
-
-                    });
-
-                NewsMapDataService.setWholeResponse(wholeResponse);
+                localStorageService.set("searchParams", JSON.stringify(searchParams));
+//                $state.go($state.current, {}, {reload: true});
             }
         }
+    }
+
+    loadNewsSearchResultData(searchParams) {
+        let popularEntitiesSearchParams = {
+            from: searchParams.from,
+            type: "popular",
+            category: searchParams.category,
+            relPop: searchParams.relPop
+        };
+
+        this.NewsMapDataService.getWordCloud(popularEntitiesSearchParams)
+            .success((response) => {
+                console.log("POPULAR");
+                this.wordCloudPopular = response;
+            })
+            .error(() => {
+
+            });
+
+        let hiddenEntitiesSearchParams = {
+            from: searchParams.from,
+            type: "hidden",
+            category: searchParams.category,
+            relPop: searchParams.relPop
+        };
+
+        this.NewsMapDataService.getWordCloud(hiddenEntitiesSearchParams)
+            .success((response) => {
+                console.log("HIDDEN");
+                this.wordCloudHidden = response;
+            })
+            .error(() => {
+
+            });
+
+        let popularAndHiddenEntitiesSearchParams = {
+            from: searchParams.from,
+            category: searchParams.category,
+            relPop: searchParams.relPop
+        };
+
+        this.NewsMapDataService.getWordCloud(popularAndHiddenEntitiesSearchParams)
+            .success((response) => {
+                console.log("POPULAR & HIDDEN");
+                this.wordCloudPopularAndHidden = response;
+            })
+            .error(() => {
+
+            });
+
+        this.NewsMapDataService.getWorldHeatMap(searchParams.from)
+            .success((response) => {
+                console.log("HEAT MAP");
+                this.geoHeatMap = response;
+            })
+            .error(() => {
+
+            });
     }
 
 //    showSearchCriteriaBottonSheet($event) {
@@ -118,5 +130,5 @@ class NewsMapController {
 
 }
 
-NewsMapController.$inject = ['$scope', '$timeout', '$mdBottomSheet', '$mdDialog', 'NewsMapDataService'];
+NewsMapController.$inject = ['$scope', '$timeout', '$mdBottomSheet', '$mdDialog', 'NewsMapDataService', 'localStorageService'];
 export default NewsMapController;

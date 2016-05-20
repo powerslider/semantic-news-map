@@ -1,6 +1,6 @@
 import 'angular-material/angular-material.css!';
 import 'angular-material-icons/angular-material-icons.css!';
-import 'angular-resizable/src/angular-resizable.css!';
+//import 'angular-resizable/src/angular-resizable.css!';
 import 'bootstrap/css/bootstrap.css!';
 import 'font-awesome/css/font-awesome.css!';
 
@@ -14,7 +14,8 @@ import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 
 import 'angular-material-icons';
-import 'angular-resizable';
+import 'angular-local-storage';
+//import 'angular-resizable';
 
 import 'angular-ui-bootstrap';
 
@@ -22,7 +23,7 @@ import 'angular-material';
 import 'angular-aria';
 import 'angular-messages';
 
-import 'lib/angular-pageslide-directive';
+//import 'lib/angular-pageslide-directive';
 
 import 'jquery';
 import 'lodash';
@@ -39,8 +40,9 @@ export default angular
         'ngAria',
         'ngMaterial',
         'ngMdIcons',
-        'angularResizable',
-        'pageslide-directive',
+//        'angularResizable',
+//        'pageslide-directive',
+        'LocalStorageModule',
         services.name,
         controllers.name,
         directives.name

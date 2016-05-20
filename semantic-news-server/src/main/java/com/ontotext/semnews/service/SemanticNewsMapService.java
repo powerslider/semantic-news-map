@@ -95,7 +95,7 @@ public class SemanticNewsMapService {
                 (label, weight, mentionedEntity) -> {
                     Word word = new Word();
                     word.setText(label);
-                    word.setWeight(XMLDatatypeUtil.parseDouble(weight));
+                    word.setSize(XMLDatatypeUtil.parseDouble(weight));
                     word.setDetailsUrl("/details?uri=" + mentionedEntity +
                             "&from=" + from + "&category=" + category);
                     return word;

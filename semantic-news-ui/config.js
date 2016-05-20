@@ -17,6 +17,7 @@ System.config({
     "angular": "github:angular/bower-angular@1.5.2",
     "angular-animate": "github:angular/bower-angular-animate@1.5.2",
     "angular-aria": "github:angular/bower-angular-aria@1.5.2",
+    "angular-local-storage": "npm:angular-local-storage@0.2.7",
     "angular-material": "github:angular/bower-material@1.0.7",
     "angular-material-icons": "npm:angular-material-icons@0.7.0",
     "angular-messages": "github:angular/bower-angular-messages@1.5.2",

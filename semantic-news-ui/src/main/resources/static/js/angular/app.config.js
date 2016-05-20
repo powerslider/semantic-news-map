@@ -1,5 +1,5 @@
-routing.$inject = ['$urlRouterProvider', '$stateProvider', '$locationProvider'];
-export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
+routing.$inject = ['$urlRouterProvider', '$stateProvider', '$locationProvider', 'localStorageServiceProvider'];
+export function routing($urlRouterProvider, $stateProvider, $locationProvider, localStorageServiceProvider) {
     $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/');
@@ -14,13 +14,13 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider) {
             controller: 'NewsMapController as nmCtrl',
             templateUrl: 'views/news-map.tpl.html'
         })
-        .state('tab1', {
-            url: '/tab1',
-            template: '<word-cloud></word-cloud>'
-        })
-        .state('tab2', {
-            url: '/tab2',
-            template: '<word-cloud></word-cloud>'
+        .state('home.data', {
+            controller: 'NewsMapController as nmCtrl',
+            templateUrl: 'views/news-map.tpl.html'
         });
+
+    localStorageServiceProvider
+       .setStorageType('localStorage')
+       .setNotify(true, true);
 }
 

@@ -7,16 +7,16 @@ package com.ontotext.semnews.model;
 public class Word {
 
     private String text;
-    private double weight;
+    private double size;
     private String detailsUrl;
 
     public Word() {
         super();
     }
 
-    public Word(String text, int weight, String detailsUrl) {
+    public Word(String text, int size, String detailsUrl) {
         this.text = text;
-        this.weight = weight;
+        this.size = size;
         this.detailsUrl = detailsUrl;
     }
 
@@ -28,12 +28,12 @@ public class Word {
         this.text = text;
     }
 
-    public double getWeight() {
-        return weight;
+    public double getSize() {
+        return size;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setSize(double size) {
+        this.size = size;
     }
 
     public String getDetailsUrl() {
