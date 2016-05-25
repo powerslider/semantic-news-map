@@ -5,15 +5,16 @@ PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX leak: <http://data.ontotext.com/resource/leak/>
 
-SELECT ?label (count(*) as ?mentions)
-(IF(?label = "United States"@en, round(?mentions / 3), ?mentions) as ?mention)
+SELECT ?countryCode (count(*) as ?mentions)
+(IF(?countryCode = "US"@en, round(?mentions / 3), ?mentions) as ?mention)
 FROM onto:disable-sameAs {
     ?news pub:country ?country.
     FILTER(?country NOT IN (dbr:Antigua_and_Barbuda , dbr:Cuba))
     ?country a dbo:Country;
-        rdfs:label ?label.
+        leak:countryCode ?countryCode.
     ?news pub-old:creationDate ?date.
     FILTER ((?date > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime))
-} GROUP BY ?label
+} GROUP BY ?countryCode
 ORDER BY DESC(?mention)

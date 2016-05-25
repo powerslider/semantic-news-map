@@ -13,12 +13,10 @@ class NewsMapController {
 
         this.selectedTabIndex = 0;
 
-        let searchParams = JSON.parse(this.localStorageService.get("searchParams"));
+        let searchParams = this.localStorageService.get("searchParams");
         if (searchParams) {
-            console.log(searchParams);
-            this.loadNewsSearchResultData(searchParams);
+            this.loadNewsSearchResultData(angular.fromJson(searchParams));
         }
-
 //        this.showSearchCriteriaBottonSheet();
     }
 
@@ -49,7 +47,7 @@ class NewsMapController {
                 };
 
                 localStorageService.set("searchParams", JSON.stringify(searchParams));
-//                $state.go($state.current, {}, {reload: true});
+                $state.go('tabs', {}, {reload: true});
             }
         }
     }

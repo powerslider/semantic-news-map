@@ -6,15 +6,15 @@ package com.ontotext.semnews.model;
  */
 public class WorldHeatMap {
 
-    private String country;
+    private String countryCode;
     private Integer frequency;
 
-    public String getCountry() {
-        return country;
+    public String getCountryCode() {
+        return countryCode;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public Integer getFrequency() {

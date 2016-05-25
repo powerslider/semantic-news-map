@@ -13,8 +13,10 @@ class WordCloudDirective {
 
     link(scope, element, attrs) {
         function drawWordCloud() {
-            let width = Math.floor(this.$window.innerWidth * 0.95),
-                height = Math.floor(this.$window.innerHeight) - 80;
+//            let width = Math.floor(this.$window.innerWidth * 0.95),
+//                height = Math.floor(this.$window.innerHeight) - 80;
+            let width = Math.floor(window.innerWidth * 0.95),
+                height = Math.floor(window.innerHeight) - 80;
 
             let svg = d3.select(".word-cloud-holder")
                 .insert("svg:svg", "h2")

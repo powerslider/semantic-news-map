@@ -4,21 +4,25 @@
                  md-align-tabs="bottom"
                  md-stretch-tabs="always">
             <md-tab label="Most Popular">
+                <div onto-loader size="100" ng-show="!nmCtrl.wordCloudPopular"></div>
                 <word-cloud
                         ng-if="nmCtrl.selectedTabIndex == 0"
                         word-data="nmCtrl.wordCloudPopular"></word-cloud>
             </md-tab>
             <md-tab label="Most Popular + Hidden">
+                <div style="display: block; margin: auto;" onto-loader size="100" ng-show="!nmCtrl.wordCloudPopularAndHidden"></div>
                 <word-cloud
                         ng-if="nmCtrl.selectedTabIndex == 1"
                         word-data="nmCtrl.wordCloudPopularAndHidden"></word-cloud>
             </md-tab>
             <md-tab label="Hidden Champions">
+                <div class="ot-loader" onto-loader size="100" ng-show="!nmCtrl.wordCloudHidden"></div>
                 <word-cloud
                         ng-if="nmCtrl.selectedTabIndex == 2"
                         word-data="nmCtrl.wordCloudHidden"></word-cloud>
             </md-tab>
             <md-tab label="Geo Heat Map">
+                <div onto-loader size="100" ng-show="!nmCtrl.geoHeatMap"></div>
                 <geo-heat-map
                         ng-if="nmCtrl.selectedTabIndex == 3"
                         geo-data="nmCtrl.geoHeatMap"></geo-heat-map>

@@ -1,6 +1,8 @@
 import controllers from 'app/controllers/controllers.module';
 import WordCloudDirective from 'app/directives/word-cloud.directive';
 import GeoHeatMapDirective from 'app/directives/geo-heatmap.directive';
+import OntoLoaderDirective from 'app/directives/onto-loader.directive';
+
 import { register } from 'app/utils/register';
 
 
@@ -10,4 +12,5 @@ export default directives;
 
 register(directives.name)
     .directive('wordCloud', WordCloudDirective)
-    .directive('geoHeatMap', GeoHeatMapDirective);
+    .directive('geoHeatMap', GeoHeatMapDirective)
+    .directive('ontoLoader', OntoLoaderDirective);

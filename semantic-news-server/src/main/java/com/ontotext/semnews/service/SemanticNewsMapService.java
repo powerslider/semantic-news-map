@@ -5,13 +5,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
-import com.ontotext.semnews.model.WorldHeatMap;
 import org.openrdf.model.datatypes.XMLDatatypeUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -145,18 +145,15 @@ public class SemanticNewsMapService {
         return newsEntities;
     }
 
-    public List<WorldHeatMap> getHeatMap(Map<String, List<String>> queryResult) {
-        Stream<String> labels = queryResult.get("label").stream();
+    public String getHeatMap(Map<String, List<String>> queryResult) {
+        Stream<String> labels = queryResult.get("countryCode").stream();
         Stream<String> mentions = queryResult.get("mention").stream();
 
-        return StreamUtils.zip(labels, mentions,
-                (label, mention) -> {
-                    WorldHeatMap worldHeatMap = new WorldHeatMap();
-                    worldHeatMap.setCountry(label);
-                    worldHeatMap.setFrequency(Integer.parseInt(mention));
-                    return worldHeatMap;
-                })
-                .collect(Collectors.toList());
+        String heatMapEntries = StreamUtils.zip(labels, mentions,
+                (label, mention) -> String.join(",", label, mention) + "\n")
+                .collect(Collectors.joining());
+
+        return String.join("\n", "country_code,frequency", heatMapEntries);
     }
 
     public String toIsoLocalDate(String dateString) {

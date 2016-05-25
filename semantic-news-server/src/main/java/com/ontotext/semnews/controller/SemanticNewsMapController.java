@@ -1,6 +1,7 @@
 package com.ontotext.semnews.controller;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.net.MediaType;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.model.WorldHeatMap;
@@ -70,17 +71,16 @@ public class SemanticNewsMapController {
         return SemanticNewsMapService.PUB_CATEGORIES;
     }
 
-    @RequestMapping(value = "/world-heat-map", method = RequestMethod.GET)
-    public List<WorldHeatMap> getWorldHeatMap(@RequestParam("from") String from) {
-        return sparqlService.new WithConnection<List<WorldHeatMap>>() {
+    @RequestMapping(value = "/world-heat-map", method = RequestMethod.GET, produces = "text/csv")
+    public String getWorldHeatMap(@RequestParam("from") String from) {
+        return sparqlService.new WithConnection<String>() {
 
             @Override
-            protected List<WorldHeatMap> doInConnection() throws RepositoryException {
+            protected String doInConnection() throws RepositoryException {
                 Map<String, List<String>> queryResults = executeQueryAndGetBindings("newsByCountry",
                         q -> q.replace("{min_date}", from)
                                 .replace("{max_date}", from));
-//                        q -> q.replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-//                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
+
                 return semanticNewsMapService.getHeatMap(queryResults);
             }
         }.run();
@@ -99,8 +99,6 @@ public class SemanticNewsMapController {
                         q -> q.replace("{category}", category)
                                 .replace("{min_date}", from)
                                 .replace("{max_date}", from)
-//                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-//                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from))
                                 .replace("{entity}", entitiUri));
             }
 

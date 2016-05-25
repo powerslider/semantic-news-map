@@ -10,11 +10,8 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider, l
             controller: 'SplashController as splashCtrl',
             template: '<div ui-view></div>'
         })
-        .state('home.init', {
-            controller: 'NewsMapController as nmCtrl',
-            templateUrl: 'views/news-map.tpl.html'
-        })
-        .state('home.data', {
+        .state('tabs', {
+            url: '/tabs',
             controller: 'NewsMapController as nmCtrl',
             templateUrl: 'views/news-map.tpl.html'
         });
