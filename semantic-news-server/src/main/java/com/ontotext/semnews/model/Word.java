@@ -8,16 +8,16 @@ public class Word {
 
     private String text;
     private double size;
-    private String detailsUrl;
+    private String entityUri;
 
     public Word() {
         super();
     }
 
-    public Word(String text, int size, String detailsUrl) {
+    public Word(String text, int size, String entityUri) {
         this.text = text;
         this.size = size;
-        this.detailsUrl = detailsUrl;
+        this.entityUri = entityUri;
     }
 
     public String getText() {
@@ -36,11 +36,11 @@ public class Word {
         this.size = size;
     }
 
-    public String getDetailsUrl() {
-        return detailsUrl;
+    public String getEntityUri() {
+        return entityUri;
     }
 
-    public void setDetailsUrl(String detailsUrl) {
-        this.detailsUrl = detailsUrl;
+    public void setEntityUri(String entityUri) {
+        this.entityUri = entityUri;
     }
 }

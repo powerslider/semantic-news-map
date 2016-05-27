@@ -10,10 +10,15 @@ export function routing($urlRouterProvider, $stateProvider, $locationProvider, l
             controller: 'SplashController as splashCtrl',
             template: '<div ui-view></div>'
         })
-        .state('tabs', {
-            url: '/tabs',
-            controller: 'NewsMapController as nmCtrl',
+        .state('news-map', {
+            url: '/news-map',
+            controller: 'NewsMapController as mapCtrl',
             templateUrl: 'views/news-map.tpl.html'
+        })
+        .state('news-details', {
+            url: '/news-details?uri&from&category',
+            controller: 'NewsDetailsController as detailsCtrl',
+            templateUrl: 'views/news-details.tpl.html'
         });
 
     localStorageServiceProvider

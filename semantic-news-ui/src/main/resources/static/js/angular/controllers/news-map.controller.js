@@ -13,9 +13,9 @@ class NewsMapController {
 
         this.selectedTabIndex = 0;
 
-        let searchParams = this.localStorageService.get("searchParams");
-        if (searchParams) {
-            this.loadNewsSearchResultData(angular.fromJson(searchParams));
+        this.searchParams = this.localStorageService.get("searchParams");
+        if (this.searchParams) {
+            this.loadNewsSearchResultData(angular.fromJson(this.searchParams));
         }
 //        this.showSearchCriteriaBottonSheet();
     }

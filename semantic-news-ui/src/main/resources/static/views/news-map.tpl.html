@@ -1,41 +1,44 @@
 <section layout-align="left" class="dynamic-tabs" flex>
     <md-content class="md-padding">
-        <md-tabs md-selected="nmCtrl.selectedTabIndex"
+        <md-tabs md-selected="mapCtrl.selectedTabIndex"
                  md-align-tabs="bottom"
                  md-stretch-tabs="always">
             <md-tab label="Most Popular">
-                <div onto-loader size="100" ng-show="!nmCtrl.wordCloudPopular"></div>
+                <div onto-loader size="100" ng-show="!mapCtrl.wordCloudPopular"></div>
                 <word-cloud
-                        ng-if="nmCtrl.selectedTabIndex == 0"
-                        word-data="nmCtrl.wordCloudPopular"></word-cloud>
+                        ng-if="mapCtrl.selectedTabIndex == 0"
+                        word-data="mapCtrl.wordCloudPopular"
+                        word-search-params="mapCtrl.searchParams"></word-cloud>
             </md-tab>
             <md-tab label="Most Popular + Hidden">
-                <div style="display: block; margin: auto;" onto-loader size="100" ng-show="!nmCtrl.wordCloudPopularAndHidden"></div>
+                <div style="display: block; margin: auto;" onto-loader size="100" ng-show="!mapCtrl.wordCloudPopularAndHidden"></div>
                 <word-cloud
-                        ng-if="nmCtrl.selectedTabIndex == 1"
-                        word-data="nmCtrl.wordCloudPopularAndHidden"></word-cloud>
+                        ng-if="mapCtrl.selectedTabIndex == 1"
+                        word-data="mapCtrl.wordCloudPopularAndHidden"
+                        word-search-params="mapCtrl.searchParams"></word-cloud>
             </md-tab>
             <md-tab label="Hidden Champions">
-                <div class="ot-loader" onto-loader size="100" ng-show="!nmCtrl.wordCloudHidden"></div>
+                <div class="ot-loader" onto-loader size="100" ng-show="!mapCtrl.wordCloudHidden"></div>
                 <word-cloud
-                        ng-if="nmCtrl.selectedTabIndex == 2"
-                        word-data="nmCtrl.wordCloudHidden"></word-cloud>
+                        ng-if="mapCtrl.selectedTabIndex == 2"
+                        word-data="mapCtrl.wordCloudHidden"
+                        word-search-params="mapCtrl.searchParams"></word-cloud>
             </md-tab>
             <md-tab label="Geo Heat Map">
-                <div onto-loader size="100" ng-show="!nmCtrl.geoHeatMap"></div>
+                <div onto-loader size="100" ng-show="!mapCtrl.geoHeatMap"></div>
                 <geo-heat-map
-                        ng-if="nmCtrl.selectedTabIndex == 3"
-                        geo-data="nmCtrl.geoHeatMap"></geo-heat-map>
+                        ng-if="mapCtrl.selectedTabIndex == 3"
+                        geo-data="mapCtrl.geoHeatMap"></geo-heat-map>
             </md-tab>
         </md-tabs>
 
-        <md-button class="md-fab md-fab-top-right" aria-label="Add" ng-click="nmCtrl.showSearchCriteriaDialog($event)">
+        <md-button class="md-fab md-fab-top-right" aria-label="Add" ng-click="mapCtrl.showSearchCriteriaDialog($event)">
             <ng-md-icon class="floating-btn" icon="add"></ng-md-icon>
         </md-button>
 
         <!--<md-fab-toolbar-->
-                <!--md-open="nmCtrl.diagramOptions.isOpen"-->
-                <!--count="nmCtrl.diagramOptions.count"-->
+                <!--md-open="mapCtrl.diagramOptions.isOpen"-->
+                <!--count="mapCtrl.diagramOptions.count"-->
                 <!--md-direction="right">-->
             <!--<md-fab-trigger class="align-with-text">-->
                 <!--<md-button aria-label="menu"-->

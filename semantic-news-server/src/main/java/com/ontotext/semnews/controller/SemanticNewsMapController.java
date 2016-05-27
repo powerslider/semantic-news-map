@@ -1,15 +1,16 @@
 package com.ontotext.semnews.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.net.MediaType;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
-import com.ontotext.semnews.model.WorldHeatMap;
 import com.ontotext.semnews.service.SemanticNewsMapService;
 import com.ontotext.semnews.service.SparqlService;
 import org.openrdf.repository.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,6 @@ public class SemanticNewsMapController {
                         q -> q.replace("{category}", category)
                                 .replace("{min_date}", from)
                                 .replace("{max_date}", from));
-//                                .replace("{min_date}", semanticNewsMapService.toIsoLocalDate(from))
-//                                .replace("{max_date}", semanticNewsMapService.toIsoLocalDate(from)));
             }
 
             @Override

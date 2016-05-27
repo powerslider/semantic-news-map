@@ -1,22 +1,22 @@
 class WordCloudDirective {
 
-    constructor($window, $timeout) {
+    constructor($window, $timeout, $state) {
         this.restrict = 'AE';
-        this.template = '<div class="word-cloud-holder" style="text-align:center;"></div>';
+        this.template = '<div class="word-cloud-holder"></div>';
         this.scope = {
-            wordData: '='
+            wordData: '=',
+            wordSearchParams: '='
         };
 
         this.$window = $window;
         this.$timeout = $timeout;
+        this.$state = $state;
     }
 
     link(scope, element, attrs) {
-        function drawWordCloud() {
-//            let width = Math.floor(this.$window.innerWidth * 0.95),
-//                height = Math.floor(this.$window.innerHeight) - 80;
-            let width = Math.floor(window.innerWidth * 0.95),
-                height = Math.floor(window.innerHeight) - 80;
+        function drawWordCloud($window, $state) {
+            let width = Math.floor($window.innerWidth * 0.95),
+                height = Math.floor($window.innerHeight) - 80;
 
             let svg = d3.select(".word-cloud-holder")
                 .insert("svg:svg", "h2")
@@ -40,7 +40,7 @@ class WordCloudDirective {
 
             update();
 
-            this.$window.onresize = (event) => {
+            $window.onresize = (event) => {
                 update();
             };
 
@@ -89,7 +89,9 @@ class WordCloudDirective {
                         return d.size + "px";
                     })
                     .on("click",(d) => {
-                        window.open(d.detailsUrl, "_blank");
+                        let sp = scope.wordSearchParams;
+                        console.log(sp);
+                        $state.go('news-details', {uri: d.entityUri, from: sp.from, category: sp.category});
                     })
                     .style("opacity", 1e-6)
                     .transition()
@@ -123,11 +125,11 @@ class WordCloudDirective {
 
         scope.$watch('wordData',() => {
             if (scope.wordData) {
-                this.$timeout(drawWordCloud, 50);
+                this.$timeout(drawWordCloud(this.$window, this.$state), 50);
             }
         });
     }
 }
 
-WordCloudDirective.$inject = ['$window', '$timeout'];
+WordCloudDirective.$inject = ['$window', '$timeout', '$state'];
 export default WordCloudDirective;

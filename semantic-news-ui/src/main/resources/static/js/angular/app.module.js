@@ -28,6 +28,8 @@ import 'angular-messages';
 import 'jquery';
 import 'lodash';
 
+import 'lib/yasr.bundled.min';
+
 import { routing } from 'app/app.config';
 import services from 'app/services/services.module';
 import controllers from 'app/controllers/controllers.module';
@@ -47,4 +49,8 @@ export default angular
         controllers.name,
         directives.name
     ])
-    .config(routing);
+    .config(routing)
+    .run(['$state', '$stateParams',
+        function($state, $stateParams) {
+            //this solves page refresh and getting back to state
+    }]);
