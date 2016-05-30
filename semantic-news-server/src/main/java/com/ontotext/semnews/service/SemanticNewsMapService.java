@@ -6,13 +6,17 @@ import com.google.common.collect.ImmutableSet;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import org.openrdf.model.datatypes.XMLDatatypeUtil;
+import org.openrdf.query.algebra.Str;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,10 +81,14 @@ public class SemanticNewsMapService {
         return zip2Words(from, category, labels, weights, mentionedEntities);
     }
 
-    public List<Word> getHiddenChampions(Map<String, List<String>> entities, String from, String category) {
-        Stream<String> labels = entities.get("entityLabel").stream();
-        Stream<String> weights = entities.get("relativePopularity").stream();
-        Stream<String> mentionedEntities = entities.get("relativeEntity").stream();
+    public List<Word> getHiddenChampions(Map<String, List<String>> queryResult, String from, String category) {
+        if (queryResult.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Stream<String> labels = queryResult.get("entityLabel").stream();
+        Stream<String> weights = queryResult.get("relativePopularity").stream();
+        Stream<String> mentionedEntities = queryResult.get("relativeEntity").stream();
 
         return zip2Words(from, category, labels, weights, mentionedEntities);
     }
@@ -101,7 +109,12 @@ public class SemanticNewsMapService {
                 .collect(Collectors.toList());
     }
 
+
     public List<NewsEntity> getNewsMentioningEntity(Map<String, List<String>> queryResult) {
+        if (queryResult.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         List<NewsEntity> newsEntities = new ArrayList<>();
 
         List<String> newsTitles = queryResult.get("newsTitle");
@@ -122,6 +135,10 @@ public class SemanticNewsMapService {
     }
 
     public List<NewsEntity> getNewsMentioningRelEntity(Map<String, List<String>> queryResult) {
+        if (queryResult.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         List<NewsEntity> newsEntities = new ArrayList<>();
 
         List<String> newsTitles = queryResult.get("newsTitle");
@@ -144,6 +161,10 @@ public class SemanticNewsMapService {
     }
 
     public String getHeatMap(Map<String, List<String>> queryResult) {
+        if (queryResult.isEmpty()) {
+            return "";
+        }
+
         Stream<String> labels = queryResult.get("countryCode").stream();
         Stream<String> mentions = queryResult.get("mention").stream();
 

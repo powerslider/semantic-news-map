@@ -22,6 +22,7 @@ System.config({
     "angular-material-icons": "npm:angular-material-icons@0.7.0",
     "angular-messages": "github:angular/bower-angular-messages@1.5.2",
     "angular-resizable": "npm:angular-resizable@1.2.0",
+    "angular-route": "github:angular/bower-angular-route@1.5.6",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@1.3.2",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
     "babel": "npm:babel-core@5.8.38",
@@ -47,6 +48,9 @@ System.config({
     },
     "github:angular/bower-angular-messages@1.5.2": {
       "angular": "github:angular/bower-angular@1.5.2"
+    },
+    "github:angular/bower-angular-route@1.5.6": {
+      "angular": "github:angular/bower-angular@1.5.6"
     },
     "github:angular/bower-material@1.0.7": {
       "angular": "github:angular/bower-angular@1.5.2",

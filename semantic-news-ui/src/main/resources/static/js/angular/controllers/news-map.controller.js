@@ -1,6 +1,3 @@
-/**
- * The one and only controller used in this app.
- */
 class NewsMapController {
 
     constructor($scope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService, localStorageService) {
@@ -46,8 +43,8 @@ class NewsMapController {
                     relPop: this.relativePopularity
                 };
 
-                localStorageService.set("searchParams", JSON.stringify(searchParams));
-                $state.go('tabs', {}, {reload: true});
+                localStorageService.set("searchParams", angular.toJson(searchParams));
+                $state.go('news-map', {}, {reload: true});
             }
         }
     }

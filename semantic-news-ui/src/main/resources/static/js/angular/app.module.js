@@ -11,7 +11,7 @@ import 'styles/dynamic-tabs.css!';
 import 'styles/app.css!';
 
 import angular from 'angular';
-import uiRouter from 'angular-ui-router';
+import 'angular-ui-router';
 
 import 'angular-material-icons';
 import 'angular-local-storage';

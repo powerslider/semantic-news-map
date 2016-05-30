@@ -1,5 +1,6 @@
 package com.ontotext.semnews.service;
 
+import com.google.common.collect.Maps;
 import com.ontotext.semnews.model.RepositoryConfiguration;
 import info.aduna.io.IOUtil;
 import org.openrdf.model.Value;
@@ -16,10 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -146,15 +144,17 @@ public class SparqlService {
                 e.printStackTrace();
             }
             queryString = replacePlaceholdersOperator.apply(queryString);
-            TupleQueryResult queryResult = null;
+            TupleQueryResult tqr = null;
             try {
-                queryResult = prepareAndEvaluate(queryString);
+                tqr = prepareAndEvaluate(queryString);
             } catch (QueryEvaluationException | MalformedQueryException e) {
                 LOG.error("Error evaluating query");
             } catch (RepositoryException e) {
                 LOG.error("Repository error");
             }
-            return getResultsForAllQueryBindings(queryResult);
+            return Optional.ofNullable(tqr)
+                    .map(SparqlService.this::getResultsForAllQueryBindings)
+                    .orElse(Maps.newHashMap());
         }
 
         protected abstract R doInConnection() throws RepositoryException;
@@ -192,8 +192,11 @@ public class SparqlService {
                     currentBinding = entry.getKey();
                     List<String> values = entry.getValue();
                     Value value = bs.getValue(currentBinding);
-                    if (value == null) continue;
-                    values.add(value.stringValue());
+                    if (value != null) {
+                        values.add(value.stringValue());
+                    } else {
+                        values.add(null);
+                    }
                 }
             }
         } catch (QueryEvaluationException e) {
@@ -206,7 +209,9 @@ public class SparqlService {
 
     private void closeQueryResult(TupleQueryResult tqr) {
         try {
-            tqr.close();
+            if (tqr != null) {
+                tqr.close();
+            }
         } catch (QueryEvaluationException e) {
             LOG.error("Error closing tuple query result!");
         }

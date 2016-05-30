@@ -9,8 +9,8 @@ class GeoHeatMapDirective {
     }
 
     link(scope, element, attrs) {
-        let format = function (d) {
-            return d % 1 == 0 ? d : d3.format(',.02f')(d);
+        let format = (d) => {
+            return Math.floor(d);
         };
 
         let map = d3.geomap.choropleth()

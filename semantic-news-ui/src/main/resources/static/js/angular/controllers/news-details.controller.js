@@ -1,18 +1,15 @@
-/**
- * The one and only controller used in this app.
- */
 class NewsDetailsController {
 
-    constructor($scope, $location, NewsMapDataService) {
-        this.entityUri = $location.search().uri;
+    constructor($scope, $state, NewsMapDataService) {
+        this.entityUri = $state.params.uri;
 
         let yasrNonRel = YASR(document.getElementById("yasr_results_non_rel"));
         let yasrRel = YASR(document.getElementById("yasr_results_rel"));
 
         let searchParams = {
-            entityUri: this.entityUri,
-            category: $location.search().category,
-            from: $location.search().category.from
+            entityUri: decodeURIComponent(this.entityUri),
+            category: $state.params.category,
+            from: $state.params.from
         };
 
         NewsMapDataService.getNewsEntityDetails(searchParams)
@@ -27,5 +24,5 @@ class NewsDetailsController {
 
 }
 
-NewsDetailsController.$inject = ['$scope', '$location'];
+NewsDetailsController.$inject = ['$scope', '$state', 'NewsMapDataService'];
 export default NewsDetailsController;

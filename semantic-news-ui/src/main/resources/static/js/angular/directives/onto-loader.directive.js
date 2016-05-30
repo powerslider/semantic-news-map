@@ -1,6 +1,6 @@
 class OntoLoaderDirective {
 
-    constructor($window, $timeout) {
+    constructor() {
         this.restrict = 'AE';
         this.template = (elem, attr) => { return '<object width="' + attr.size + '" height="' + attr.size + '"data="img/ot-loader.svg">Loading...</object>' }
     }

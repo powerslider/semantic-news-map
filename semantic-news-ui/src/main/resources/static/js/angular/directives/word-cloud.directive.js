@@ -89,9 +89,9 @@ class WordCloudDirective {
                         return d.size + "px";
                     })
                     .on("click",(d) => {
-                        let sp = scope.wordSearchParams;
-                        console.log(sp);
-                        $state.go('news-details', {uri: d.entityUri, from: sp.from, category: sp.category});
+                        let sp = angular.fromJson(scope.wordSearchParams);
+                        let entityUri = encodeURIComponent(d.entityUri);
+                        $state.go('news-details', {uri: entityUri, from: sp.from, category: sp.category});
                     })
                     .style("opacity", 1e-6)
                     .transition()

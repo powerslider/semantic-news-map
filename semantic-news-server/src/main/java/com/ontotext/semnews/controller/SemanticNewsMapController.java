@@ -86,7 +86,7 @@ public class SemanticNewsMapController {
     }
 
     @RequestMapping(value = "/news-details", method = RequestMethod.GET)
-    public Map<String, List<NewsEntity>> getNewsEntityDetails(@RequestParam(value = "uri") String entitiUri,
+    public Map<String, List<NewsEntity>> getNewsEntityDetails(@RequestParam(value = "uri") String entityUri,
                                                               @RequestParam("from") String from,
                                                               @RequestParam("category") String category) {
 
@@ -98,7 +98,7 @@ public class SemanticNewsMapController {
                         q -> q.replace("{category}", category)
                                 .replace("{min_date}", from)
                                 .replace("{max_date}", from)
-                                .replace("{entity}", entitiUri));
+                                .replace("{entity}", entityUri));
             }
 
             @Override
