@@ -6,17 +6,13 @@ import com.google.common.collect.ImmutableSet;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import org.openrdf.model.datatypes.XMLDatatypeUtil;
-import org.openrdf.query.algebra.Str;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -73,10 +69,14 @@ public class SemanticNewsMapService {
             "Lifestyle"
     );
 
-    public List<Word> getMostFrequentEntities(Map<String, List<String>> entities, String from, String category) {
-        Stream<String> labels = entities.get("entityLabel").stream();
-        Stream<String> weights = entities.get("relativePopularity").stream();
-        Stream<String> mentionedEntities = entities.get("mentionedLodEntity").stream();
+    public List<Word> getMostFrequentEntities(Map<String, List<String>> queryResult, String from, String category) {
+        if (queryResult.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Stream<String> labels = queryResult.get("entityLabel").stream();
+        Stream<String> weights = queryResult.get("relativePopularity").stream();
+        Stream<String> mentionedEntities = queryResult.get("mentionedLodEntity").stream();
 
         return zip2Words(from, category, labels, weights, mentionedEntities);
     }

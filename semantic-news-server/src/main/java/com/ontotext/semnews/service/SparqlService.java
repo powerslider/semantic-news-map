@@ -13,13 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -148,9 +146,9 @@ public class SparqlService {
             try {
                 tqr = prepareAndEvaluate(queryString);
             } catch (QueryEvaluationException | MalformedQueryException e) {
-                LOG.error("Error evaluating query");
+                LOG.error("Error evaluating query", e);
             } catch (RepositoryException e) {
-                LOG.error("Repository error");
+                LOG.error("Repository error", e);
             }
             return Optional.ofNullable(tqr)
                     .map(SparqlService.this::getResultsForAllQueryBindings)
