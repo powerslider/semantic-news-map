@@ -1,7 +1,7 @@
 package com.ontotext.semnews.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
-import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.service.SemanticNewsMapService;
 import com.ontotext.semnews.service.SparqlService;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/rest/semnews")
@@ -86,57 +87,29 @@ public class SemanticNewsMapController {
     }
 
     @RequestMapping(value = "/news-details", method = RequestMethod.GET)
-    public Map<String, List<NewsEntity>> getNewsEntityDetails(@RequestParam(value = "uri") String entityUri,
-                                                              @RequestParam("from") String from,
-                                                              @RequestParam("category") String category) {
+    public Map<String, JsonNode> getNewsEntityDetails(@RequestParam(value = "uri") String entityUri,
+                                                      @RequestParam("from") String from,
+                                                      @RequestParam("category") String category) {
 
-        return sparqlService.new WithConnection<Map<String, List<NewsEntity>>>() {
+        String newsMentioningEntityQuery = sparqlService.setQueryPlaceholders("newsMentioningEntity",
+                q -> q.replace("{category}", category)
+                        .replace("{min_date}", from)
+                        .replace("{max_date}", from)
+                        .replace("{entity}", entityUri));
 
-            private Map<String, List<String>> executeNewsEntityDetailsQuery(String sparqlFileName) {
-                return executeQueryAndGetBindings(
-                        sparqlFileName,
-                        q -> q.replace("{category}", category)
-                                .replace("{min_date}", from)
-                                .replace("{max_date}", from)
-                                .replace("{entity}", entityUri));
-            }
+        String newsMentioningRelevantEntitiesQuery = sparqlService.setQueryPlaceholders("newsMentioningRelevantEntities",
+                q -> q.replaceAll(Pattern.quote("{category}"), category)
+                        .replaceAll(Pattern.quote("{min_date}"), from)
+                        .replaceAll(Pattern.quote("{max_date}"), from)
+                        .replaceAll(Pattern.quote("{entity}"), entityUri));
 
-            @Override
-            protected Map<String, List<NewsEntity>> doInConnection() throws RepositoryException {
-                Map<String, List<String>> queryResult1 = executeNewsEntityDetailsQuery("newsMentioningEntity");
-                List<NewsEntity> newsMentioningEntity = semanticNewsMapService.getNewsMentioningEntity(queryResult1);
-                Map<String, List<String>> queryResult2 = executeNewsEntityDetailsQuery("newsMentioningRelevantEntities");
-                List<NewsEntity> newsMentioningRelEntity = semanticNewsMapService.getNewsMentioningRelEntity(queryResult2);
 
-                return ImmutableMap.<String, List<NewsEntity>>builder()
-                        .put("nonRelevant", newsMentioningEntity)
-                        .put("relevant", newsMentioningRelEntity)
-                        .build();
-            }
-        }.run();
+        JsonNode newsMentioningEntityResults = sparqlService.getSparqlResultsAsJson(newsMentioningEntityQuery);
+        JsonNode newsMentioningRelevantEntitiesResults = sparqlService.getSparqlResultsAsJson(newsMentioningRelevantEntitiesQuery);
+
+        return ImmutableMap.<String, JsonNode>builder()
+                .put("nonRelevant", newsMentioningEntityResults)
+                .put("relevant", newsMentioningRelevantEntitiesResults)
+                .build();
     }
-
-    //
-//	@RequestMapping(value = "/tag-cloud/results", method = RequestMethod.GET)
-//	public String getReuslts(HttpServletRequest request, @RequestParam("from") String from,
-//							 @RequestParam("category") String category,
-//							 @RequestParam(value = "relPop", required = false, defaultValue = "false") Boolean relPopularity,
-//							 ModelMap model) {
-//		model.addAttribute("fromA", from);
-////		model.addAttribute("toA", to);
-//		model.addAttribute("catA", category);
-//
-//		model.addAttribute("repativePop", relPopularity);
-//
-//
-//		return "tagcloud";
-//
-//	}
-//
-//	@RequestMapping(value = "/heat-map", method = RequestMethod.GET)
-//	@ResponseBody
-//	public List<WorldHeatMap> getHeatMap(HttpServletRequest request, @RequestParam("from") String from, ModelMap model) {
-//		return semanticNewsMapService.getHeatMap(from);
-//	}
-
 }

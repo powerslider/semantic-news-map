@@ -14,9 +14,10 @@ class WordCloudDirective {
     }
 
     link(scope, element, attrs) {
-        function drawWordCloud($window, $state) {
-            let width = Math.floor($window.innerWidth * 0.95),
-                height = Math.floor($window.innerHeight) - 80;
+        let $state = this.$state;
+        function drawWordCloud() {
+            let width = Math.floor(window.innerWidth * 0.95),
+                height = Math.floor(window.innerHeight) - 80;
 
             let svg = d3.select(".word-cloud-holder")
                 .insert("svg:svg", "h2")
@@ -40,7 +41,7 @@ class WordCloudDirective {
 
             update();
 
-            $window.onresize = (event) => {
+            window.onresize = (event) => {
                 update();
             };
 
@@ -122,10 +123,9 @@ class WordCloudDirective {
                 layout.stop().words(wordData).start();
             }
         }
-
         scope.$watch('wordData',() => {
             if (scope.wordData) {
-                this.$timeout(drawWordCloud(this.$window, this.$state), 50);
+                this.$timeout(drawWordCloud, 50);
             }
         });
     }

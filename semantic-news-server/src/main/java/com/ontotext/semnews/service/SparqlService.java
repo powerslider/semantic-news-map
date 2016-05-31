@@ -1,8 +1,12 @@
 package com.ontotext.semnews.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.ontotext.semnews.model.RepositoryConfiguration;
 import info.aduna.io.IOUtil;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
 import org.openrdf.model.Value;
 import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
@@ -32,7 +36,10 @@ public class SparqlService {
     @Autowired
     private RepositoryConfiguration repositoryConfiguration;
 
-    public Repository getRepository(){
+    public static final ObjectMapper MAPPER = new ObjectMapper();
+
+
+    private Repository initRepository(){
         Repository repository = new HTTPRepository(
                 repositoryConfiguration.getSesameServer(),
                 repositoryConfiguration.getRepositoryId());
@@ -42,6 +49,24 @@ public class SparqlService {
             e.printStackTrace();
         }
         return repository;
+    }
+
+    public JsonNode getSparqlResultsAsJson(String queryString) {
+        String endpoint = repositoryConfiguration.getSesameServer() + "/repositories/" + repositoryConfiguration.getRepositoryId();
+        try {
+            String escapedResponse = Request.Post(endpoint)
+                    .addHeader("Accept", "application/sparql-results+json")
+                    .bodyForm(Form.form()
+                            .add("query", queryString)
+                            .build())
+                    .execute()
+                    .returnContent()
+                    .asString();
+            return MAPPER.readTree(escapedResponse);
+        } catch (IOException e) {
+            LOG.error("Error executing SPARQL query against {}", endpoint, e);
+        }
+        return null;
     }
 
     /**
@@ -71,9 +96,11 @@ public class SparqlService {
      */
     public abstract class WithConnection<R> {
 
-        RepositoryConnection connection = null;
+        protected RepositoryConnection connection = null;
 
         List<QueryResult<?>> results = new ArrayList<>(4);
+
+        Repository repository = initRepository();
 
         public WithConnection() {
             super();
@@ -81,7 +108,7 @@ public class SparqlService {
 
         public R run() {
             try {
-                connection = getRepository().getConnection();
+                connection = repository.getConnection();
                 return doInConnection();
             } catch (RepositoryException e) {
                 throw new RuntimeException("There was an error while communicating with the repository", e);
@@ -135,13 +162,7 @@ public class SparqlService {
 
         protected Map<String, List<String>> executeQueryAndGetBindings(String sparqlFileName, Function<String, String> replacePlaceholdersOperator) {
 
-            String queryString = null;
-            try {
-                queryString = readQueryString(sparqlFileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            queryString = replacePlaceholdersOperator.apply(queryString);
+            String queryString = setQueryPlaceholders(sparqlFileName, replacePlaceholdersOperator);
             TupleQueryResult tqr = null;
             try {
                 tqr = prepareAndEvaluate(queryString);
@@ -156,6 +177,16 @@ public class SparqlService {
         }
 
         protected abstract R doInConnection() throws RepositoryException;
+    }
+
+    public String setQueryPlaceholders(String sparqlFileName, Function<String, String> replacePlaceholdersOperator) {
+        String queryString = null;
+        try {
+            queryString = readQueryString(sparqlFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return replacePlaceholdersOperator.apply(queryString);
     }
 
     /**

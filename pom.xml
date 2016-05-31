@@ -31,6 +31,8 @@
         <commons.io.version>2.4</commons.io.version>
         <sesame.version>2.8.11</sesame.version>
         <protonpack.version>1.8</protonpack.version>
+        <httpcomponents.fluent.api.version>4.5.2</httpcomponents.fluent.api.version>
+        <jackson.version>2.5.4</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -89,6 +91,23 @@
                 <version>${sesame.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>fluent-hc</artifactId>
+                <version>${httpcomponents.fluent.api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.codepoetics</groupId>
