@@ -75,7 +75,8 @@ public class SemanticNewsMapService {
         }
 
         Stream<String> labels = queryResult.get("entityLabel").stream();
-        Stream<String> weights = queryResult.get("relativePopularity").stream();
+        Stream<String> weights = queryResult.get("relativePopularity").stream()
+                .map(this::normalizeWeights);
         Stream<String> mentionedEntities = queryResult.get("mentionedLodEntity").stream();
 
         return zip2Words(from, category, labels, weights, mentionedEntities);
@@ -87,7 +88,8 @@ public class SemanticNewsMapService {
         }
 
         Stream<String> labels = queryResult.get("entityLabel").stream();
-        Stream<String> weights = queryResult.get("relativePopularity").stream();
+        Stream<String> weights = queryResult.get("relativePopularity").stream()
+                .map(this::normalizeWeights);
         Stream<String> mentionedEntities = queryResult.get("relativeEntity").stream();
 
         return zip2Words(from, category, labels, weights, mentionedEntities);
@@ -179,5 +181,9 @@ public class SemanticNewsMapService {
         DateTimeFormatter fromFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate parsedDate = LocalDate.parse(dateString, fromFormat);
         return parsedDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    private String normalizeWeights(String w) {
+        return String.valueOf(Double.parseDouble(w) + 20);
     }
 }
