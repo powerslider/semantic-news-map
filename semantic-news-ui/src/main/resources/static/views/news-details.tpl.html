@@ -9,12 +9,14 @@
             <md-tab label="News Mentioning Entity">
                 <yasr
                         ng-if="detailsCtrl.selectedTabIndex == 0"
-                        yasr-data="detailsCtrl.yasrNonRelData"></yasr>
+                        yasr-data="detailsCtrl.yasrNonRelData"
+                        yasr-post-process="detailsCtrl.redirectNewsToNOW()"></yasr>
             </md-tab>
             <md-tab label="News Mentioning Related Entities">
                 <yasr
                         ng-if="detailsCtrl.selectedTabIndex == 1"
-                        yasr-data="detailsCtrl.yasrRelData"></yasr>
+                        yasr-data="detailsCtrl.yasrRelData"
+                        yasr-post-process="detailsCtrl.redirectNewsToNOW()"></yasr>
             </md-tab>
         </md-tabs>
     </md-content>

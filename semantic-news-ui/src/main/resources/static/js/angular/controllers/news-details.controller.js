@@ -33,6 +33,13 @@ class NewsDetailsController {
 //    isResponseEmpty(arr) {
 //        return arr ? arr.length == 0 || (arr.length == 1 && $.isEmptyObject(arr[0])) : true;
 //    }
+
+    redirectNewsToNOW() {
+        $('table tr td:nth-child(4) a.uri').each(function() {
+            let href = $(this).attr('href');
+            $(this).attr('href', "http://now.ontotext.com/#document?uri=" + encodeURIComponent(href));
+        });
+    }
 }
 
 NewsDetailsController.$inject = ['$scope', '$state', 'NewsMapDataService'];

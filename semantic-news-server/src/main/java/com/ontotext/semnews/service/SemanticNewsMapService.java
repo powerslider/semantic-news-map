@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 @Service
 public class SemanticNewsMapService {
 
+    public static final String NOW_NEWS_URI = "http://now.ontotext.com/#/document?uri=";
+
     public static final ImmutableMap<String, String> INDUSTRIES = ImmutableMap.<String, String>builder()
             .put("all", "all")
             .put("Agriculture", "http://dbpedia.org/resource/Agriculture")
