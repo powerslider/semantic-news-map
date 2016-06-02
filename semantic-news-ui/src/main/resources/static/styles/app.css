@@ -2,6 +2,10 @@
 	display: block;
 }
 
+.yasr_btn btn_fullscreen btn_icon {
+    display: none;
+}
+
 .viz-options-side-panel {
 	background: white;
 	max-height: 10vh;

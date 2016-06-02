@@ -1,8 +1,21 @@
-<div>
-    <b>Resource URI:</b> <a href="http://ff-news.ontotext.com/resource?uri={{detailsCtrl.entityUri}}">http://ff-news.ontotext.com/resource?uri={{detailsCtrl.entityUri}}</a>
-</div>
-<h2>News Mentioning Entity</h2>
-<div id="yasr_results_non_rel"></div>
-
-<h2>News Mentioning Related Entities</h2>
-<div id="yasr_results_rel"></div>
+<section layout-align="left" class="dynamic-tabs" flex>
+    <md-content class="md-padding">
+        <div>
+            <b>Resource URI:</b> <a href="http://ff-news.ontotext.com/resource?uri={{detailsCtrl.entityUri}}">http://ff-news.ontotext.com/resource?uri={{detailsCtrl.entityUri}}</a>
+        </div>
+        <md-tabs md-selected="detailsCtrl.selectedTabIndex"
+                 md-align-tabs="bottom"
+                 md-stretch-tabs="always">
+            <md-tab label="News Mentioning Entity">
+                <yasr
+                        ng-if="detailsCtrl.selectedTabIndex == 0"
+                        yasr-data="detailsCtrl.yasrNonRelData"></yasr>
+            </md-tab>
+            <md-tab label="News Mentioning Related Entities">
+                <yasr
+                        ng-if="detailsCtrl.selectedTabIndex == 1"
+                        yasr-data="detailsCtrl.yasrRelData"></yasr>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+</section>
