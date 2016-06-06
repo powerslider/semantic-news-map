@@ -2,16 +2,14 @@
 	display: block;
 }
 
-.yasr_btn btn_fullscreen btn_icon {
-    display: none;
+.geo-heat-map-side-panel {
+    position: relative;
 }
 
-.viz-options-side-panel {
-	background: white;
-	max-height: 10vh;
-	-webkit-box-shadow: -1px 3px 10px 0px rgba(49, 109, 208, 0.69);
-    -moz-box-shadow:    -1px 3px 10px 0px rgba(49, 109, 208, 0.69);
-    box-shadow:         -1px 3px 10px 0px rgba(49, 109, 208, 0.69);
+.close-icon {
+    position:absolute;
+    top:0;
+    left:0;
 }
 
 md-backdrop {

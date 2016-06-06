@@ -1,0 +1,20 @@
+PREFIX pub: <http://ontology.ontotext.com/taxonomy/>
+PREFIX pub-old: <http://ontology.ontotext.com/publishing#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX leak: <http://data.ontotext.com/resource/leak/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?newsTitle ?newsUrl ?category
+WHERE {
+    ?newsUrl pub:country ?country ;
+          pub-old:creationDate ?date ;
+          pub-old:title ?newsTitle ;
+          pub-old:category ?category .
+    ?country a dbo:Country;
+          leak:countryCode ?countryCode .
+    FILTER (
+        ?countryCode = "{country_code}"
+            && (?date > "{min_date}T00:00:00Z"^^xsd:dateTime)
+            && (?date < "{max_date}T23:59:00Z"^^xsd:dateTime)
+    )
+} ORDER BY DESC (?category)

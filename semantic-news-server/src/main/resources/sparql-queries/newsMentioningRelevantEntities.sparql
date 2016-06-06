@@ -10,7 +10,7 @@ SELECT DISTINCT ?newsTitle ?newsDate ?news ?relEntity ?intermedEntity
 FROM onto:disable-sameAs
 WHERE {
     {
-        SELECT distinct ?news ?newsDate ?newsTitle ?relEntity  {
+        SELECT DISTINCT ?news ?newsDate ?newsTitle ?relEntity  {
             BIND(<{entity}>  as ?entity)
             ?news pub-old:creationDate ?newsDate .
             FILTER ((?newsDate > "{min_date}T00:00:00Z"^^xsd:dateTime) && (?newsDate < "{max_date}T23:59:59Z"^^xsd:dateTime))

@@ -1,12 +1,16 @@
+const GEO_HEAT_MAP_SIDE_PANEL = "geo-heat-map-side-panel";
+
 class NewsMapController {
 
-    constructor($scope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService, localStorageService) {
+    constructor($scope, $rootScope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService, MdAutocompleteService, localStorageService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$mdBottomSheet = $mdBottomSheet;
         this.$mdDialog = $mdDialog;
         this.NewsMapDataService = NewsMapDataService;
+        this.MdAutocompleteService = MdAutocompleteService;
         this.localStorageService = localStorageService;
+        this.$rootScope = $rootScope;
 
         this.selectedTabIndex = 0;
 
@@ -14,7 +18,25 @@ class NewsMapController {
         if (this.searchParams) {
             this.loadNewsSearchResultData(angular.fromJson(this.searchParams));
         }
-//        this.showSearchCriteriaBottonSheet();
+
+        this.showGeoHeatMapSidePanel = false;
+
+        this.categories = MdAutocompleteService
+                                .loadAllItems("Business, International, Lifestyle, Science And Technology, Sports");
+        this.querySearch = MdAutocompleteService.querySearch;
+
+        this.$rootScope.$on('countryClicked', (event, country) => {
+            if ($.isArray(country)) {
+                this.$scope.$apply(() => {
+                    this.showGeoHeatMapSidePanel = false;
+                });
+            } else {
+                this.$scope.$apply(() => {
+                    this.selectedCountry = country;
+                    this.showGeoHeatMapSidePanel = true;
+                });
+            }
+        });
     }
 
     showSearchCriteriaDialog($event) {
@@ -30,7 +52,7 @@ class NewsMapController {
         function NewsMapSearchController($mdDialog, $rootScope,  MdAutocompleteService, localStorageService, $state) {
             this.currentDate = new Date();
             this.categories = MdAutocompleteService
-                                    .loadAllItems("All, Science And Technology, Lifestyle, Business, Sports, International");
+                                    .loadAllItems("All, Business, International, Lifestyle, Science And Technology, Sports");
             this.querySearch = MdAutocompleteService.querySearch;
             this.cancel = ($event) => $mdDialog.cancel();
             this.finish = ($event) => $mdDialog.hide();
@@ -106,24 +128,7 @@ class NewsMapController {
 
             });
     }
-
-//    showSearchCriteriaBottonSheet($event) {
-//        this.$mdBottomSheet.show({
-//            templateUrl: 'views/bottom-sheet-search-criteria.tpl.html',
-//            controller: [ '$mdBottomSheet', NewsMapSearchController],
-//            controllerAs: "searchCtrl",
-//            bindToController : true,
-//            targetEvent: $event
-//        });
-//
-//        function NewsMapSearchController($mdBottomSheet) {
-//            this.categories = ["All", "Science And Technology", "Lifestyle", "Business", "Sports", "International"];
-//            this.currentDate = new Date();
-//        }
-//    }
-
-
 }
 
-NewsMapController.$inject = ['$scope', '$timeout', '$mdBottomSheet', '$mdDialog', 'NewsMapDataService', 'localStorageService'];
+NewsMapController.$inject = ['$scope', '$rootScope', '$timeout', '$mdBottomSheet', '$mdDialog', 'NewsMapDataService', 'MdAutocompleteService', 'localStorageService'];
 export default NewsMapController;

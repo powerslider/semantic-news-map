@@ -1,14 +1,19 @@
 class GeoHeatMapDirective {
 
-    constructor() {
+    constructor($rootScope) {
         this.restrict = 'AE';
         this.template = '<div class="geo-heatmap-holder"></div>';
         this.scope = {
-            geoData: '='
+            geoData: '=',
+            geoCountry: '='
         }
+
+        this.$rootScope = $rootScope;
     }
 
     link(scope, element, attrs) {
+        let $rootScope = this.$rootScope;
+
         let format = (d) => {
             return Math.floor(d);
         };
@@ -19,7 +24,12 @@ class GeoHeatMapDirective {
             .column('frequency')
             .format(format)
             .legend(true)
-            .unitId('country_code');
+            .unitId('country_code')
+            .onClick(onClick);
+
+        function onClick(d) {
+            $rootScope.$broadcast('countryClicked', d);
+        }
 
         scope.$watch('geoData', () => {
             if (scope.geoData) {
@@ -31,5 +41,5 @@ class GeoHeatMapDirective {
     }
 }
 
-GeoHeatMapDirective.$inject = [];
+GeoHeatMapDirective.$inject = ['$rootScope'];
 export default GeoHeatMapDirective;

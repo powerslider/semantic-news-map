@@ -125,7 +125,7 @@ class WordCloudDirective {
         }
         scope.$watch('wordData',() => {
             if (scope.wordData) {
-                this.$timeout(drawWordCloud, 50);
+                this.$timeout(drawWordCloud, 5000);
             }
         });
     }

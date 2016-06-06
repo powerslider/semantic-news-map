@@ -8,7 +8,7 @@ PREFIX dbr: <http://dbpedia.org/resource/>
 PREFIX leak: <http://data.ontotext.com/resource/leak/>
 
 SELECT ?countryCode (count(*) as ?mentions)
-(IF(?countryCode = "US"@en, round(?mentions / 3), ?mentions) as ?mention)
+(IF(?countryCode = "USA"@en, round(?mentions / 3), ?mentions) as ?mention)
 FROM onto:disable-sameAs {
     ?news pub:country ?country.
     FILTER(?country NOT IN (dbr:Antigua_and_Barbuda , dbr:Cuba))
