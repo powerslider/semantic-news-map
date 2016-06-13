@@ -2,7 +2,7 @@ class GeoHeatMapDirective {
 
     constructor($rootScope) {
         this.restrict = 'AE';
-        this.template = '<div class="geo-heatmap-holder"></div>';
+        this.template = '<div class="geo-heatmap-container"></div>';
         this.scope = {
             geoData: '=',
             geoCountry: '='
@@ -33,7 +33,7 @@ class GeoHeatMapDirective {
 
         scope.$watch('geoData', () => {
             if (scope.geoData) {
-                d3.select('.geo-heatmap-holder')
+                d3.select('.geo-heatmap-container')
                     .datum(d3.csv.parse(scope.geoData))
                     .call(map.draw, map);
             }

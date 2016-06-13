@@ -6,8 +6,12 @@ import com.google.common.collect.ImmutableSet;
 import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import org.openrdf.model.datatypes.XMLDatatypeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,44 +27,10 @@ import java.util.stream.Stream;
 @Service
 public class SemanticNewsMapService {
 
-    public static final String NOW_NEWS_URI = "http://now.ontotext.com/#/document?uri=";
+    private static final Logger LOG = LoggerFactory.getLogger(SemanticNewsMapService.class);
 
-    public static final ImmutableMap<String, String> INDUSTRIES = ImmutableMap.<String, String>builder()
-            .put("all", "all")
-            .put("Agriculture", "http://dbpedia.org/resource/Agriculture")
-            .put("Biotechnology", "http://dbpedia.org/resource/Biotechnology")
-            .put("Electronics", "http://dbpedia.org/resource/Electronics")
-            .put("Telecommunications", "http://dbpedia.org/resource/Telecommunications")
-            .put("Real estate", "http://dbpedia.org/resource/Real_estate")
-            .put("Internet", "http://dbpedia.org/resource/Internet")
-            .put("Software", "http://dbpedia.org/resource/Software")
-            .put("Transport", "http://dbpedia.org/resource/Transport")
-            .put("Manufacturing", "http://dbpedia.org/resource/Manufacturing")
-            .put("Construction", "http://dbpedia.org/resource/Construction")
-            .put("Mining", "http://dbpedia.org/resource/Mining")
-            .put("Energy", "http://dbpedia.org/resource/Energy")
-            .put("Entertainment", "http://dbpedia.org/resource/Entertainment")
-            .put("Mass media", "http://dbpedia.org/resource/Mass_media")
-            .put("Education", "http://dbpedia.org/resource/Education")
-            .put("Finance", "http://dbpedia.org/resource/Finance")
-            .put("Automotive", "http://dbpedia.org/resource/Automotive")
-            .put("Healthcare", "http://dbpedia.org/resource/Healthcare")
-            .put("Publishing", "http://dbpedia.org/resource/Publishing")
-            .put("Hospitality", "http://dbpedia.org/resource/Hospitality")
-            .put("Retail", "http://dbpedia.org/resource/Retail")
-            .put("Oil and gas", "http://dbpedia.org/resource/Oil_and_gas")
-            .put("Food and Beverage", "http://dbpedia.org/resource/Food_and_Beverage")
-            .build();
+    public static final String NOW_NEWS_URI = "http://now.ontotext.com/#document?uri=";
 
-    public static final ImmutableMap<String, String> CONTINENTS = ImmutableMap.<String, String>builder()
-            .put("Africa", "http://dbpedia.org/resource/Africa")
-            .put("Antarctica", "http://dbpedia.org/resource/Antarctica")
-            .put("Asia", "http://dbpedia.org/resource/Asia")
-            .put("Europe", "http://dbpedia.org/resource/Europe")
-            .put("North America", "http://dbpedia.org/resource/North_America")
-            .put("South America", "http://dbpedia.org/resource/South_America")
-            .put("Australia (continent)", "http://dbpedia.org/resource/Australia_(continent)")
-            .build();
 
     public static final ImmutableSet<String> PUB_CATEGORIES = ImmutableSet.of(
             "All",
@@ -113,57 +83,6 @@ public class SemanticNewsMapService {
                 .collect(Collectors.toList());
     }
 
-
-    public List<NewsEntity> getNewsMentioningEntity(Map<String, List<String>> queryResult) {
-        if (queryResult.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<NewsEntity> newsEntities = new ArrayList<>();
-
-        List<String> newsTitles = queryResult.get("newsTitle");
-        List<String> newsDate = queryResult.get("newsDate");
-        List<String> newsUris = queryResult.get("news");
-        List<String> entityRelevances = queryResult.get("entityRelevance");
-
-        for (int i = 0; i < newsTitles.size(); i++) {
-            NewsEntity newsEntity = new NewsEntity();
-            newsEntity.setTitle(newsTitles.get(i));
-            newsEntity.setDate(newsDate.get(i));
-            newsEntity.setUriLink(newsUris.get(i));
-            newsEntity.setEntityRelevance(entityRelevances.get(i));
-            newsEntities.add(newsEntity);
-        }
-
-        return newsEntities;
-    }
-
-    public List<NewsEntity> getNewsMentioningRelEntity(Map<String, List<String>> queryResult) {
-        if (queryResult.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<NewsEntity> newsEntities = new ArrayList<>();
-
-        List<String> newsTitles = queryResult.get("newsTitle");
-        List<String> newsDate = queryResult.get("newsDate");
-        List<String> newsUris = queryResult.get("news");
-        List<String> entityRelevances = queryResult.get("relEntity");
-        List<String> intermedEntities = queryResult.get("intermedEntity");
-
-        for (int i = 0; i < newsTitles.size(); i++) {
-            NewsEntity newsEntity = new NewsEntity();
-            newsEntity.setTitle(newsTitles.get(i));
-            newsEntity.setDate(newsDate.get(i));
-            newsEntity.setUriLink(newsUris.get(i));
-            newsEntity.setEntityRelevance(entityRelevances.get(i));
-            newsEntity.setInternalEntity(intermedEntities.get(i));
-            newsEntities.add(newsEntity);
-        }
-
-        return newsEntities;
-    }
-
     public String getHeatMap(Map<String, List<String>> queryResult) {
         if (queryResult.isEmpty()) {
             return "";
@@ -177,6 +96,26 @@ public class SemanticNewsMapService {
                 .collect(Collectors.joining());
 
         return String.join("\n", "country_code,frequency", heatMapEntries);
+    }
+
+    public List<NewsEntity> getNewsMentioningCountry(Map<String, List<String>> queryResult) {
+        Stream<String> newsTitles = queryResult.get("newsTitle").stream();
+        Stream<String> newsUrls = queryResult.get("newsUrl").stream();
+        Stream<String> categories = queryResult.get("category").stream();
+
+        return StreamUtils.zip(newsTitles, newsUrls, categories,
+                (newsTitle, newsUrl, category) -> {
+                    NewsEntity newsEntity = new NewsEntity();
+                    newsEntity.setTitle(newsTitle);
+                    try {
+                        newsEntity.setUrl(NOW_NEWS_URI + URLEncoder.encode(newsUrl, "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        LOG.error("Error encoding news url -> {}", newsUrl, e);
+                    }
+                    newsEntity.setCategory(category);
+                    return newsEntity;
+                })
+                .collect(Collectors.toList());
     }
 
     public String toIsoLocalDate(String dateString) {

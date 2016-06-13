@@ -1,0 +1,60 @@
+.news-map-tabs md-tabs {
+    height: 95vh;
+}
+
+.news-map-tabs md-content {
+    background-color: transparent !important;
+}
+
+.news-map-tabs md-content md-tabs {
+    border: 1px solid #e1e1e1;
+}
+
+.news-map-tabs md-content md-tabs md-tab-content {
+    background: #f6f6f6;
+}
+
+.news-map-tabs md-content md-tabs md-tabs-wrapper {
+    background: white;
+}
+
+.news-map-tabs md-content h1:first-child {
+    margin-top: 0;
+}
+
+.news-map-tabs md-input-container {
+    padding-bottom: 0;
+}
+
+.news-map-tabs .remove-tab {
+    margin-bottom: 40px;
+}
+
+.news-map-tabs .demo-tab > div > div {
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.news-map-tabs .edit-form input {
+    width: 100%;
+}
+
+.news-map-tabs md-tabs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.news-map-tabs md-tab[disabled] {
+    opacity: 0.5;
+}
+
+.news-map-tabs label {
+    text-align: left;
+}
+
+.news-map-tabs .long > input {
+    width: 264px;
+}
+
+.news-map-tabs .md-button.add-tab {
+    transform: translateY(5px);
+}

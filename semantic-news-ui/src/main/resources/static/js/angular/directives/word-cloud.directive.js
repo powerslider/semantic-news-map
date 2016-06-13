@@ -2,7 +2,7 @@ class WordCloudDirective {
 
     constructor($window, $timeout, $state) {
         this.restrict = 'AE';
-        this.template = '<div class="word-cloud-holder"></div>';
+        this.template = '<div class="word-cloud-container"></div>';
         this.scope = {
             wordData: '=',
             wordSearchParams: '='
@@ -19,7 +19,7 @@ class WordCloudDirective {
             let width = Math.floor(window.innerWidth * 0.95),
                 height = Math.floor(window.innerHeight) - 80;
 
-            let svg = d3.select(".word-cloud-holder")
+            let svg = d3.select(".word-cloud-container")
                 .insert("svg:svg", "h2")
                 .attr("viewBox", "0 0 " + width / 2 + " " + height / 2)
                 .attr("preserveAspectRatio", "xMidYMid meet");
@@ -125,7 +125,7 @@ class WordCloudDirective {
         }
         scope.$watch('wordData',() => {
             if (scope.wordData) {
-                this.$timeout(drawWordCloud, 5000);
+                this.$timeout(drawWordCloud, 500);
             }
         });
     }

@@ -2,6 +2,7 @@ package com.ontotext.semnews.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
+import com.ontotext.semnews.model.NewsEntity;
 import com.ontotext.semnews.model.Word;
 import com.ontotext.semnews.service.SemanticNewsMapService;
 import com.ontotext.semnews.service.SparqlService;
@@ -87,7 +88,7 @@ public class SemanticNewsMapController {
     }
 
     @RequestMapping(value = "/news-details", method = RequestMethod.GET)
-    public Map<String, JsonNode> getNewsEntityDetails(@RequestParam(value = "uri") String entityUri,
+    public Map<String, JsonNode> getNewsEntityDetails(@RequestParam("uri") String entityUri,
                                                       @RequestParam("from") String from,
                                                       @RequestParam("category") String category) {
 
@@ -111,5 +112,21 @@ public class SemanticNewsMapController {
                 .put("nonRelevant", newsMentioningEntityResults)
                 .put("relevant", newsMentioningRelevantEntitiesResults)
                 .build();
+    }
+
+    @RequestMapping(value = "/news-mentioning-country", method = RequestMethod.GET)
+    public List<NewsEntity> getNewsMentioningCountry(@RequestParam("countryCode") String countryCode,
+                                                     @RequestParam("from") String from) {
+        return sparqlService.new WithConnection<List<NewsEntity>>() {
+            @Override
+            protected List<NewsEntity> doInConnection() throws RepositoryException {
+                Map<String, List<String>> queryResults = executeQueryAndGetBindings("newsMentioningCountry",
+                        q -> q.replace("{min_date}", from)
+                                .replace("{max_date}", from)
+                                .replace("{country_code}", countryCode));
+                return semanticNewsMapService.getNewsMentioningCountry(queryResults);
+            }
+
+        }.run();
     }
 }

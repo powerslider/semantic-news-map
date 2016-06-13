@@ -7,7 +7,8 @@ import 'font-awesome/css/font-awesome.css!';
 import 'lib/d3-geomap/d3.geomap.css!';
 
 import 'styles/splash.css!';
-import 'styles/dynamic-tabs.css!';
+import 'styles/news-map-tabs.css!';
+import 'styles/news-scroll.css!';
 import 'styles/app.css!';
 
 import angular from 'angular';

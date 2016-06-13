@@ -16,7 +16,8 @@ class NewsMapController {
 
         this.searchParams = this.localStorageService.get("searchParams");
         if (this.searchParams) {
-            this.loadNewsSearchResultData(angular.fromJson(this.searchParams));
+            this.searchParams = angular.fromJson(this.searchParams)
+            this.loadNewsSearchResultData(this.searchParams);
         }
 
         this.showGeoHeatMapSidePanel = false;
@@ -25,6 +26,7 @@ class NewsMapController {
                                 .loadAllItems("Business, International, Lifestyle, Science And Technology, Sports");
         this.querySearch = MdAutocompleteService.querySearch;
 
+
         this.$rootScope.$on('countryClicked', (event, country) => {
             if ($.isArray(country)) {
                 this.$scope.$apply(() => {
@@ -32,10 +34,33 @@ class NewsMapController {
                 });
             } else {
                 this.$scope.$apply(() => {
+                    let newsMentioningCountryParams = {
+                        from: this.searchParams.from,
+                        countryCode: country.id
+                    }
+                    this.NewsMapDataService.getNewsMentioningCountry(newsMentioningCountryParams)
+                        .success((response) => {
+                            this.newsMentioningCountry = response;
+                        })
+                        .error(() => {
+
+                        });
                     this.selectedCountry = country;
                     this.showGeoHeatMapSidePanel = true;
                 });
             }
+        });
+
+        $scope.$watch('selectedCategory', () => {
+            var scrollYear = Math.floor(this.topIndex / 13);
+            if(scrollYear !== yearIndex) {
+                this.topIndex = yearIndex * 13;
+            }
+        });
+
+        $scope.$watch('topIndex', () => {
+            var scrollYear = Math.floor(this.topIndex / 13);
+            this.selectedYear = scrollYear;
         });
     }
 

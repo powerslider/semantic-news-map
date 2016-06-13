@@ -7,27 +7,9 @@ package com.ontotext.semnews.model;
 public class NewsEntity {
 
     private String title;
-    private String date;
-    private String uriLink;
-    private String entityRelevance;
-    private String relEntity;
-    private String internalEntity;
+    private String url;
 
-    public String getRelEntity() {
-        return relEntity;
-    }
-
-    public void setRelEntity(String relEntity) {
-        this.relEntity = relEntity;
-    }
-
-    public String getInternalEntity() {
-        return internalEntity;
-    }
-
-    public void setInternalEntity(String internalEntity) {
-        this.internalEntity = internalEntity;
-    }
+    private String category;
 
     public String getTitle() {
         return title;
@@ -37,27 +19,20 @@ public class NewsEntity {
         this.title = title;
     }
 
-    public String getDate() {
-        return date;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getUriLink() {
-        return uriLink;
+    public String getCategory() {
+        return category;
     }
 
-    public void setUriLink(String uriLink) {
-        this.uriLink = uriLink;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getEntityRelevance() {
-        return entityRelevance;
-    }
-
-    public void setEntityRelevance(String entityRelevance) {
-        this.entityRelevance = entityRelevance;
-    }
 }

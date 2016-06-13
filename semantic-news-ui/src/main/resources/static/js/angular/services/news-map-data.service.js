@@ -39,6 +39,15 @@ class NewsMapDataService {
                         }
                     });
     }
+
+    getNewsMentioningCountry(searchParams) {
+        return this.$http.get('rest/semnews/news-mentioning-country', {
+                        params: {
+                            from: getDatePart(searchParams.from),
+                            countryCode: searchParams.countryCode
+                        }
+                    })
+    }
 }
 
 NewsMapDataService.$inject = ['$http'];
