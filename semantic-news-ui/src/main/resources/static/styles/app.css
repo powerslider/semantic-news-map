@@ -6,6 +6,15 @@
     position: relative;
 }
 
+.geo-heat-map-side-panel-content {
+    margin: 10px 10px 10px 10px;
+    word-wrap: break-word;
+}
+
+.geo-heat-map-side-panel-content > section {
+    margin-top:50px;
+}
+
 .close-icon {
     position:absolute;
     top:0;

@@ -22,6 +22,7 @@ class NewsMapController {
 
         this.showGeoHeatMapSidePanel = false;
 
+//        this.categories = ["Business", "International", "Lifestyle", "Science And Technology", "Sports"];
         this.categories = MdAutocompleteService
                                 .loadAllItems("Business, International, Lifestyle, Science And Technology, Sports");
         this.querySearch = MdAutocompleteService.querySearch;
@@ -40,6 +41,7 @@ class NewsMapController {
                     }
                     this.NewsMapDataService.getNewsMentioningCountry(newsMentioningCountryParams)
                         .success((response) => {
+                            country.newsCount = response.length;
                             this.newsMentioningCountry = response;
                         })
                         .error(() => {

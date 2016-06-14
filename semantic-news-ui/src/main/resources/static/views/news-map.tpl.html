@@ -36,46 +36,52 @@
                         md-component-id="geo-heat-map-side-panel"
                         md-is-open="mapCtrl.showGeoHeatMapSidePanel"
                         md-disable-backdrop>
-                    <ng-md-icon class="close-icon"
-                                ng-click="mapCtrl.showGeoHeatMapSidePanel = false"
-                                icon="close"></ng-md-icon>
-                    <h2>{{mapCtrl.selectedCountry.properties.name}}</h2>
+                    <md-content class="geo-heat-map-side-panel-content">
+                        <ng-md-icon class="close-icon"
+                                    ng-click="mapCtrl.showGeoHeatMapSidePanel = false"
+                                    icon="close"></ng-md-icon>
+                        <section flex>
+                            <h2>{{mapCtrl.selectedCountry.properties.name}}</h2>
+                            <h4 ng-show="mapCtrl.selectedCountry.newsCount">{{mapCtrl.selectedCountry.newsCount}} news articles</h4>
+                        </section>
+                        <!--<h2>{{mapCtrl.selectedCountry.properties.name}}</h2>-->
 
-                    <section flex="20">
-                        <form ng-submit="$event.preventDefault()">
-                            <!--<md-input-container>-->
+                        <section flex>
+                            <form ng-submit="$event.preventDefault()">
+                                <!--<md-input-container>-->
                                 <!--<md-select ng-model="mapCtrl.selectedCategory" aria-label="Pick news category">-->
-                                    <!--<md-option ng-value="$index" ng-repeat="category in mapCtrl.categories">{{category}}</md-option>-->
+                                <!--<md-option ng-value="$index" ng-repeat="category in mapCtrl.categories">{{category}}</md-option>-->
                                 <!--</md-select>-->
-                            <!--</md-input-container>-->
-                            <md-autocomplete
-                                    md-selected-item="mapCtrl.selectedItem"
-                                    md-search-text="mapCtrl.selectedCategory"
-                                    md-items="item in mapCtrl.querySearch(mapCtrl.category, mapCtrl.categories)"
-                                    md-item-text="item.display"
-                                    md-min-length="0"
-                                    md-autoselect="true"
-                                    placeholder="Pick news category"
-                                    ng-model="mapCtrl.selectedCategory">
-                                <md-item-template>
-                                    <span md-highlight-text="mapCtrl.selectedCategory" md-highlight-flags="^i">{{item.display}}</span>
-                                </md-item-template>
-                                <md-not-found>
-                                    No categories matching {{item.display}} were found
-                                </md-not-found>
-                            </md-autocomplete>
-                        </form>
-                    </section>
-                    <section layout-align="left" class="news-scroll" flex="50">
-                        <md-virtual-repeat-container id="vertical-container" md-top-index="mapCtrl.topIndex">
-                            <div md-virtual-repeat="newsItem in mapCtrl.newsMentioningCountry"
-                                 class="repeated-item"
-                                 ng-class="{ header: newsItem.category }"
-                                 flex>
-                                <a href="{{newsItem.url}}">{{newsItem.title}}</a>
-                            </div>
-                        </md-virtual-repeat-container>
-                    </section>
+                                <!--</md-input-container>-->
+                                <md-autocomplete
+                                        md-selected-item="mapCtrl.selectedItem"
+                                        md-search-text="mapCtrl.selectedCategory"
+                                        md-items="item in mapCtrl.querySearch(mapCtrl.category, mapCtrl.categories)"
+                                        md-item-text="item.display"
+                                        md-min-length="0"
+                                        md-autoselect="true"
+                                        placeholder="Pick news category"
+                                        ng-model="mapCtrl.selectedCategory">
+                                    <md-item-template>
+                                        <span md-highlight-text="mapCtrl.selectedCategory" md-highlight-flags="^i">{{item.display}}</span>
+                                    </md-item-template>
+                                    <md-not-found>
+                                        No categories matching {{item.display}} were found
+                                    </md-not-found>
+                                </md-autocomplete>
+                            </form>
+                        </section>
+                        <section layout-align="left" class="news-scroll" flex>
+                            <md-virtual-repeat-container id="vertical-container" md-top-index="mapCtrl.topIndex">
+                                <div md-virtual-repeat="newsItem in mapCtrl.newsMentioningCountry"
+                                     class="repeated-item"
+                                     ng-class="{ header: newsItem.category }"
+                                     flex>
+                                    <a href="{{newsItem.url}}">{{newsItem.title}}</a>
+                                </div>
+                            </md-virtual-repeat-container>
+                        </section>
+                    </md-content>
                 </md-sidenav>
             </md-tab>
         </md-tabs>
