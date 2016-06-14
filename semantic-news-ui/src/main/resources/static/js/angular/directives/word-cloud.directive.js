@@ -92,7 +92,8 @@ class WordCloudDirective {
                     .on("click",(d) => {
                         let sp = angular.fromJson(scope.wordSearchParams);
                         let entityUri = encodeURIComponent(d.entityUri);
-                        $state.go('news-details', {uri: entityUri, from: sp.from, category: sp.category});
+                        let detailsUrl = $state.href('news-details', {uri: entityUri, from: sp.from, category: sp.category});
+                        window.open(detailsUrl, '_blank');
                     })
                     .style("opacity", 1e-6)
                     .transition()
@@ -125,7 +126,7 @@ class WordCloudDirective {
         }
         scope.$watch('wordData',() => {
             if (scope.wordData) {
-                this.$timeout(drawWordCloud, 500);
+                this.$timeout(drawWordCloud, 300);
             }
         });
     }
