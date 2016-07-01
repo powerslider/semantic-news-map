@@ -6,7 +6,7 @@ class YasrDirective {
         this.scope = {
             yasrData: '=',
             yasrPostProcess: '&'
-        }
+        };
 
         this.$timeout = $timeout;
 

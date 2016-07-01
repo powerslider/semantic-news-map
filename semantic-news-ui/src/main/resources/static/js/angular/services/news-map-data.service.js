@@ -12,41 +12,41 @@ class NewsMapDataService {
 
     getWordCloud(searchParams) {
         return this.$http.get('rest/semnews/word-cloud', {
-                        params: {
-                            type: searchParams.type,
-                            from: getDatePart(searchParams.from),
-                            category: searchParams.category,
-                            hidden: searchParams.hidden,
-                            relPop: searchParams.relativePopularity
-                        }
-                    });
+            params: {
+                type: searchParams.type,
+                from: getDatePart(searchParams.from),
+                category: searchParams.category,
+                hidden: searchParams.hidden,
+                relPop: searchParams.relativePopularity
+            }
+        });
     }
 
     getWorldHeatMap(from) {
         return this.$http.get('rest/semnews/world-heat-map', {
-                        params: {
-                            from: getDatePart(from)
-                        }
-                   });
+            params: {
+                from: getDatePart(from)
+            }
+        });
     }
 
     getNewsEntityDetails(searchParams) {
         return this.$http.get('rest/semnews/news-details', {
-                        params: {
-                            from: getDatePart(searchParams.from),
-                            uri: searchParams.entityUri,
-                            category: searchParams.category
-                        }
-                    });
+            params: {
+                from: getDatePart(searchParams.from),
+                uri: searchParams.entityUri,
+                category: searchParams.category
+            }
+        });
     }
 
     getNewsMentioningCountry(searchParams) {
         return this.$http.get('rest/semnews/news-mentioning-country', {
-                        params: {
-                            from: getDatePart(searchParams.from),
-                            countryCode: searchParams.countryCode
-                        }
-                    })
+            params: {
+                from: getDatePart(searchParams.from),
+                countryCode: searchParams.countryCode
+            }
+        })
     }
 }
 

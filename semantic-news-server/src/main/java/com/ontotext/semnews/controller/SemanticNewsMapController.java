@@ -78,7 +78,8 @@ public class SemanticNewsMapController {
 
             @Override
             protected String doInConnection() throws RepositoryException {
-                Map<String, List<String>> queryResults = executeQueryAndGetBindings("newsByCountry",
+                Map<String, List<String>> queryResults = executeQueryAndGetBindings(
+                        "newsByCountry",
                         q -> q.replace("{min_date}", from)
                                 .replace("{max_date}", from));
 
@@ -92,21 +93,24 @@ public class SemanticNewsMapController {
                                                       @RequestParam("from") String from,
                                                       @RequestParam("category") String category) {
 
-        String newsMentioningEntityQuery = sparqlService.setQueryPlaceholders("newsMentioningEntity",
+        String newsMentioningEntityQuery = sparqlService.setQueryPlaceholders(
+                "newsMentioningEntity",
                 q -> q.replace("{category}", category)
                         .replace("{min_date}", from)
                         .replace("{max_date}", from)
                         .replace("{entity}", entityUri));
 
-        String newsMentioningRelevantEntitiesQuery = sparqlService.setQueryPlaceholders("newsMentioningRelevantEntities",
+        String newsMentioningRelevantEntitiesQuery = sparqlService.setQueryPlaceholders(
+                "newsMentioningRelevantEntities",
                 q -> q.replaceAll(Pattern.quote("{category}"), category)
                         .replaceAll(Pattern.quote("{min_date}"), from)
                         .replaceAll(Pattern.quote("{max_date}"), from)
                         .replaceAll(Pattern.quote("{entity}"), entityUri));
 
-
-        JsonNode newsMentioningEntityResults = sparqlService.getSparqlResultsAsJson(newsMentioningEntityQuery);
-        JsonNode newsMentioningRelevantEntitiesResults = sparqlService.getSparqlResultsAsJson(newsMentioningRelevantEntitiesQuery);
+        JsonNode newsMentioningEntityResults = sparqlService
+                .getSparqlResultsAsJson(newsMentioningEntityQuery);
+        JsonNode newsMentioningRelevantEntitiesResults = sparqlService
+                .getSparqlResultsAsJson(newsMentioningRelevantEntitiesQuery);
 
         return ImmutableMap.<String, JsonNode>builder()
                 .put("nonRelevant", newsMentioningEntityResults)
