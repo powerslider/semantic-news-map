@@ -119,7 +119,8 @@ public class SemanticNewsMapController {
 
             @Override
             protected String doInConnection() throws RepositoryException {
-                Map<String, List<String>> queryResults = executeQueryAndGetBindings("newsByCountry",
+                Map<String, List<String>> queryResults = executeQueryAndGetBindings(
+                        "newsByCountry",
                         q -> q.replace("{min_date}", from)
                                 .replace("{max_date}", from));
 
@@ -165,7 +166,6 @@ public class SemanticNewsMapController {
                         .replaceAll(Pattern.quote("{min_date}"), from)
                         .replaceAll(Pattern.quote("{max_date}"), from)
                         .replaceAll(Pattern.quote("{entity}"), entityUri));
-
 
         JsonNode newsMentioningEntityResults = sparqlService
                 .getSparqlResultsAsJson(newsMentioningEntityQuery);

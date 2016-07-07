@@ -35,7 +35,7 @@ class NewsDetailsController {
 //    }
 
     redirectNewsToNOW() {
-        $('table tr td:nth-child(4) a.uri').each(function() {
+        $('table tr td:nth-child(4) a.uri').each(function () {
             let href = $(this).attr('href');
             $(this).attr('href', "http://now.ontotext.com/#document?uri=" + encodeURIComponent(href));
         });

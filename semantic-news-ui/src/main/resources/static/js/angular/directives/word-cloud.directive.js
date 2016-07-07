@@ -15,6 +15,7 @@ class WordCloudDirective {
 
     link(scope, element, attrs) {
         let $state = this.$state;
+
         function drawWordCloud() {
             let width = Math.floor(window.innerWidth * 0.95),
                 height = Math.floor(window.innerHeight) - 80;
@@ -89,10 +90,14 @@ class WordCloudDirective {
                     .style("font-size", (d) => {
                         return d.size + "px";
                     })
-                    .on("click",(d) => {
+                    .on("click", (d) => {
                         let sp = angular.fromJson(scope.wordSearchParams);
                         let entityUri = encodeURIComponent(d.entityUri);
-                        let detailsUrl = $state.href('news-details', {uri: entityUri, from: sp.from, category: sp.category});
+                        let detailsUrl = $state.href('news-details', {
+                            uri: entityUri,
+                            from: sp.from,
+                            category: sp.category
+                        });
                         window.open(detailsUrl, '_blank');
                     })
                     .style("opacity", 1e-6)
@@ -124,7 +129,8 @@ class WordCloudDirective {
                 layout.stop().words(wordData).start();
             }
         }
-        scope.$watch('wordData',() => {
+
+        scope.$watch('wordData', () => {
             if (scope.wordData) {
                 this.$timeout(drawWordCloud, 300);
             }

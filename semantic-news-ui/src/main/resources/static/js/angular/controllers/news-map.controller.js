@@ -25,7 +25,7 @@ class NewsMapController {
 
 //        this.categories = ["Business", "International", "Lifestyle", "Science And Technology", "Sports"];
         this.categories = MdAutocompleteService
-                                .loadAllItems("Business, International, Lifestyle, Science And Technology, Sports");
+            .loadAllItems("Business, International, Lifestyle, Science And Technology, Sports");
         this.querySearch = MdAutocompleteService.querySearch;
 
 
@@ -39,7 +39,7 @@ class NewsMapController {
                     let newsMentioningCountryParams = {
                         from: this.searchParams.from,
                         countryCode: country.id
-                    }
+                    };
                     this.NewsMapDataService.getNewsMentioningCountry(newsMentioningCountryParams)
                         .success((response) => {
                             country.newsCount = response.length;
@@ -77,10 +77,10 @@ class NewsMapController {
             targetEvent: $event
         });
 
-        function NewsMapSearchController($mdDialog, $rootScope,  MdAutocompleteService, localStorageService, $state) {
+        function NewsMapSearchController($mdDialog, $rootScope, MdAutocompleteService, localStorageService, $state) {
             this.currentDate = new Date();
             this.categories = MdAutocompleteService
-                                    .loadAllItems("All, Business, International, Lifestyle, Science And Technology, Sports");
+                .loadAllItems("All, Business, International, Lifestyle, Science And Technology, Sports");
             this.querySearch = MdAutocompleteService.querySearch;
             this.cancel = ($event) => $mdDialog.cancel();
             this.finish = ($event) => $mdDialog.hide();
