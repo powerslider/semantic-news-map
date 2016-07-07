@@ -56,7 +56,7 @@
                                 <md-autocomplete
                                         md-selected-item="mapCtrl.selectedItem"
                                         md-search-text="mapCtrl.selectedCategory"
-                                        md-items="item in mapCtrl.querySearch(mapCtrl.category, mapCtrl.categories)"
+                                        md-items="item in mapCtrl.querySearch(mapCtrl.selectedCategory, mapCtrl.categories)"
                                         md-item-text="item.display"
                                         md-min-length="0"
                                         md-autoselect="true"

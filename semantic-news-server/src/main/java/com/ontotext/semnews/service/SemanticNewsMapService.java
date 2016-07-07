@@ -21,8 +21,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
- * @since 11-May-2016
+ *  Service class for processing data from FactForge News remote repository for rendering it as word clouds or a
+ *  geographic heat map.
+ *
+ *  @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
+ *  @since 11-May-2016
  */
 @Service
 public class SemanticNewsMapService {
@@ -41,7 +44,15 @@ public class SemanticNewsMapService {
             "Lifestyle"
     );
 
-    public List<Word> getMostFrequentEntities(Map<String, List<String>> queryResult, String from, String category) {
+    /**
+     * Processing results from MOST POPULAR criteria SPARQL queries for word cloud visualisation.
+     *
+     * @param queryResult
+     *          sparql results a (binding)-(list of values) map
+     *
+     * @return a list of {@link Word} object used for MOST POPULAR criteria word cloud visualisation
+     */
+    public List<Word> getMostPopularEntities(Map<String, List<String>> queryResult) {
         if (queryResult.isEmpty()) {
             return new ArrayList<>();
         }
@@ -51,10 +62,18 @@ public class SemanticNewsMapService {
                 .map(this::normalizeWeights);
         Stream<String> mentionedEntities = queryResult.get("mentionedLodEntity").stream();
 
-        return zip2Words(from, category, labels, weights, mentionedEntities);
+        return zip2Words(labels, weights, mentionedEntities);
     }
 
-    public List<Word> getHiddenChampions(Map<String, List<String>> queryResult, String from, String category) {
+    /**
+     * Processing results from HIDDEN CHAMPIONS criteria SPARQL queries for word cloud visualisation.
+     *
+     * @param queryResult
+     *          sparql results a (binding)-(list of values) map
+     *
+     * @return a list of {@link Word} object used for HIDDEN CHAMPIONS criteria word cloud visualisation
+     */
+    public List<Word> getHiddenChampions(Map<String, List<String>> queryResult) {
         if (queryResult.isEmpty()) {
             return new ArrayList<>();
         }
@@ -64,26 +83,18 @@ public class SemanticNewsMapService {
                 .map(this::normalizeWeights);
         Stream<String> mentionedEntities = queryResult.get("relativeEntity").stream();
 
-        return zip2Words(from, category, labels, weights, mentionedEntities);
+        return zip2Words(labels, weights, mentionedEntities);
     }
 
-    private List<Word> zip2Words(String from,
-                                 String category,
-                                 Stream<String> labels,
-                                 Stream<String> weights,
-                                 Stream<String> mentionedEntities) {
-        return StreamUtils.zip(labels, weights, mentionedEntities,
-                (label, weight, mentionedEntity) -> {
-                    Word word = new Word();
-                    word.setText(label);
-                    word.setSize(XMLDatatypeUtil.parseDouble(weight));
-                    word.setEntityUri(mentionedEntity);
-                    return word;
-                })
-                .collect(Collectors.toList());
-    }
-
-    public String getHeatMap(Map<String, List<String>> queryResult) {
+    /**
+     * Processing results for geographic heat map visualisation.
+     *
+     * @param queryResult
+     *          sparql results a (binding)-(list of values) map
+     *
+     * @return csv response of country codes and mentions frequency counts
+     */
+    public String getGeoHeatMap(Map<String, List<String>> queryResult) {
         if (queryResult.isEmpty()) {
             return "";
         }
@@ -98,6 +109,15 @@ public class SemanticNewsMapService {
         return String.join("\n", "country_code,frequency", heatMapEntries);
     }
 
+    /**
+     * Preparing a list of news titles, news links and corresponding news categories mentioning
+     * a selected country.
+     *
+     * @param queryResult
+     *          sparql results a (binding)-(list of values) map
+     *
+     * @return csv response of country codes and mentions frequency counts
+     */
     public List<NewsEntity> getNewsMentioningCountry(Map<String, List<String>> queryResult) {
         Stream<String> newsTitles = queryResult.get("newsTitle").stream();
         Stream<String> newsUrls = queryResult.get("newsUrl").stream();
@@ -122,6 +142,20 @@ public class SemanticNewsMapService {
         DateTimeFormatter fromFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate parsedDate = LocalDate.parse(dateString, fromFormat);
         return parsedDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    private List<Word> zip2Words(Stream<String> labels,
+                                 Stream<String> weights,
+                                 Stream<String> mentionedEntities) {
+        return StreamUtils.zip(labels, weights, mentionedEntities,
+                (label, weight, mentionedEntity) -> {
+                    Word word = new Word();
+                    word.setText(label);
+                    word.setSize(XMLDatatypeUtil.parseDouble(weight));
+                    word.setEntityUri(mentionedEntity);
+                    return word;
+                })
+                .collect(Collectors.toList());
     }
 
     private String normalizeWeights(String w) {

@@ -2,10 +2,11 @@ const GEO_HEAT_MAP_SIDE_PANEL = "geo-heat-map-side-panel";
 
 class NewsMapController {
 
-    constructor($scope, $rootScope, $timeout, $mdBottomSheet, $mdDialog, NewsMapDataService, MdAutocompleteService, localStorageService) {
+    constructor($scope, $rootScope, $timeout, $mdBottomSheet, $mdToast, $mdDialog, NewsMapDataService, MdAutocompleteService, localStorageService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$mdBottomSheet = $mdBottomSheet;
+        this.$mdToast = $mdToast;
         this.$mdDialog = $mdDialog;
         this.NewsMapDataService = NewsMapDataService;
         this.MdAutocompleteService = MdAutocompleteService;
@@ -53,16 +54,16 @@ class NewsMapController {
             }
         });
 
-        $scope.$watch('selectedCategory', () => {
-            var scrollYear = Math.floor(this.topIndex / 13);
-            if(scrollYear !== yearIndex) {
-                this.topIndex = yearIndex * 13;
+        $scope.$watch('selectedCategory', angular.bind(this, (categoryIndex) => {
+            let scrollCategory = Math.floor(this.topIndex / 6);
+            if (scrollCategory !== categoryIndex) {
+                this.topIndex = categoryIndex * 6;
             }
-        });
+        }));
 
         $scope.$watch('topIndex', () => {
-            var scrollYear = Math.floor(this.topIndex / 13);
-            this.selectedYear = scrollYear;
+            let scrollCategory = Math.floor(this.topIndex / 6);
+            this.selectedCategory = scrollCategory;
         });
     }
 
@@ -112,7 +113,7 @@ class NewsMapController {
                 this.wordCloudPopular = response;
             })
             .error(() => {
-
+                this.$mdToast.showSimple('Error requesting POPULAR entities word cloud data');
             });
 
         let hiddenEntitiesSearchParams = {
@@ -128,7 +129,7 @@ class NewsMapController {
                 this.wordCloudHidden = response;
             })
             .error(() => {
-
+                this.$mdToast.showSimple('Error requesting HIDDEN CHAMPIONS entities word cloud data');
             });
 
         let popularAndHiddenEntitiesSearchParams = {
@@ -143,7 +144,7 @@ class NewsMapController {
                 this.wordCloudPopularAndHidden = response;
             })
             .error(() => {
-
+                this.$mdToast.showSimple('Error requesting POPULAR & HIDDEN entities word cloud data');
             });
 
         this.NewsMapDataService.getWorldHeatMap(searchParams.from)
@@ -152,10 +153,10 @@ class NewsMapController {
                 this.geoHeatMap = response;
             })
             .error(() => {
-
+                this.$mdToast.showSimple('Error requesting countries GEO HEAT MAP data');
             });
     }
 }
 
-NewsMapController.$inject = ['$scope', '$rootScope', '$timeout', '$mdBottomSheet', '$mdDialog', 'NewsMapDataService', 'MdAutocompleteService', 'localStorageService'];
+NewsMapController.$inject = ['$scope', '$rootScope', '$timeout', '$mdBottomSheet', '$mdToast', '$mdDialog', 'NewsMapDataService', 'MdAutocompleteService', 'localStorageService'];
 export default NewsMapController;

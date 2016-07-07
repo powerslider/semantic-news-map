@@ -8,6 +8,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
+ * Application Spring MVC configuration.
+ *
  * @author Tsvetan Dimitrov <tsvetan.dimitrov@ontotext.com>
  * @since 30-May-2016
  */

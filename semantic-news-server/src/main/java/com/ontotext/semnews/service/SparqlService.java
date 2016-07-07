@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
+ * Service class responsible for executing sparql queries against a given repository connection.
+ *
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 09-May-2016
  */

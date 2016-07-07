@@ -1,14 +1,19 @@
 package com.ontotext.semnews.model;
 
 /**
+ * Model class representing data used for word cloud visualisation.
+ *
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 11-May-2016
  */
 public class Word {
 
     private String text;
+
     private double size;
+
     private String entityUri;
+
 
     public Word() {
         super();
@@ -19,6 +24,7 @@ public class Word {
         this.size = size;
         this.entityUri = entityUri;
     }
+
 
     public String getText() {
         return text;

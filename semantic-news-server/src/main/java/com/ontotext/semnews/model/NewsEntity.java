@@ -1,15 +1,19 @@
 package com.ontotext.semnews.model;
 
 /**
+ * Model class representing data used for news mentioning entity/related entities.
+ *
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 11-May-2016
  */
 public class NewsEntity {
 
     private String title;
+
     private String url;
 
     private String category;
+
 
     public String getTitle() {
         return title;
