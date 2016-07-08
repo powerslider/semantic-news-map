@@ -14,15 +14,8 @@ class NewsDetailsController {
             .success((response) => {
                 this.yasrNonRelData = response.nonRelevant;
                 this.yasrRelData = response.relevant;
-//
-//                this.forcedTabIndex = this.selectedTabIndex;
-//
-//                this.nonRelevantDataExists = this.isResponseEmpty(this.yasrNonRelData.results.bindings);
-//                this.relevantDataExists = this.isResponseEmpty(this.yasrRelData.results.bindings);
-//
-//                if (this.nonRelevantDataExists ^ this.relevantDataExists == 1) {
-//                    this.forcedTabIndex = 0;
-//                }
+                this.yasrNonRelDataExists = this.isResponseEmpty(this.yasrNonRelData);
+                this.yasrRelDataExists = this.isResponseEmpty(this.yasrRelData);
             })
             .error(() => {
 
@@ -30,15 +23,16 @@ class NewsDetailsController {
 
     }
 
-//    isResponseEmpty(arr) {
-//        return arr ? arr.length == 0 || (arr.length == 1 && $.isEmptyObject(arr[0])) : true;
-//    }
-
     redirectNewsToNOW() {
         $('table tr td:nth-child(4) a.uri').each(function () {
             let href = $(this).attr('href');
             $(this).attr('href', "http://now.ontotext.com/#document?uri=" + encodeURIComponent(href));
         });
+    }
+
+    isResponseEmpty(response) {
+        console.log(response);
+        return response ? $.isEmptyObject(response.results.bindings[0]) : true;
     }
 }
 

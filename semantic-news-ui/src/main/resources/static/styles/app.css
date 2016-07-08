@@ -40,6 +40,10 @@ md-fab-toolbar.md-right md-fab-trigger.align-with-text {
     width: 33%;
     height: 25%
 }
+
+.word {
+    cursor: pointer;
+}
 /*
   body {
     color: #343e3d;

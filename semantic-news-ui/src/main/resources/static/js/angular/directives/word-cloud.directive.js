@@ -1,6 +1,6 @@
 class WordCloudDirective {
 
-    constructor($window, $timeout, $state) {
+    constructor($window, $timeout, $state, $rootScope) {
         this.restrict = 'AE';
         this.template = '<div class="word-cloud-container"></div>';
         this.scope = {
@@ -11,10 +11,12 @@ class WordCloudDirective {
         this.$window = $window;
         this.$timeout = $timeout;
         this.$state = $state;
+        this.$rootScope = $rootScope;
     }
 
     link(scope, element, attrs) {
         let $state = this.$state;
+        let $rootScope = this.$rootScope;
 
         function drawWordCloud() {
             let width = Math.floor(window.innerWidth * 0.95),
@@ -83,7 +85,10 @@ class WordCloudDirective {
 
                 text
                     .enter().append("text")
-                    .attr("text-anchor", "middle")
+                    .attr({
+                        class: "word",
+                        'text-anchor': "middle"
+                    })
                     .attr("transform", (d) => {
                         return "translate(" + [getTranslatedX(d.x), getTranslatedY(d.y)] + ")rotate(" + d.rotate + ")";
                     })
@@ -91,14 +96,7 @@ class WordCloudDirective {
                         return d.size + "px";
                     })
                     .on("click", (d) => {
-                        let sp = angular.fromJson(scope.wordSearchParams);
-                        let entityUri = encodeURIComponent(d.entityUri);
-                        let detailsUrl = $state.href('news-details', {
-                            uri: entityUri,
-                            from: sp.from,
-                            category: sp.category
-                        });
-                        window.open(detailsUrl, '_blank');
+                        $rootScope.$broadcast('wordClicked', d.entityUri, d.text);
                     })
                     .style("opacity", 1e-6)
                     .transition()
@@ -138,5 +136,5 @@ class WordCloudDirective {
     }
 }
 
-WordCloudDirective.$inject = ['$window', '$timeout', '$state'];
+WordCloudDirective.$inject = ['$window', '$timeout', '$state', '$rootScope'];
 export default WordCloudDirective;

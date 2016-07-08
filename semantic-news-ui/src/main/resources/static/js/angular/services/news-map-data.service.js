@@ -30,6 +30,16 @@ class NewsMapDataService {
         });
     }
 
+    checkNewsEntityDetails(searchParams) {
+        return this.$http.head('rest/semnews/news-details', {
+            params: {
+                from: getDatePart(searchParams.from),
+                uri: searchParams.entityUri,
+                category: searchParams.category
+            }
+        });
+    }
+
     getNewsEntityDetails(searchParams) {
         return this.$http.get('rest/semnews/news-details', {
             params: {

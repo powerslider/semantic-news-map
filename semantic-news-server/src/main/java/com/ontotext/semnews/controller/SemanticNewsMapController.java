@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -148,8 +146,8 @@ public class SemanticNewsMapController {
      *
      *  @return json response of mime type application/sparql-results+json for feeding YASR js library table view
      */
-    @RequestMapping(value = "/news-details", method = RequestMethod.GET)
-    public Map<String, JsonNode> getNewsEntityDetails(@RequestParam("uri") String entityUri,
+    @RequestMapping(value = "/news-details", method = { RequestMethod.GET, RequestMethod.HEAD } )
+    public ResponseEntity<Map<String, JsonNode>> getNewsEntityDetails(@RequestParam("uri") String entityUri,
                                                       @RequestParam("from") String from,
                                                       @RequestParam("category") String category) {
 
@@ -172,10 +170,18 @@ public class SemanticNewsMapController {
         JsonNode newsMentioningRelevantEntitiesResults = sparqlService
                 .getSparqlResultsAsJson(newsMentioningRelevantEntitiesQuery);
 
-        return ImmutableMap.<String, JsonNode>builder()
+
+        Map<String, JsonNode> resultsMap = ImmutableMap.<String, JsonNode>builder()
                 .put("nonRelevant", newsMentioningEntityResults)
                 .put("relevant", newsMentioningRelevantEntitiesResults)
                 .build();
+
+        if (!semanticNewsMapService.areNewsEntityResultsAvailable(newsMentioningEntityResults)
+                && !semanticNewsMapService.areNewsEntityResultsAvailable(newsMentioningRelevantEntitiesResults)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(resultsMap, HttpStatus.OK);
     }
 
     /**

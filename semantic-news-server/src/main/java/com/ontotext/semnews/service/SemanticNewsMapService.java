@@ -1,6 +1,7 @@
 package com.ontotext.semnews.service;
 
 import com.codepoetics.protonpack.StreamUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.ontotext.semnews.model.NewsEntity;
@@ -136,6 +137,16 @@ public class SemanticNewsMapService {
                     return newsEntity;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public boolean areNewsEntityResultsAvailable(JsonNode newsMentioningEntityResults) {
+        JsonNode newsEntityResults = newsMentioningEntityResults.get("results").get("bindings");
+        for (JsonNode jsonNode : newsEntityResults) {
+            if (jsonNode.get("news") != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toIsoLocalDate(String dateString) {

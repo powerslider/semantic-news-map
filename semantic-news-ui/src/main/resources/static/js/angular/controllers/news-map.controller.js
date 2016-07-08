@@ -2,7 +2,7 @@ const GEO_HEAT_MAP_SIDE_PANEL = "geo-heat-map-side-panel";
 
 class NewsMapController {
 
-    constructor($scope, $rootScope, $timeout, $mdBottomSheet, $mdToast, $mdDialog, NewsMapDataService, MdAutocompleteService, localStorageService) {
+    constructor($scope, $rootScope, $timeout, $mdBottomSheet, $mdToast, $mdDialog, $window, $state, NewsMapDataService, MdAutocompleteService, MdToastService, localStorageService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$mdBottomSheet = $mdBottomSheet;
@@ -10,14 +10,14 @@ class NewsMapController {
         this.$mdDialog = $mdDialog;
         this.NewsMapDataService = NewsMapDataService;
         this.MdAutocompleteService = MdAutocompleteService;
+        this.MdToastService = MdToastService;
         this.localStorageService = localStorageService;
-        this.$rootScope = $rootScope;
 
         this.selectedTabIndex = 0;
 
         this.searchParams = this.localStorageService.get("searchParams");
         if (this.searchParams) {
-            this.searchParams = angular.fromJson(this.searchParams)
+            this.searchParams = angular.fromJson(this.searchParams);
             this.loadNewsSearchResultData(this.searchParams);
         }
 
@@ -28,8 +28,30 @@ class NewsMapController {
             .loadAllItems("Business, International, Lifestyle, Science And Technology, Sports");
         this.querySearch = MdAutocompleteService.querySearch;
 
+        $rootScope.$on('wordClicked', (event, entityUri, text) => {
+            this.searchParams.entityUri = entityUri;
+            this.NewsMapDataService.checkNewsEntityDetails(this.searchParams)
+                .success((response, status) => {
+                    if (status === 204) {
+                        this.MdToastService
+                            .showToast('No other news data mentioning "' + text +'" or other entities related to it.');
+                    } else {
+                        let uri = encodeURIComponent(entityUri);
+                        let detailsUrl = $state.href('news-details', {
+                            uri: uri,
+                            from: this.searchParams.from,
+                            category: this.searchParams.category
+                        });
+                        $window.open(detailsUrl, '_blank');
+                    }
+                })
+                .error((response) => {
+                     this.MdToastService
+                          .showToast('Error getting other news data mentioning "' + text +'" or other entities related to it.');
+                });
+        });
 
-        this.$rootScope.$on('countryClicked', (event, country) => {
+        $rootScope.$on('countryClicked', (event, country) => {
             if ($.isArray(country)) {
                 this.$scope.$apply(() => {
                     this.showGeoHeatMapSidePanel = false;
@@ -46,7 +68,9 @@ class NewsMapController {
                             this.newsMentioningCountry = response;
                         })
                         .error(() => {
-
+                            this.$mdToast
+                                .position('top right')
+                                .showSimple('Error requesting news mentioning ' + country.properties.name);
                         });
                     this.selectedCountry = country;
                     this.showGeoHeatMapSidePanel = true;
@@ -107,13 +131,21 @@ class NewsMapController {
             relPop: searchParams.relPop
         };
 
+//        function showToast(msg) {
+//            let toast = this.$mdToast
+//                    .simple()
+//                    .position('top right')
+//                    .textContent(msg);
+//            this.$mdToast.show(toast);
+//        }
+
         this.NewsMapDataService.getWordCloud(popularEntitiesSearchParams)
             .success((response) => {
                 console.log("POPULAR");
                 this.wordCloudPopular = response;
             })
             .error(() => {
-                this.$mdToast.showSimple('Error requesting POPULAR entities word cloud data');
+                this.MdToastService.showToast('Error requesting POPULAR entities word cloud data');
             });
 
         let hiddenEntitiesSearchParams = {
@@ -129,7 +161,7 @@ class NewsMapController {
                 this.wordCloudHidden = response;
             })
             .error(() => {
-                this.$mdToast.showSimple('Error requesting HIDDEN CHAMPIONS entities word cloud data');
+                this.MdToastService.showToast('Error requesting HIDDEN CHAMPIONS entities word cloud data');
             });
 
         let popularAndHiddenEntitiesSearchParams = {
@@ -144,7 +176,7 @@ class NewsMapController {
                 this.wordCloudPopularAndHidden = response;
             })
             .error(() => {
-                this.$mdToast.showSimple('Error requesting POPULAR & HIDDEN entities word cloud data');
+                this.MdToastService.showToast('Error requesting POPULAR & HIDDEN entities word cloud data');
             });
 
         this.NewsMapDataService.getWorldHeatMap(searchParams.from)
@@ -153,10 +185,10 @@ class NewsMapController {
                 this.geoHeatMap = response;
             })
             .error(() => {
-                this.$mdToast.showSimple('Error requesting countries GEO HEAT MAP data');
+                this.MdToastService.showToast('Error requesting countries GEO HEAT MAP data');
             });
     }
 }
 
-NewsMapController.$inject = ['$scope', '$rootScope', '$timeout', '$mdBottomSheet', '$mdToast', '$mdDialog', 'NewsMapDataService', 'MdAutocompleteService', 'localStorageService'];
+NewsMapController.$inject = ['$scope', '$rootScope', '$timeout', '$mdBottomSheet', '$mdToast', '$mdDialog', '$window', '$state', 'NewsMapDataService', 'MdAutocompleteService', 'MdToastService', 'localStorageService'];
 export default NewsMapController;
