@@ -6,7 +6,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ff-map: <http://factforge.net/ff2016-mapping/>
 PREFIX dbr: <http://dbpedia.org/resource/>
 
-SELECT (max(?title) AS ?newsTitle) (max(?date) AS ?newsDate) ?news (xsd:integer(max(?relevance) * 100) AS ?entityRelevance)
+SELECT (max(?title) AS ?newsTitle) (str(max(?date)) AS ?newsDate) ?news (str(xsd:integer(max(?relevance) * 100)) AS ?entityRelevance)
 FROM onto:disable-sameAs
 WHERE {
     BIND(<{entity}> as ?entity)
