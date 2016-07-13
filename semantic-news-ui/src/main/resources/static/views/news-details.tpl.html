@@ -8,19 +8,21 @@
                  md-stretch-tabs="always">
             <md-tab
                     label="News Mentioning Entity"
-                    ng-disabled="detailsCtrl.isResponseEmpty(detailsCtrl.yasrNonRelData)">
+                    ng-disabled="detailsCtrl.yasrNonRelDataExists">
+                    <!--ng-disabled="detailsCtrl.isResponseEmpty(detailsCtrl.yasrNonRelData)">-->
                 <div class="ot-loader" onto-loader size="100" ng-show="!detailsCtrl.yasrNonRelData"></div>
                 <yasr
-                        ng-if="detailsCtrl.selectedTabIndex == 0"
+                        ng-if="detailsCtrl.selectedTabIndex == 0 && !detailsCtrl.yasrNonRelDataExists"
                         yasr-data="detailsCtrl.yasrNonRelData"
                         yasr-post-process="detailsCtrl.redirectNewsToNOW()"></yasr>
             </md-tab>
             <md-tab
                     label="News Mentioning Related Entities"
-                    ng-disabled="detailsCtrl.isResponseEmpty(detailsCtrl.yasrRelData)">
+                    ng-disabled="detailsCtrl.yasrRelDataExists">
+                    <!--ng-disabled="detailsCtrl.isResponseEmpty(detailsCtrl.yasrRelData)">-->
                 <div class="ot-loader" onto-loader size="100" ng-show="!detailsCtrl.yasrRelData"></div>
                 <yasr
-                        ng-if="detailsCtrl.selectedTabIndex == 1"
+                        ng-if="detailsCtrl.selectedTabIndex == 1 && !detailsCtrl.yasrRelDataExists"
                         yasr-data="detailsCtrl.yasrRelData"
                         yasr-post-process="detailsCtrl.redirectNewsToNOW()"></yasr>
             </md-tab>

@@ -10,12 +10,17 @@ class NewsDetailsController {
         };
 
         this.selectedTabIndex = 0;
+        this.yasrNonRelDataExists = false;
+        this.yasrRelDataExists = false;
+
         NewsMapDataService.getNewsEntityDetails(searchParams)
             .success((response) => {
                 this.yasrNonRelData = response.nonRelevant;
                 this.yasrRelData = response.relevant;
                 this.yasrNonRelDataExists = this.isResponseEmpty(this.yasrNonRelData);
+                console.log(this.yasrNonRelDataExists);
                 this.yasrRelDataExists = this.isResponseEmpty(this.yasrRelData);
+                console.log(this.yasrRelDataExists);
             })
             .error(() => {
 
@@ -31,8 +36,8 @@ class NewsDetailsController {
     }
 
     isResponseEmpty(response) {
-        console.log(response);
-        return response ? $.isEmptyObject(response.results.bindings[0]) : true;
+        let data = response.results.bindings;
+        return response ? $.isEmptyObject(data[data.length - 1]) : true;
     }
 }
 
