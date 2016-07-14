@@ -1,6 +1,13 @@
 <div class="splash-content text-center">
-    <h1 ng-bind="title"></h1>
-
-    <p class="lead" ng-bind="message"></p>
-    <a ui-sref="news-map" class="btn btn-lg btn-outline" ng-bind="btnText || 'GO NOW'" ng-click="$close()"></a>
+    <!--<h1 ng-bind="title"></h1>-->
+    <img src="img/semnews-logo.png" class="img-responsive center-block"/>
+    <a ui-sref="news-map" ng-click="$close()">
+        <img src="img/onto-ball.svg" width="300" class="img-responsive center-block"/>
+    </a>
+    <img src="img/discover-meaning.png" class="img-responsive center-block"/>
+    <!--<p class="lead" ng-bind="message"></p>-->
+    <!--<a ui-sref="news-map" class="btn btn-lg btn-link" ng-bind="btnText || 'GO NOW'" ng-click="$close()"></a>-->
+    <a ui-sref="news-map" ng-click="$close()" class="row top-buffer">
+        <img src="img/gonow-btn.png" class="img-responsive center-block gonow-btn">
+    </a>
 </div>

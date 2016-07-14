@@ -3,7 +3,7 @@ class SplashController {
     constructor(SplashService) {
         SplashService.open({
             title: 'Semantic News Map',
-            message: "Read news like a champ"
+            message: "Discover a world of meaning"
         });
     }
 }
